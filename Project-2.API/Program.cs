@@ -13,8 +13,13 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+else {
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseAuthorization();
 
