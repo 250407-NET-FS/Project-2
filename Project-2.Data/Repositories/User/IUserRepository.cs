@@ -4,7 +4,7 @@ namespace Project_2.Data.Repositories;
 
 public interface IUserRepository
 {
-    Task<IEnumerable<User>> GetAllUser();
+    Task<IEnumerable<User>> GetAllUsers();
     Task<User?> GetById(Guid guid);
     Task AddUser(User user);
     Task<bool> RemoveUser(Guid guid);

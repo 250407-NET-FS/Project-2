@@ -17,7 +17,7 @@ public class UserRepository : IUserRepository
         return await _context.Users.ToListAsync();
     }
 
-    public async Task<User?> GetByIdAsync(Guid guid)
+    public async Task<User?> GetById(Guid guid)
     {
         return await _context.Users.FindAsync(guid);
     }
