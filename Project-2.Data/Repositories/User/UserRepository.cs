@@ -12,33 +12,33 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<User>> GetAllUsersAysnc()
+    public async Task<IEnumerable<User>> GetAllUsers()
     {
         return await _context.Users.ToListAsync();
     }
 
-    public async Task<User?> GetUserByIdAsync(Guid guid)
+    public async Task<User?> GetByIdAsync(Guid guid)
     {
         return await _context.Users.FindAsync(guid);
     }
 
-    public async Task AddUserAsync(User user)
+    public async Task AddUser(User user)
     {
         _context.Users.Add(user);
-        await SaveUserAsync();
+        await SaveUser();
     }
 
-    public async Task<bool> RemoveUserAsync(Guid guid)
+    public async Task<bool> RemoveUser(Guid guid)
     {
         var user = await _context.Users.FindAsync(guid);
         if (user is null) return false;
 
         _context.Users.Remove(user);
-        await SaveUserAsync();
+        await SaveUser();
         return true;
     }
 
-    public async Task<bool> UpdateUserAysnc(User user)
+    public async Task<bool> UpdateUser(User user)
     {
         var existingUser = await _context.Users.FindAsync(user.UserID);
         if (existingUser is null) return false;
@@ -66,11 +66,11 @@ public class UserRepository : IUserRepository
         if (user.Status == (true || false))
             existingUser.Status = user.Status;
 
-        await SaveUserAsync();
+        await SaveUser();
         return true;
     }
 
-    private async Task SaveUserAsync()
+    private async Task SaveUser()
     {
 
         await _context.SaveChangesAsync();
