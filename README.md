@@ -3,4 +3,4 @@
 <br>
 <p>Project2 placeholder text
 <br>
-![alt text](erd.png)
+![alt text](./erd.png)
