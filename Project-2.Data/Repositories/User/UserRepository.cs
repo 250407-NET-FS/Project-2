@@ -22,7 +22,7 @@ public class UserRepository : IUserRepository
         return await _context.User.FindAsync(guid);
     }
 
-    public async Task AddUser(User user)
+    public async Task<bool> AddUser(User user)
     {
         await using var transaction = await _context.Database.BeginTransactionAsync();
         try
@@ -30,6 +30,7 @@ public class UserRepository : IUserRepository
             _context.User.Add(user);
             await SaveUser();
             await transaction.CommitAsync();
+            return true;
         }
         catch (Exception ex)
         {
@@ -93,6 +94,7 @@ public class UserRepository : IUserRepository
                 existingUser.Status = user.Status;
 
             await SaveUser();
+            await transaction.CommitAsync();
             return true;
         }
         catch (Exception ex)

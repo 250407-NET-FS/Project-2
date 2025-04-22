@@ -6,7 +6,7 @@ public interface IUserRepository
 {
     Task<IEnumerable<User>> GetAllUsers();
     Task<User?> GetById(Guid guid);
-    Task AddUser(User user);
+    Task<bool> AddUser(User user);
     Task<bool> RemoveUser(Guid guid);
     Task<bool> UpdateUser(User user);
 }
