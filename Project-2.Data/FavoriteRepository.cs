@@ -3,7 +3,7 @@ using Project_2.Models;
 
 namespace Project_2.Data;
 
-public class FavoriteRepository
+public class FavoriteRepository : IFavoriteRepository
 {
     private readonly JazaContext _dbContext;
 
@@ -23,7 +23,7 @@ public class FavoriteRepository
      * in the next Save() call. 
      * ENSURE that Save() is called after this, as it has no effect otherwise
      */
-    public async Task AddFavoriteAsync(Favorite favToAdd) {
+    public async Task AddAsync(Favorite favToAdd) {
         await _dbContext.Favorite.AddAsync(favToAdd);
     }
 
@@ -36,7 +36,7 @@ public class FavoriteRepository
     }
 
     // Saves any insertions/deletions made to the db
-    public async Task Save() {
+    public async Task SaveChangesAsync() {
         await _dbContext.SaveChangesAsync();
     }
 }
