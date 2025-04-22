@@ -19,10 +19,23 @@ public class FavoriteRepository
         return await _dbContext.Favorite.FindAsync(guid);
     }
 
+    /* Marks an an entity as to-be-inserted until its insertion from the db
+     * in the next Save() call. 
+     * ENSURE that Save() is called after this, as it has no effect otherwise
+     */
     public async Task AddFavoriteAsync(Favorite favToAdd) {
         await _dbContext.Favorite.AddAsync(favToAdd);
     }
 
+    /* Marks an entity as to-be-deleted until its removal from the db
+     * in the next Save() call. 
+     * ENSURE that Save() is called after this, as it has no effect otherwise
+     */
+    public void Remove(Favorite favToRemove) {
+        _dbContext.Favorite.Remove(favToRemove);
+    }
+
+    // Saves any insertions/deletions made to the db
     public async Task Save() {
         await _dbContext.SaveChangesAsync();
     }
