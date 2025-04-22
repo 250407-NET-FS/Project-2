@@ -25,7 +25,7 @@ public class UserRepository : IUserRepository
     public async Task AddUserAsync(User user)
     {
         _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+        await SaveUserAsync();
     }
 
     public async Task<bool> RemoveUserAsync(Guid guid)
@@ -34,7 +34,7 @@ public class UserRepository : IUserRepository
         if (user is null) return false;
 
         _context.Users.Remove(user);
-        await _context.SaveChangesAsync();
+        await SaveUserAsync();
         return true;
     }
 
@@ -66,7 +66,13 @@ public class UserRepository : IUserRepository
         if (user.Status == (true || false))
             existingUser.Status = user.Status;
 
-        await _context.SaveChangesAsync();
+        await SaveUserAsync();
         return true;
+    }
+
+    private async Task SaveUserAsync()
+    {
+
+        await _context.SaveChangesAsync();
     }
 }
