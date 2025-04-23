@@ -4,9 +4,10 @@ namespace Project_2.Data.Repositories;
 
 public interface IUserRepository
 {
-    Task<IEnumerable<User>> GetAllUsers();
-    Task<User?> GetById(Guid guid);
-    Task AddUser(User user);
-    Task<bool> RemoveUser(Guid guid);
-    Task<bool> UpdateUser(User user);
+    Task<IEnumerable<User>> GetAllAsync();
+    Task<User?> GetByIdAsync(Guid guid);
+    Task AddAsync(User user);
+    void Update(User user);
+    void Remove(User user);
+    Task SaveChangesAsync();
 }
