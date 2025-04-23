@@ -1,11 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Project_2.Models;
 
 [Table("Properties")]
 public class Property(string Country, string State, string ZipCode,
- string StreetAddress, string StartingPrice)
+ string StreetAddress, decimal StartingPrice, int Bedrooms, float Bathrooms)
 {
     [Key]
     public Guid PropertyID { get; set; } = Guid.NewGuid();
@@ -22,9 +23,13 @@ public class Property(string Country, string State, string ZipCode,
     [StringLength(50)]
     public string? StreetAddress { get; set; } = StreetAddress;
     [Required]
-    [StringLength(50)]
-    public string? StartingPrice { get; set; } = StartingPrice;
-
+    [Precision(18, 2)]
+    public decimal StartingPrice { get; set; } = StartingPrice;
+    [Required]
+    public int Bedrooms { get; set; } = Bedrooms;
+    [Required]
+    [Precision(10, 1)]
+    public float Bathrooms { get; set; } = Bathrooms;
     public DateTime ListDate { get; set; } = DateTime.Now;
 
     [ForeignKey("OwnerID")]
