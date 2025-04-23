@@ -42,8 +42,6 @@ public class UserRepository : IUserRepository
     public async Task<bool> RemoveUser(Guid guid)
     {
         var user = await _context.User.FindAsync(guid);
-        if (user is null)
-            throw new KeyNotFoundException($"User with ID {guid} does not exist");
 
         await using var transaction = await _context.Database.BeginTransactionAsync();
         try
@@ -63,8 +61,6 @@ public class UserRepository : IUserRepository
     public async Task<bool> UpdateUser(User user)
     {
         var existingUser = await _context.User.FindAsync(user.UserID);
-        if (existingUser is null)
-            throw new KeyNotFoundException($"User with ID {user.UserID} does not exist");
 
         await using var transaction = await _context.Database.BeginTransactionAsync();
 

@@ -30,6 +30,7 @@ public class PropertyRepository : IPropertyRepository
             _context.Property.Add(property);
             await SaveProperty();
             await transaction.CommitAsync();
+            return true;
         }
         catch (Exception ex)
         {
@@ -41,8 +42,6 @@ public class PropertyRepository : IPropertyRepository
     public async Task<bool> RemoveProperty(Guid guid)
     {
         var property = await _context.Property.FindAsync(guid);
-        if (property is null)
-            throw new KeyNotFoundException($"Property with ID {guid} does not exist");
 
         await using var transaction = await _context.Database.BeginTransactionAsync();
         try
@@ -61,9 +60,7 @@ public class PropertyRepository : IPropertyRepository
 
     public async Task<bool> UpdateProperty(Property property)
     {
-        var existingProperty = await _context.Property.FindAsync(property.PropertyID);
-        if (existingProperty is null)
-            throw new KeyNotFoundException($"Property with ID {property.PropertyID} does not exist");
+        Property existingProperty = await _context.Property.FindAsync(property.PropertyID);
 
         await using var transaction = await _context.Database.BeginTransactionAsync();
 
