@@ -35,6 +35,6 @@ public class PropertyRepository : BaseRepository<Property>, IPropertyRepository 
         if (!_dbContext.Property.Any(p => p.PropertyID == propertyInfo.PropertyID)) {
             throw new Exception("No property found");
         }
-        
+        _dbContext.Property.Update(propertyInfo);
     }
-}
+}   
