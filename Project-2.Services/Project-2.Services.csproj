@@ -12,4 +12,8 @@
     <ProjectReference Include="../Project-2.Models/Project-2.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.4" />
+  </ItemGroup>
+
 </Project>
