@@ -20,6 +20,7 @@ public class PropertyController : ControllerBase{
     //     _propertyService = _propertyService;
     // }
 
+    // // Get: api/property
     // // Endpoint to retrieve all Properties
     // [HttpGet]
     // public async Task<ActionResult<IEnumerable<Property>>> GetAllProperties(){

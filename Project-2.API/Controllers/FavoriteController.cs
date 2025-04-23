@@ -20,6 +20,7 @@ public class FavoriteController : ControllerBase{
     //     _favoriteService = _favoriteService;
     // }
 
+    // // Get: api/favorite
     // // Endpoint to retrieve all Favorites
     // [HttpGet]
     // public async Task<ActionResult<IEnumerable<Favorite>>> GetAllFavorites(){

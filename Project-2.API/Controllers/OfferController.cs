@@ -20,6 +20,7 @@ public class OfferController : ControllerBase{
     //     _offerService = _offerService;
     // }
 
+    // // Get: api/offer
     // // Endpoint to retrieve all Offers
     // [HttpGet]
     // public async Task<ActionResult<IEnumerable<Offer>>> GetAllOffers(){

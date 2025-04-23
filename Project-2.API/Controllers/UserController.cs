@@ -20,6 +20,7 @@ public class UserController : ControllerBase{
     //     _userService = _userService;
     // }
 
+    // // Get: api/user
     // // Endpoint to retrieve all Users
     // [HttpGet]
     // public async Task<ActionResult<IEnumerable<User>>> GetAllUsers(){

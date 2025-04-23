@@ -20,6 +20,7 @@ public class PurchaseController : ControllerBase{
     //     _purchaseService = _purchaseService;
     // }
 
+    // // Get: api/purchase
     // // Endpoint to retrieve all Purchases
     // [HttpGet]
     // public async Task<ActionResult<IEnumerable<Purchase>>> GetAllPurchases(){
