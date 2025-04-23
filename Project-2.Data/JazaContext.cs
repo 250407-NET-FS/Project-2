@@ -12,5 +12,6 @@ public class JazaContext : DbContext
     public DbSet<Offer> Offer { get; set; }
     public DbSet<Property> Property { get; set; }
     public DbSet<Purchase> Purchase { get; set; }
+
     public DbSet<User> User { get; set; }
 }

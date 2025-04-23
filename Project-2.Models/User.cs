@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Project_2.Models;
 
@@ -22,5 +23,5 @@ public class User(string FName, string LName, string Email, string PhoneNumber)
 
     public bool IsAdmin { get; set; } = false;
 
-    public bool Status { get; set; } = false;
+    public bool Status { get; set; } = true;
 }

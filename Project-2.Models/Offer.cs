@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Project_2.Models;
 
 [Table("Offers")]
-public class Offer(Guid UserID, Guid PropertyID, string BidAmount)
+public class Offer(Guid UserID, Guid PropertyID, decimal BidAmount)
 {
     [Key]
     public Guid FavoriteID { get; set; } = Guid.NewGuid();
@@ -16,8 +17,8 @@ public class Offer(Guid UserID, Guid PropertyID, string BidAmount)
     public Guid PropertyID { get; set; } = PropertyID;
 
     [Required]
-    [StringLength(50)]
-    public string BidAmount { get; set; } = BidAmount;
+    [Precision(18, 2)]
+    public decimal BidAmount { get; set; } = BidAmount;
 
     public DateTime Date { get; set; } = DateTime.Now;
 }
