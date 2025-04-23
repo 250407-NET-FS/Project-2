@@ -12,97 +12,33 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<User>> GetAllUsers()
+    public async Task<IEnumerable<User>> GetAllAsync()
     {
         return await _context.User.ToListAsync();
     }
 
-    public async Task<User?> GetById(Guid guid)
+    public async Task<User?> GetByIdAsync(Guid guid)
     {
         return await _context.User.FindAsync(guid);
     }
 
-    public async Task<bool> AddUser(User user)
+    public async Task AddAsync(User user)
     {
-        await using var transaction = await _context.Database.BeginTransactionAsync();
-        try
-        {
-            _context.User.Add(user);
-            await SaveUser();
-            await transaction.CommitAsync();
-            return true;
-        }
-        catch (Exception ex)
-        {
-            await transaction.RollbackAsync();
-            throw new Exception("Error adding user", ex);
-        }
+        await _context.User.AddAsync(user);
     }
 
-    public async Task<bool> RemoveUser(Guid guid)
+    public void Update(User user)
     {
-        var user = await _context.User.FindAsync(guid);
-
-        await using var transaction = await _context.Database.BeginTransactionAsync();
-        try
-        {
-            _context.User.Remove(user);
-            await SaveUser();
-            await transaction.CommitAsync();
-            return true;
-        }
-        catch (Exception ex)
-        {
-            await transaction.RollbackAsync();
-            throw new Exception("Error removing user", ex);
-        }
+        _context.User.Update(user);
     }
 
-    public async Task<bool> UpdateUser(User user)
+    public void Remove(User user)
     {
-        var existingUser = await _context.User.FindAsync(user.UserID);
-
-        await using var transaction = await _context.Database.BeginTransactionAsync();
-
-        try
-        {
-            // only update properties if values are not null
-            // might need to add DTO to make cleaner
-            if (!string.IsNullOrEmpty(user.FName))
-                existingUser.FName = user.FName;
-
-            if (!string.IsNullOrEmpty(user.LName))
-                existingUser.LName = user.LName;
-
-            if (!string.IsNullOrEmpty(user.Email))
-                existingUser.Email = user.Email;
-
-            if (!string.IsNullOrEmpty(user.PhoneNumber))
-                existingUser.PhoneNumber = user.PhoneNumber;
-
-            if (!string.IsNullOrEmpty(user.PhoneNumber))
-                existingUser.PhoneNumber = user.PhoneNumber;
-
-            if (user.IsAdmin == (true || false))
-                existingUser.IsAdmin = user.IsAdmin;
-
-            if (user.Status == (true || false))
-                existingUser.Status = user.Status;
-
-            await SaveUser();
-            await transaction.CommitAsync();
-            return true;
-        }
-        catch (Exception ex)
-        {
-            await transaction.RollbackAsync();
-            throw new Exception("Error updating user", ex);
-        }
+        _context.User.Remove(user);
     }
 
-    private async Task SaveUser()
+    public async Task SaveChangesAsync()
     {
-
         await _context.SaveChangesAsync();
     }
 }

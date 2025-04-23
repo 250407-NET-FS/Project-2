@@ -4,9 +4,10 @@ namespace Project_2.Data.Repositories;
 
 public interface IPropertyRepository
 {
-    Task<IEnumerable<Property>> GetAllProperties();
-    Task<Property?> GetById(Guid guid);
-    Task<bool> AddProperty(Property property);
-    Task<bool> RemoveProperty(Guid guid);
-    Task<bool> UpdateProperty(Property property);
+    Task<IEnumerable<Property>> GetAllAsync();
+    Task<Property?> GetByIdAsync(Guid guid);
+    Task AddAsync(Property property);
+    void Update(Property property);
+    void Remove(Property property);
+    Task SaveChangesAsync();
 }

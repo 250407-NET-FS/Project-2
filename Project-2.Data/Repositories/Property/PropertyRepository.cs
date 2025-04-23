@@ -12,83 +12,33 @@ public class PropertyRepository : IPropertyRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Property>> GetAllProperties()
+    public async Task<IEnumerable<Property>> GetAllAsync()
     {
         return await _context.Property.ToListAsync();
     }
 
-    public async Task<Property?> GetById(Guid guid)
+    public async Task<Property?> GetByIdAsync(Guid guid)
     {
         return await _context.Property.FindAsync(guid);
     }
 
-    public async Task<bool> AddProperty(Property property)
+    public async Task AddAsync(Property property)
     {
-        await using var transaction = await _context.Database.BeginTransactionAsync();
-        try
-        {
-            _context.Property.Add(property);
-            await SaveProperty();
-            await transaction.CommitAsync();
-            return true;
-        }
-        catch (Exception ex)
-        {
-            await transaction.RollbackAsync();
-            throw new Exception("Error adding property", ex);
-        }
+        await _context.Property.AddAsync(property);
     }
 
-    public async Task<bool> RemoveProperty(Guid guid)
+    public void Update(Property property)
     {
-        var property = await _context.Property.FindAsync(guid);
-
-        await using var transaction = await _context.Database.BeginTransactionAsync();
-        try
-        {
-            _context.Property.Remove(property);
-            await SaveProperty();
-            await transaction.CommitAsync();
-            return true;
-        }
-        catch (Exception ex)
-        {
-            await transaction.RollbackAsync();
-            throw new Exception("Error removing property", ex);
-        }
+        _context.Property.Update(property);
     }
 
-    public async Task<bool> UpdateProperty(Property property)
+    public void Remove(Property property)
     {
-        Property existingProperty = await _context.Property.FindAsync(property.PropertyID);
-
-        await using var transaction = await _context.Database.BeginTransactionAsync();
-
-        try
-        {
-            // only update properties if values are not null
-            // might need to add DTO to make cleaner
-            if (property.StartingPrice != 0)
-                existingProperty.StartingPrice = property.StartingPrice;
-
-            if (property.OwnerID != Guid.Empty)
-                existingProperty.OwnerID = property.OwnerID;
-
-
-            await SaveProperty();
-            await transaction.CommitAsync();
-            return true;
-        }
-        catch (Exception ex)
-        {
-            await transaction.RollbackAsync();
-            throw new Exception("Error updating property", ex);
-        }
+        _context.Property.Remove(property);
     }
 
-    private async Task SaveProperty()
+    public async Task SaveChangesAsync()
     {
-
         await _context.SaveChangesAsync();
     }
 }
