@@ -1,6 +1,6 @@
 using Project_2.Models;
 
-namespace Project_2.Data.Repositories;
+namespace Project_2.Data;
 
 public interface IPropertyRepository
 {
