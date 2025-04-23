@@ -6,7 +6,7 @@ namespace Project_2.Models;
 
 [Table("Properties")]
 public class Property(string Country, string State, string ZipCode,
- string StreetAddress, decimal StartingPrice)
+ string StreetAddress, decimal StartingPrice, int Bedrooms, float Bathrooms)
 {
     [Key]
     public Guid PropertyID { get; set; } = Guid.NewGuid();
@@ -26,6 +26,12 @@ public class Property(string Country, string State, string ZipCode,
     [Precision(18, 2)]
     public decimal StartingPrice { get; set; } = StartingPrice;
 
+    [Required]
+    public int Bedrooms { get; set; } = Bedrooms;
+
+    [Required]
+    [Precision(10, 1)]
+    public float Bathrooms { get; set; } = Bathrooms;
     public DateTime ListDate { get; set; } = DateTime.Now;
 
     [ForeignKey("OwnerID")]
