@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Project_2.Models;
 
 [Table("Purchases")]
-public class Purchase(Guid OwnerID, Guid PropertyID, string FinalPrice)
+public class Purchase(Guid OwnerID, Guid PropertyID, decimal FinalPrice)
 {
     [Key]
     public Guid PurchaseID { get; set; } = Guid.NewGuid();
@@ -15,7 +16,7 @@ public class Purchase(Guid OwnerID, Guid PropertyID, string FinalPrice)
     [ForeignKey("PropertyID")]
     public Guid PropertyID { get; set; } = PropertyID;
     [Required]
-    [StringLength(50)]
-    public string FinalPrice { get; set; } = FinalPrice;
+    [Precision(18, 2)]
+    public decimal FinalPrice { get; set; } = FinalPrice;
     public DateTime Date { get; set; } = DateTime.Now;
 }
