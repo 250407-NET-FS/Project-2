@@ -7,12 +7,11 @@ namespace Project_2.Services.Services;
 public class PropertyService : IPropertyService
 {
     private readonly IPropertyRepository _propertyRepository;
-    private readonly JazaContext _context;
 
     public PropertyService(IPropertyRepository propertyRepository, JazaContext context)
     {
         _propertyRepository = propertyRepository;
-        _context = context;
+
     }
 
     public async Task<IEnumerable<Property>> GetAllAsync()

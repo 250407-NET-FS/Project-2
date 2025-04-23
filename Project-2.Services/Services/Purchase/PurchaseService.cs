@@ -7,12 +7,10 @@ namespace Project_2.Services.Services;
 public class PurchaseService : IPurchaseService
 {
     private readonly IPurchaseRepository _purchaseRepository;
-    private readonly JazaContext _context;
 
-    public PurchaseService(IPurchaseRepository purchaseRepository, JazaContext context)
+    public PurchaseService(IPurchaseRepository purchaseRepository)
     {
         _purchaseRepository = purchaseRepository;
-        _context = context;
     }
 
     public async Task<IEnumerable<Purchase>> GetAllAsync()

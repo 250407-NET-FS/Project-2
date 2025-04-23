@@ -7,12 +7,10 @@ namespace Project_2.Services.Services;
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
-    private readonly JazaContext _context;
 
-    public UserService(IUserRepository userRepository, JazaContext context)
+    public UserService(IUserRepository userRepository)
     {
         _userRepository = userRepository;
-        _context = context;
     }
 
     public async Task<IEnumerable<User>> GetAllAsync()

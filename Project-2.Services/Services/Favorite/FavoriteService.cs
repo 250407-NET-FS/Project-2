@@ -7,12 +7,10 @@ namespace Project_2.Services.Services;
 public class FavoriteService : IFavoriteService
 {
     private readonly IFavoriteRepository _favoriteRepository;
-    private readonly JazaContext _context;
 
-    public FavoriteService(IFavoriteRepository favoriteRepository, JazaContext context)
+    public FavoriteService(IFavoriteRepository favoriteRepository)
     {
         _favoriteRepository = favoriteRepository;
-        _context = context;
     }
 
     public async Task<IEnumerable<Favorite>> GetAllAsync()
