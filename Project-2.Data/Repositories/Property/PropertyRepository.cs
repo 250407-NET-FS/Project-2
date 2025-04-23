@@ -22,7 +22,7 @@ public class PropertyRepository : IPropertyRepository
         return await _context.Property.FindAsync(guid);
     }
 
-    public async Task AddProperty(Property property)
+    public async Task<bool> AddProperty(Property property)
     {
         await using var transaction = await _context.Database.BeginTransactionAsync();
         try
