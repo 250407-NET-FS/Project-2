@@ -58,5 +58,16 @@ public class OfferController : ControllerBase{
     //     }
     // }
 
+    // // Get: api/offer/id/{id}
+    // // Get offer by id
+    // [HttpGet]
+    // public async Task<ActionResult<Offer>> GetOfferById([FromRoute] Guid id){
+    //     try{
+    //         return await Ok(_offerService.GetOfferByIdAsync(id));
+    //     } catch(Exception e){
+    //         return BadRequest(e.Message);
+    //     }
+    // }
+
 
 }
