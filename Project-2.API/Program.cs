@@ -65,26 +65,9 @@ builder
 
 builder.Services.AddAuthorization();
 
-var app = builder.Build();
-
-
 //Services
 builder.Services.AddScoped<IUserService, UserService>();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-
-app.UseAuthorization();
-
-app.MapControllers();
 
 //swagger
 //Adding swagger support
@@ -119,7 +102,26 @@ builder.Services.AddSwaggerGen(c =>
         }
     );
 });
-//For first time
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+
+//For first timec
 // using (var scope = app.Services.CreateScope())
 // {
 //     var services = scope.ServiceProvider;
