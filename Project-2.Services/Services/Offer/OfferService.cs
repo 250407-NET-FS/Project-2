@@ -8,11 +8,13 @@ public class OfferService : IOfferService
 {
     private readonly IOfferRepository _offerRepository;
     private readonly IPropertyRepository _propertyRepository;
+    private readonly IUserRepository _userRepository;
 
-    public OfferService(IOfferRepository offerRepository, IPropertyRepository propertyRepository)
+    public OfferService(IOfferRepository offerRepository, IPropertyRepository propertyRepository, IUserRepository userRepository)
     {
         _offerRepository = offerRepository;
         _propertyRepository = propertyRepository;
+        _userRepository = userRepository;
     }
 
     public async Task<IEnumerable<Offer>> GetAllAsync()
@@ -46,5 +48,17 @@ public class OfferService : IOfferService
 
         // return list of offers for property
         return await _offerRepository.GetAllForProperty(propertyId);
+    }
+
+
+    public async Task<IEnumerable<Offer>> GetAllByUser(Guid userId)
+    {
+        // check if user exist
+        User user = await _userRepository.GetByIdAsync(userId);
+        if (user is null)
+            throw new Exception("User does not exist.");
+
+        // return list of offers made by user
+        return await _offerRepository.GetAllByUser(userId);
     }
 }
