@@ -86,7 +86,7 @@ public class PropertyController : ControllerBase{
     // // Get property by id
     // [HttpGet]
     // [Route("api/property/id/{id}")]
-    // public async Task<ActionResult<Property>> GetPropertyById([FromRoute] int id){
+    // public async Task<ActionResult<Property>> GetPropertyById([FromRoute] Guid id){
     //     try{
     //         return await OK(_propertyService.GetPropertyByIdAsync(id))
     //     } catch (Exception e){
