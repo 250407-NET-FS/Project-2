@@ -44,4 +44,6 @@ public class Property(string Country, string State, string City, string ZipCode,
 
     [ForeignKey("OwnerID")]
     public Guid OwnerID { get; set; }
+
+    public bool ForSale { get; set; } = true;
 }

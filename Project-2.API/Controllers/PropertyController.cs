@@ -33,12 +33,13 @@ public class PropertyController : ControllerBase{
     //     [FromQuery] decimal minprice = -1,
     //     [FromQuery] decimal maxprice = -1,
     //     [FromQuery] int bedrooms = -1,
-    //     [FromQuery] float bathrooms = -1
+    //     [FromQuery] float bathrooms = -1,
+    //     [FromQuery] bool forsale = false
     //     ){
     //     try
     //     {
     //         return Ok(await _propertyService.GetAllAsync(country, state, city, zip, address,
-    //         minprice, maxprice, bedrooms, bathrooms));
+    //         minprice, maxprice, bedrooms, bathrooms, forsale));
     //     }
     //     catch (Exception e)
     //     {
