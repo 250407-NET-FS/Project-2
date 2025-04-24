@@ -1,44 +1,44 @@
-using Microsoft.EntityFrameworkCore;
-using Project_2.Models;
+// using Microsoft.EntityFrameworkCore;
+// using Project_2.Models;
 
-namespace Project_2.Data.Repositories;
+// namespace Project_2.Data.Repositories;
 
-public class UserRepository : IUserRepository
-{
-    private readonly JazaContext _context;
+// public class UserRepository : IUserRepository
+// {
+//     private readonly JazaContext _context;
 
-    public UserRepository(JazaContext context)
-    {
-        _context = context;
-    }
+//     public UserRepository(JazaContext context)
+//     {
+//         _context = context;
+//     }
 
-    public async Task<IEnumerable<User>> GetAllAsync()
-    {
-        return await _context.User.ToListAsync();
-    }
+//     public async Task<IEnumerable<User>> GetAllAsync()
+//     {
+//         return await _context.User.ToListAsync();
+//     }
 
-    public async Task<User?> GetByIdAsync(Guid guid)
-    {
-        return await _context.User.FindAsync(guid);
-    }
+//     public async Task<User?> GetByIdAsync(Guid guid)
+//     {
+//         return await _context.User.FindAsync(guid);
+//     }
 
-    public async Task AddAsync(User user)
-    {
-        await _context.User.AddAsync(user);
-    }
+//     public async Task AddAsync(User user)
+//     {
+//         await _context.User.AddAsync(user);
+//     }
 
-    public void Update(User user)
-    {
-        _context.User.Update(user);
-    }
+//     public void Update(User user)
+//     {
+//         _context.User.Update(user);
+//     }
 
-    public void Remove(User user)
-    {
-        _context.User.Remove(user);
-    }
+//     public void Remove(User user)
+//     {
+//         _context.User.Remove(user);
+//     }
 
-    public async Task SaveChangesAsync()
-    {
-        await _context.SaveChangesAsync();
-    }
-}
+//     public async Task SaveChangesAsync()
+//     {
+//         await _context.SaveChangesAsync();
+//     }
+// }
