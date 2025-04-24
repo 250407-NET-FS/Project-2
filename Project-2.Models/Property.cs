@@ -1,12 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Project_2.Models;
 
 [Table("Properties")]
 public class Property(string Country, string State, string ZipCode,
+
  string StreetAddress, decimal StartingPrice, int Bedrooms, decimal Bathrooms)
+
 {
     [Key]
     public Guid PropertyID { get; set; } = Guid.NewGuid();
@@ -33,6 +36,7 @@ public class Property(string Country, string State, string ZipCode,
     [Precision(10, 1)]
     //When it was float it caused Column, parameter, or variable #8: Cannot specify a column width on data type real.
     public decimal Bathrooms { get; set; } = Bathrooms;
+
     public DateTime ListDate { get; set; } = DateTime.Now;
 
     [ForeignKey("OwnerID")]
