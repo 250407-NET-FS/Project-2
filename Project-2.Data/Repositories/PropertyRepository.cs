@@ -10,7 +10,7 @@ public class PropertyRepository : BaseRepository<Property>, IPropertyRepository 
         _dbContext = context;
     }
 
-    public async Task<IEnumerable<Property>> GetAllWithFilters(decimal priceMin, decimal priceMax, int numBedroom, float numBathroom) {
+    public async Task<IEnumerable<Property>> GetAllWithFilters(decimal priceMin, decimal priceMax, int numBedroom, decimal numBathroom) {
         IQueryable<Property> query = _dbContext.Property.Where(p => 1 == 1);
         if (priceMax > 0) {
             query = query.Where(p => p.StartingPrice <= priceMax);
@@ -22,7 +22,7 @@ public class PropertyRepository : BaseRepository<Property>, IPropertyRepository 
             query = query.Where(p => p.Bedrooms >= numBedroom);
         }
         if (numBathroom != -1) {
-            query = query.Where(p => p.Bathrooms >= (decimal)numBathroom);
+            query = query.Where(p => p.Bathrooms >= numBathroom);
         }
         return await query.ToListAsync();
     }
