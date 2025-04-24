@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Project_2.Models;
 
-namespace Project_2.Data.Repositories;
+namespace Project_2.Data;
 
 public class PropertyRepository : IPropertyRepository
 {
