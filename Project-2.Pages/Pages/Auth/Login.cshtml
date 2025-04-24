@@ -1,0 +1,32 @@
+@page
+@model Auth.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>User Login</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="get">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserInfo.Email" class="control-label"></label>
+                <input asp-for="UserInfo.Email" class="form-control" />
+                <span asp-validation-for="UserInfo.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserInfo.Password" class="control-label"></label>
+                <input asp-for="UserInfo.Password" class="form-control" />
+                <span asp-validation-for="UserInfo.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Login" class="btn btn-outline-dark" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <p>Don't have an account? <a asp-asp-page="./Register" class="btn btn-outline-dark">Register</a></p>
+</div>

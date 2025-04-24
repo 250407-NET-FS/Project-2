@@ -427,4 +427,7 @@ obj/
 ### EF Generated Migrations Files
 Migrations/*
 
+### Web Root Files
+*/wwwroot
+
 # End of https://www.toptal.com/developers/gitignore/api/dotnetcore,csharp,dotenv,visualstudiocode
