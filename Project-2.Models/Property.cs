@@ -6,7 +6,7 @@ namespace Project_2.Models;
 
 [Table("Properties")]
 public class Property(string Country, string State, string ZipCode,
- string StreetAddress, decimal StartingPrice, int Bedrooms, float Bathrooms)
+ string StreetAddress, decimal StartingPrice, int Bedrooms, decimal Bathrooms)
 {
     [Key]
     public Guid PropertyID { get; set; } = Guid.NewGuid();
@@ -31,7 +31,8 @@ public class Property(string Country, string State, string ZipCode,
 
     [Required]
     [Precision(10, 1)]
-    public float Bathrooms { get; set; } = Bathrooms;
+    //When it was float it caused Column, parameter, or variable #8: Cannot specify a column width on data type real.
+    public decimal Bathrooms { get; set; } = Bathrooms;
     public DateTime ListDate { get; set; } = DateTime.Now;
 
     [ForeignKey("OwnerID")]
