@@ -22,7 +22,7 @@ public class PropertyRepository : BaseRepository<Property>, IPropertyRepository 
             query = query.Where(p => p.Bedrooms >= numBedroom);
         }
         if (numBathroom != -1) {
-            query = query.Where(p => p.Bathrooms >= numBathroom);
+            query = query.Where(p => p.Bathrooms >= (decimal)numBathroom);
         }
         return await query.ToListAsync();
     }
