@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Project_2.Data;
 using Project_2.Models;
 
@@ -42,6 +41,8 @@ public class PropertyService : IPropertyService
         }
     }
 
+    // requires updating if repo update method  is changed to use a property DTO
+    // simply remove the get call and instead directly send the DTO
     public async Task MarkForSaleAsync(Guid propertyId) {
         Property? propertyToUpdate = await _propertyRepository.GetByIdAsync(propertyId);
         if (propertyToUpdate is null) {
@@ -58,6 +59,8 @@ public class PropertyService : IPropertyService
         }
     }
 
+    // requires updating if repo update method  is changed to use a property DTO
+    // simply remove the get call and instead directly send the DTO
     public async Task MarkSoldAsync(Guid propertyId, Guid newOwnerId)
     {
         Property? propertyToUpdate = await _propertyRepository.GetByIdAsync(propertyId);
