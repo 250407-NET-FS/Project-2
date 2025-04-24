@@ -2,6 +2,7 @@ using Project_2.Models;
 using Project_2.Services;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Project_2.API;
 
@@ -23,10 +24,20 @@ public class PropertyController : ControllerBase{
     // // Get: api/property
     // // Endpoint to retrieve all Properties
     // [HttpGet]
-    // public async Task<ActionResult<IEnumerable<Property>>> GetAllProperties(){
+    // public async Task<ActionResult<IEnumerable<Property>>> GetAllProperties(
+    //     [FromQuery] string country = "",
+    //     [FromQuery] string state = "",
+    //     [FromQuery] string zip = "",
+    //     [FromQuery] string address = "",
+    //     [FromQuery] decimal minprice = -1,
+    //     [FromQuery] decimal maxprice = -1,
+    //     [FromQuery] int bedrooms = -1,
+    //     [FromQuery] float bathrooms = -1
+    //     ){
     //     try
     //     {
-    //         return Ok(await _propertyService.GetAllAsync());
+    //         return Ok(await _propertyService.GetAllAsync(country, state, zip, address,
+    //         minprice, maxprice, bedrooms, bathrooms));
     //     }
     //     catch (Exception e)
     //     {
@@ -37,7 +48,7 @@ public class PropertyController : ControllerBase{
     // //POST: api/property
     // //Create a new property
     // [HttpPost] // In this method, we explicity tell ASP to look for our dto in the body of the request
-    // public async Task<ActionResult<PropertyDto>> CreateOffer([FromBody] CreatePropertyDto dto)
+    // public async Task<ActionResult<Property>> CreateOffer([FromBody] CreatePropertyDto dto)
     // {
     //     try
     //     {
@@ -58,5 +69,76 @@ public class PropertyController : ControllerBase{
     //     }
     // }
 
+    // // Get: api/property/id/{id}
+    // // Get property by id
+    // [HttpGet]
+    // [Route("api/property/id/{id}")]
+    // public async Task<ActionResult<Property>> GetPropertyById([FromRoute] int id){
+    //     try{
+    //         return await OK(_propertyService.GetPropertyByIdAsync(id))
+    //     } catch (Exception e){
+    //         return BadRequest(e.Message);
+    //     }
+    // }
+
+    // // Get: api/property/country/{country}
+    // // Get properties by country
+    // [HttpGet]
+    // [Route("api/property/country/{country}")]
+    // public async Task<ActionResult<IEnumerable<Property>>> GetPropertiesByCountry([FromRoute] string country){
+    //     try{
+    //         return await Ok(_propertyService.GetPropertiesByCountryAsync(country));
+    //     } catch(Exception e){
+    //         return BadRequest(e.Message);
+    //     }
+    // }
+
+    // // Get: api/property/state/{state}
+    // // Get properties by state
+    // [HttpGet]
+    // [Route("api/property/state{state}")]
+    // public async Task<ActionResult<IEnumerable<Property>>> GetPropertiesByState([FromRoute] string state){
+    //     try{
+    //         return await Ok(_propertyService.GetPropertiesByStateAsync(state));
+    //     } catch(Exception e){
+    //         return BadRequest(e.Message);
+    //     }
+    // }
+
+    // // Get: api/property/city/{city}
+    // // Get properties by city
+    // [HttpGet]
+    // [Route("api/property/city/{city}")]
+    // public async Task<ActionResult<IEnumerable<Property>>> GetPropertiesByCity([FromRoute] string city){
+    //     try{
+    //         return await Ok(_propertySevice.GetPropertiesByCityAsync(city));
+    //     } catch(Exception e){
+    //         return BadRequest(e.Message);
+    //     }
+    // }
+
+    // // Get: api/property/zip/{zip}
+    // // Get properties by zipcode
+    // [HttpGet]
+    // [Route("api/property/zip/{zip}")]
+    // public async Task<ActionResult<IEnumerable<Property>>> GetPropertiesByZip([FromRoute] string zip){
+    //     try{
+    //         return await Ok(_propertyService.GetPropertiesByZipAsync(zip));
+    //     } catch(Exception e){
+    //         return BadRequest(e.Message);
+    //     }
+    // }
+
+    // // Get: api/property/streetaddress/{address}
+    // // Get properties by street address
+    // [HttpGet]
+    // [Route("api/property/streetaddress/{address}")]
+    // public async Task<ActionResult<IEnumerable<Property>>> GetPropertiesByAddress([FromRoute] string address){
+    //     try{
+    //         return await Ok(_propertService.GetPropertiesByAddressAsync(address));
+    //     } catch(Exception e){
+    //         return BadRequest(e.Message);
+    //     }
+    // }
 
 }
