@@ -37,7 +37,7 @@ public class PropertyController : ControllerBase{
     //     ){
     //     try
     //     {
-    //         return Ok(await _propertyService.GetAllAsync(country, state, zip, address,
+    //         return Ok(await _propertyService.GetAllAsync(country, state, city, zip, address,
     //         minprice, maxprice, bedrooms, bathrooms));
     //     }
     //     catch (Exception e)
