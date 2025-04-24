@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Project_2.API.Controllers;
 using Project_2.Models;
 
-namespace Project_2.Pages.Users {
-    public class RetrieveModel: PageModel {
-        private readonly UserController _controller;
+namespace Project_2.Pages.Auth {
+    public class LoginModel: PageModel {
+        private readonly AuthController _controller;
 
-        public RetrieveModel(UserController controller) {
+        public LoginModel(AuthController controller) {
             _controller = controller;
         }
 
@@ -17,11 +17,10 @@ namespace Project_2.Pages.Users {
 
         [BindProperty]
         // PageModel has its own User object idependent of the model layer
-        public new User? User {get; set;}
+        public LoginDto? UserInfo {get; set;}
 
-        // Note: To be used for admin section
-        public async Task<IActionResult> OnGetAllAsync() {
-            await _controller.GetAllAsync();
+        public async Task<IActionResult> OnLoginAsync() {
+            await _controller.Login();
             return RedirectToPage("./Index");
         }
     }
