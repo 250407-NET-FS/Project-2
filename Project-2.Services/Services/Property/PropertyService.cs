@@ -11,34 +11,67 @@ public class PropertyService : IPropertyService
     public PropertyService(IPropertyRepository propertyRepository, JazaContext context)
     {
         _propertyRepository = propertyRepository;
-
     }
 
-    public async Task<IEnumerable<Property>> GetAllAsync()
+    public async Task<IEnumerable<Property>> ShowAvailablePropertiesAsync(
+        string country,
+        string state,
+        string zip,
+        string address,
+        decimal minprice,
+        decimal maxprice,
+        int bedrooms,
+        decimal bathrooms
+    )
     {
-        return await _propertyRepository.GetAllAsync();
+        IEnumerable<Property> propertyList = await _propertyRepository.GetAllWithFilters(country, state, zip, address, minprice, maxprice, bedrooms, bathrooms);
+        return propertyList.Where(p => p.ForSale);
     }
 
-    public async Task<Property?> GetByIdAsync(Guid id)
+    public async Task<Property?> GetByIdAsync(Guid guid)
     {
-        return await _propertyRepository.GetByIdAsync(id);
+        return await _propertyRepository.GetByIdAsync(guid);
     }
 
-    public async Task AddAsync(Property property)
+    public async Task AddNewPropertyAsync(Property property)
     {
         await _propertyRepository.AddAsync(property);
-        await _propertyRepository.SaveChangesAsync();
+        int result = await _propertyRepository.SaveChangesAsync();
+        if (result < 1) {
+            throw new Exception("Failed to insert property");
+        }
     }
 
-    public async Task UpdateAsync(Property property)
-    {
-        _propertyRepository.Update(property);
-        await _propertyRepository.SaveChangesAsync();
+    public async Task MarkForSaleAsync(Guid propertyId) {
+        Property? propertyToUpdate = await _propertyRepository.GetByIdAsync(propertyId);
+        if (propertyToUpdate is null) {
+            throw new Exception("Property not found");
+        }
+
+        propertyToUpdate.ForSale = true;
+        propertyToUpdate.ListDate = DateTime.UtcNow;
+        _propertyRepository.Update(propertyToUpdate);
+
+        int result = await _propertyRepository.SaveChangesAsync();
+        if (result < 1) {
+            throw new Exception("Failed to update property");
+        }
     }
 
-    public async Task RemoveAsync(Property property)
+    public async Task MarkSoldAsync(Guid propertyId, Guid newOwnerId)
     {
-        _propertyRepository.Remove(property);
-        await _propertyRepository.SaveChangesAsync();
+        Property? propertyToUpdate = await _propertyRepository.GetByIdAsync(propertyId);
+        if (propertyToUpdate is null) {
+            throw new Exception("Property not found");
+        }
+
+        propertyToUpdate.ForSale = false;
+        propertyToUpdate.OwnerID = newOwnerId;
+        _propertyRepository.Update(propertyToUpdate);
+
+        int result = await _propertyRepository.SaveChangesAsync();
+        if (result < 1) {
+            throw new Exception("Failed to update property");
+        }
     }
 }

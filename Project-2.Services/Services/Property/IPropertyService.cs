@@ -4,9 +4,17 @@ namespace Project_2.Services.Services;
 
 public interface IPropertyService
 {
-    Task<IEnumerable<Property>> GetAllAsync();
-    Task<Property?> GetByIdAsync(Guid id);
-    Task AddAsync(Property property);
-    Task UpdateAsync(Property property);
-    Task RemoveAsync(Property property);
+    Task<IEnumerable<Property>> ShowAvailablePropertiesAsync(
+        string country,
+        string state,
+        string zip,
+        string address,
+        decimal minprice,
+        decimal maxprice,
+        int bedrooms,
+        decimal bathrooms);
+    Task<Property?> GetByIdAsync(Guid guid);
+    Task AddNewPropertyAsync(Property property);
+    Task MarkForSaleAsync(Guid propertyId);
+    Task MarkSoldAsync(Guid propertyId, Guid newOwnerId);
 }
