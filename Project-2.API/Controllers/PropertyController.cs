@@ -70,6 +70,17 @@ public class PropertyController : ControllerBase{
     //     }
     // }
 
+    // // Put: api/property
+    // // Updates property attributes based on what is not null
+    // [HttpPut]
+    // public async Task<ActionResult<Property>> UpdatePropertyAsync([FromBody] UpdatePropertyDTO dto){
+    //     try{
+    //         return await Ok(_propertyService.UpdatePropertyAsync(dto));
+    //     } catch(Exception e){
+    //         return BadRequest(e.Message);
+    //     }
+    // }
+
     // // Get: api/property/id/{id}
     // // Get property by id
     // [HttpGet]
