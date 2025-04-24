@@ -8,7 +8,7 @@ namespace Project_2.Models;
 public class Offer(Guid UserID, Guid PropertyID, decimal BidAmount)
 {
     [Key]
-    public Guid FavoriteID { get; set; } = Guid.NewGuid();
+    public Guid OfferID { get; set; } = Guid.NewGuid();
     [Required]
     [ForeignKey("UserID")]
     public Guid UserID { get; set; } = UserID;    
