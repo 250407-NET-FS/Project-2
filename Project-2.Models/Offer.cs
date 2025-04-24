@@ -7,11 +7,14 @@ namespace Project_2.Models;
 [Table("Offers")]
 public class Offer(Guid UserID, Guid PropertyID, decimal BidAmount)
 {
+<<<<<<< Updated upstream
     [Key]
     public Guid OfferID { get; set; } = Guid.NewGuid();
+=======
+>>>>>>> Stashed changes
     [Required]
     [ForeignKey("UserID")]
-    public Guid UserID { get; set; } = UserID;    
+    public Guid UserID { get; set; } = UserID;
     [Required]
     [ForeignKey("PropertyID")]
     public Guid PropertyID { get; set; } = PropertyID;
