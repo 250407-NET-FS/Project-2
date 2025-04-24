@@ -27,6 +27,7 @@ public class PropertyController : ControllerBase{
     // public async Task<ActionResult<IEnumerable<Property>>> GetAllProperties(
     //     [FromQuery] string country = "",
     //     [FromQuery] string state = "",
+    //     [FromQuery] string city = "",
     //     [FromQuery] string zip = "",
     //     [FromQuery] string address = "",
     //     [FromQuery] decimal minprice = -1,
