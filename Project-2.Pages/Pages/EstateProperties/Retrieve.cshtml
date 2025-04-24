@@ -1,0 +1,33 @@
+@page "api/property/id/{id}"
+@model EstateProperties.RetrieveModel
+@{
+    ViewData["Title"] = Model.Property!.StreetAddress;
+}
+
+<h1>Property List</h1>
+
+<div class="row">
+    <div class="col">
+        <img src="../wwwroot/11993-NOQXLF.jpg"/>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <pre>@Model.Property!.StartingPrice
+             @Model.Property.StreetAddress, @Model.Property.City, @Model.Property.State @Model.Property.ZipCode
+        </pre>
+    </div>
+    <div class="col">
+        <p>@Model.Property.Bedrooms beds</p>
+        <p>@Model.Property.Bathrooms baths</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <p>@Model.DaysListed days</p>
+    </div>
+</div>
+<div class="row">
+    <p>Listing Created: @Model.Property.ListDate</p>
+    <p>Listed by: @Model.Property.Owner</p>
+</div>
