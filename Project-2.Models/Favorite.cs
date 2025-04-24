@@ -10,8 +10,8 @@ public class Favorite(Guid OwnerID, Guid PropertyID)
     [Key]
     public Guid FavoriteID { get; set; } = Guid.NewGuid();
     [Required]
-    [ForeignKey("OwnerID")]
-    public Guid OwnerID { get; set; } = OwnerID;    
+    [ForeignKey("UserID")]
+    public Guid UserID { get; set; } = OwnerID;    
     [Required]
     [ForeignKey("PropertyID")]
     public Guid PropertyID { get; set; } = PropertyID;
