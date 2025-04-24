@@ -16,11 +16,15 @@ namespace Project_2.Pages.EstateProperties {
         }
 
         [BindProperty]
-        public Property? Property {get; set;}
+        public CreatePropertyDto? PropertyInfo {get; set;}
 
         public async Task<IActionResult> OnPostAsync() {
-            await _controller.PostAsync();
-            return RedirectToPage("./Index");
+            if (!ModelState.IsValid) {
+                return Page();
+            }
+
+            await _controller.CreateOffer(PropertyInfo);
+            return RedirectToPage("./EstateProperties");
         }
     }
 }
