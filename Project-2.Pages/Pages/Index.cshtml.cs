@@ -16,9 +16,17 @@ public class IndexModel(
 
     public new User? User {get; set;}
     public required IList<Property> Properties {get; set;}
+    public required ISet<string> States {get; set;}
     public int Offset {get; set;} = 0;
     public int Capacity {get; set;}
-    // May be changed after implementing OAuth
+    
+    public IActionResult OnGet() {
+        Properties = _propertyController.GetAllProperties();
+        foreach (Property property in Properties) {
+            States.Add(property.State!);
+        }
+        return Page();
+    }
     public async Task OnGetUserAsync() {
         User = await _userController.GetAsync();
     }

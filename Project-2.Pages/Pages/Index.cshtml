@@ -13,6 +13,22 @@
         <div class="container">
             <div class="row">
                 <div class="col">
+                    <p>Filter By: </p>
+                </div>
+                <div class="col">
+                    <label for="states">State:</label>
+                    <select name="states" id="states">
+                        @foreach (string state in Model.States) {
+                            <option value="@state">@state</option>
+                        }
+                    </select>
+                    <label for="price-range">Price Range:</label>
+                    <input type="number" for="price-range" />
+                    <input type="number" for="price-range" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
                     <a asp-page-handler="decrementpropertyoffset" class="btn btn-outline-dark">←</a>
                 </div>
                 <!--Total Property amount can be below view capacity-->
@@ -23,6 +39,7 @@
                 }
                 @for (int i = Model.Offset; i < Model.Capacity; i++) {
                     <div class="col">
+                        <img src="../wwwroot/11993-NOQXLF.jpg"/>
                         <p><a asp-page="./EstateProperties.Retrieve" asp-route-id="@Model.Properties[i].PropertyID">@Model.Properties[i].PropertyID</a></p>
                         <p>@Model.Properties[i].StreetAddress, @Model.Properties[i].State @Model.Properties[i].ZipCode</p>
                         <p>@Model.Properties[i].ListDate</p>
