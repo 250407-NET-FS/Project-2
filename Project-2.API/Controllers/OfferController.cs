@@ -69,5 +69,27 @@ public class OfferController : ControllerBase{
     //     }
     // }
 
+    // // Get: api/offer/user/{id}
+    // // Get all offer from user
+    // [HttpGet]
+    // public async Task<ActionResult<IEnumerable<User>>> GetAllOffersFromUser([FromRoute] Guid id){
+    //     try{
+    //         return await Ok(_offerService.GetAllOffersFromUserAsync(id));
+    //     } catch(Exception e){
+    //         return BadRequest(e.Message);
+    //     }
+    // }
+
+    // // Get: api/offer/property/{id}
+    // // Get all offers for property
+    // [HttpGet]
+    // public async Task<ActionResult<IEnumerable<Property>>> GetAllOffersForProperty([FromRoute] Guid id){
+    //     try{
+    //         return await Ok(_offerService.GetAllOffersForPropertyAsync(id));
+    //     } catch(Exception e){
+    //         return BadRequest(e.Message);
+    //     }
+    // }
+
 
 }
