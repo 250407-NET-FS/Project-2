@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Project_2.Models;
 
 [Table("Properties")]
-public class Property(string Country, string State, string ZipCode,
+public class Property(string Country, string State, string City, string ZipCode,
 
  string StreetAddress, decimal StartingPrice, int Bedrooms, decimal Bathrooms)
 
@@ -19,6 +19,9 @@ public class Property(string Country, string State, string ZipCode,
     [Required]
     [StringLength(50)]
     public string? State { get; set; } = State;
+    [Required]
+    [StringLength(50)]
+    public string? City { get; set; } = City;
     [Required]
     [StringLength(10)]
     public string? ZipCode { get; set; } = ZipCode;
