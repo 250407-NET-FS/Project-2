@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Project_2.API.Controllers;
+using Project_2.API;
 using Project_2.Models;
 
 namespace Project_2.Pages.Auth {

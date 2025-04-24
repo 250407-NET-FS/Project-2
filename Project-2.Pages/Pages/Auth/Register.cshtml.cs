@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Project_2.API.Controllers;
+using Project_2.API;
 using Project_2.Models;
 
 namespace Project_2.Pages.Auth {
@@ -19,7 +19,7 @@ namespace Project_2.Pages.Auth {
         public RegisterDto? UserInfo {get; set;}
 
         public async Task<IActionResult> OnPostAsync() {
-            await _userController.Register(UserInfo);
+            await _controller.Register(UserInfo);
             return RedirectToPage("./Login");
         }
     }
