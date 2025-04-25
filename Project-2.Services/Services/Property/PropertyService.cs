@@ -77,4 +77,23 @@ public class PropertyService : IPropertyService
             throw new Exception("Failed to update property");
         }
     }
+    
+    public async Task RemoveProperty(Guid propertyId, Guid userId)
+    {
+        Property? propertyToRemove = await _propertyRepository.GetByIdAsync(propertyId);
+        if (propertyToRemove is null) {
+            throw new Exception("Property not found");
+        }
+
+        if (propertyToRemove.OwnerID != userId) {
+           throw new Exception("Unauthorized");
+        }
+
+        _propertyRepository.Remove(propertyToRemove);
+
+        int result = await _propertyRepository.SaveChangesAsync();
+        if (result < 1) {
+            throw new Exception("Failed to update property");
+        }
+    }
 }

@@ -17,4 +17,5 @@ public interface IPropertyService
     Task AddNewPropertyAsync(Property property);
     Task MarkForSaleAsync(Guid propertyId);
     Task MarkSoldAsync(Guid propertyId, Guid newOwnerId);
+    Task RemoveProperty(Guid propertyId, Guid currentUserId);
 }
