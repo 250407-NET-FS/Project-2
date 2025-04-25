@@ -4,7 +4,20 @@
     ViewData["Title"] = Model.Property!.StreetAddress;
 }
 
-<h1>Property List</h1>
+<div class="row">
+    <div class="col">
+        <h1>Property List</h1>
+    </div>
+    <div class="col">
+        @if (Model.IsSaved) {
+            <button asp-action="bookmark" class="btn btn-dark pull-right">Save</button>
+        }
+        else {
+            <button asp-action="bookmark" class="btn btn-outline-dark pull-right">Save</button>
+        }
+    </div>
+</div>
+
 
 <div class="row">
     <div class="col">
