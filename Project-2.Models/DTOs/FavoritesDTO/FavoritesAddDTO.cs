@@ -8,5 +8,4 @@ public class FavoritesAddDTO
     public Guid PropertyId { get; set; }
     [Required]
     public Guid UserId { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
