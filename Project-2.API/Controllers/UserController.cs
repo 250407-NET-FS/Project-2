@@ -58,5 +58,15 @@ public class UserController : ControllerBase{
     //     }
     // }
 
+    // // Get: api/user/id/{id}
+    // // Get user by id
+    // [HttpGet]
+    // public async Task<ActionResult<User>> GetUserById([FromRoute] Guid id){
+    //     try{
+    //         return await Ok(_userService.GetUserByIdAsync(id));
+    //     } catch(Exception e){
+    //         return BadRequest(e.Message);
+    //     }
+    // }
 
 }
