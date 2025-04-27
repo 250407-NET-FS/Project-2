@@ -6,5 +6,5 @@ public interface IPurchaseService
 {
     Task<IEnumerable<Purchase>> GetAllAsync();
     Task<Purchase?> GetByIdAsync(Guid id);
-    Task AddAsync(Purchase purchase);
+    Task AcceptOffer(Guid purchaseId, Guid offerId);
 }
