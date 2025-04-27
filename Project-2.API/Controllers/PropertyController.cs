@@ -3,6 +3,8 @@ using Project_2.Services;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace Project_2.API;
 
@@ -47,10 +49,23 @@ public class PropertyController : ControllerBase{
     //     }
     // }
 
+    // // Get: api/property/admin
+    // // Get all properties Admin Only
+    // [Authorize(Roles = "Admin")]
+    // [HttpDelete]
+    // public async Task<ActionResult<Property>> GetAllPropertiesAdmin(){
+    //     try{
+    //         return await Ok(_propertyService.GetAllPropertiesAdminAsync());
+    //     } catch(Exception e){
+    //         return BadRequest(e.Message);
+    //     }
+    // }
+
     // //POST: api/property
     // //Create a new property
+    // [Authorize]
     // [HttpPost] // In this method, we explicity tell ASP to look for our dto in the body of the request
-    // public async Task<ActionResult<Property>> CreateOffer([FromBody] CreatePropertyDto dto)
+    // public async Task<ActionResult<Property>> CreateProperty([FromBody] CreatePropertyDto dto)
     // {
     //     try
     //     {
@@ -73,10 +88,35 @@ public class PropertyController : ControllerBase{
 
     // // Put: api/property
     // // Updates property attributes based on what is not null
+    // [Authorize]
     // [HttpPut]
-    // public async Task<ActionResult<Property>> UpdatePropertyAsync([FromBody] UpdatePropertyDTO dto){
+    // public async Task<ActionResult<Property>> UpdateProperty([FromBody] UpdatePropertyDTO dto){
     //     try{
     //         return await Ok(_propertyService.UpdatePropertyAsync(dto));
+    //     } catch(Exception e){
+    //         return BadRequest(e.Message);
+    //     }
+    // }
+
+    // // Delete: api/property
+    // // Deletes property by property id
+    // [Authorize]
+    // [HttpDelete]
+    // public async Task<ActionResult<bool>> DeleteProperty([FromBody] DeletePropertyDTO dto){
+    //     try{
+    //         return await Ok(_propertyService.DeletePropertyAsync(dto));
+    //     } catch(Exception e){
+    //         return BadRequest(e.Message);
+    //     }
+    // }
+
+    // // Delete: api/property/admin/{id}
+    // // Deletes property by property id admin only
+    // [Authorize(Roles = "Admin")]
+    // [HttpDelete]
+    // public async Task<ActionResult<bool>> DeletePropertyAdmin([FromRoute] Guid id){
+    //     try{
+    //         return await Ok(_propertyService.DeletePropertyAdminAsync(id));
     //     } catch(Exception e){
     //         return BadRequest(e.Message);
     //     }
