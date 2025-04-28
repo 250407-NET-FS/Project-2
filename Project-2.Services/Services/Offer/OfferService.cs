@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Project_2.Data;
 using Project_2.Models;
+using Project_2.Models.DTOs;
 
 namespace Project_2.Services;
 
@@ -17,48 +18,154 @@ public class OfferService : IOfferService
         _userRepository = userRepository;
     }
 
-    public async Task<IEnumerable<Offer>> GetAllAsync()
+    public async Task<IEnumerable<OfferResponseDTO>> GetAllAsync()
     {
-        return await _offerRepository.GetAllAsync();
+        IEnumerable<Offer> offers = await _offerRepository.GetAllAsync();
+        return offers.Select(o => new OfferResponseDTO
+        {
+            OfferId = o.OfferID,
+            UserId = o.UserID,
+            PropertyId = o.PropertyID,
+            BidAmount = o.BidAmount,
+            Date = o.Date
+
+        });
     }
 
-    public async Task<Offer?> GetByIdAsync(Guid id)
+    public async Task<OfferResponseDTO?> GetByIdAsync(Guid id)
     {
-        return await _offerRepository.GetByIdAsync(id);
+        Offer? offer = await _offerRepository.GetByIdAsync(id);
+        if (offer is null) throw new Exception("Offer not found");
+        return new OfferResponseDTO
+        {
+            OfferId = offer.OfferID,
+            UserId = offer.UserID,
+            PropertyId = offer.PropertyID,
+            BidAmount = offer.BidAmount,
+            Date = offer.Date
+        };
     }
 
-    public async Task AddAsync(Offer offer)
+    public async Task<OfferResponseDTO> AddAsync(OfferNewDTO dto)
     {
-        // check if offer is good
-        if (offer is null)
-            throw new Exception("offer cannot be null");
+        // check if property exists
+        Property property = await _propertyRepository.GetByIdAsync(dto.PropertyId);
+        if (property is null)
+            throw new Exception("Property does not exist");
+
+        // check if user exists
+        User user = await _userRepository.GetByIdAsync(dto.UserId);
+        if (user is null)
+            throw new Exception("User does not exist");
+
+        // check if the Bid Ammount is a postive number
+        if (dto.BidAmount <= 0.00m)
+            throw new Exception("Bid amount must be gretaer than zero");
+
+        // create new offer using dto
+        Offer offer = new Offer(dto.PropertyId, dto.UserId, dto.BidAmount);
 
         // add to database
         await _offerRepository.AddAsync(offer);
         // save database
         await _offerRepository.SaveChangesAsync();
+
+        return new OfferResponseDTO
+        {
+            OfferId = offer.OfferID,
+            UserId = offer.UserID,
+            PropertyId = offer.PropertyID,
+            BidAmount = offer.BidAmount,
+            Date = offer.Date
+        };
     }
 
-    public async Task<IEnumerable<Offer>> GetAllForProperty(Guid propertyId)
+    public async Task RemoveAsync(Guid offerId)
+    {
+        // Get offer to be removed
+        Offer offer = await _offerRepository.GetByIdAsync(offerId);
+
+        // if offer did not exist throw error
+        if (offer is null)
+            throw new Exception("Offer not found");
+
+        // remove offer from databse
+        _offerRepository.Remove(offer);
+
+        // save changes to databse
+        await _offerRepository.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<OfferResponseDTO>> GetAllForProperty(Guid propertyId)
     {
         // check if property exist
         Property property = await _propertyRepository.GetByIdAsync(propertyId);
         if (property is null)
-            throw new Exception("Property doees not exist");
+            throw new Exception("Property does not exist");
 
-        // return list of offers for property
-        return await _offerRepository.GetAllForProperty(propertyId);
+        // get list of offers for property
+        IEnumerable<Offer> offers = await _offerRepository.GetAllForProperty(propertyId);
+
+        // return the list of property's offers with dto
+        return offers.Select(o => new OfferResponseDTO
+        {
+            OfferId = o.OfferID,
+            UserId = o.UserID,
+            PropertyId = o.PropertyID,
+            BidAmount = o.BidAmount,
+            Date = o.Date
+
+        });
     }
 
 
-    public async Task<IEnumerable<Offer>> GetAllByUser(Guid userId)
+    public async Task<IEnumerable<OfferResponseDTO>> GetAllByUser(Guid userId)
     {
         // check if user exist
         User user = await _userRepository.GetByIdAsync(userId);
         if (user is null)
             throw new Exception("User does not exist.");
 
-        // return list of offers made by user
-        return await _offerRepository.GetAllByUser(userId);
+        // get list of offers made by user
+        IEnumerable<Offer> offers = await _offerRepository.GetAllByUser(userId);
+
+        // return the list of user's offers with dto
+        return offers.Select(o => new OfferResponseDTO
+        {
+            OfferId = o.OfferID,
+            UserId = o.UserID,
+            PropertyId = o.PropertyID,
+            BidAmount = o.BidAmount,
+            Date = o.Date
+
+        });
+    }
+
+    // can be used for admin or used
+    public async Task<IEnumerable<OfferResponseDTO>> SearchOffersAsync(OfferSearchDTO dto)
+    {
+        if (dto is null)
+            throw new ArgumentException("At least one search criterion (OfferId, UserId, or PropertyId) must be provided");
+
+        IEnumerable<Offer> offers = await _offerRepository.GetAllAsync();
+
+        if (dto.OfferId.HasValue)
+            offers = offers.Where(o => o.OfferID == dto.OfferId.Value).ToList();
+
+        if (dto.UserId.HasValue)
+            offers = offers.Where(o => o.UserID == dto.UserId.Value).ToList();
+
+        if (dto.PropertyId.HasValue)
+            offers = offers.Where(o => o.PropertyID == dto.PropertyId.Value).ToList();
+
+        return offers.Select(o => new OfferResponseDTO
+        {
+            OfferId = o.OfferID,
+            UserId = o.UserID,
+            PropertyId = o.PropertyID,
+            BidAmount = o.BidAmount,
+            Date = o.Date
+
+        });
     }
 }
