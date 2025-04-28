@@ -5,10 +5,10 @@ namespace Project_2.Models.DTOs;
 public class OfferNewDTO
 {
     [Required]
-    public int UserId { get; set; }
+    public Guid UserId { get; set; }
     [Required]
-    public int PropertyId { get; set; }
+    public Guid PropertyId { get; set; }
     [Required]
-    public int BidAmount { get; set; }
+    public decimal BidAmount { get; set; }
 
 }
