@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Project_2.API.Controllers;
+using Project_2.API;
 using Project_2.Models;
 
-namespace Project_2.Pages.Auth {
+namespace Project_2.Pages.Pages.Auth {
     public class LoginModel: PageModel {
         private readonly AuthController _controller;
 
@@ -20,7 +20,7 @@ namespace Project_2.Pages.Auth {
         public LoginDto? UserInfo {get; set;}
 
         public async Task<IActionResult> OnLoginAsync() {
-            await _controller.Login();
+            //await _controller.Login();
             return RedirectToPage("./Index");
         }
     }

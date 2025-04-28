@@ -34,10 +34,9 @@ public class UnitOfWork : IUnitOfWork
     {
         try
         {
+            // may appear to save favoritesRepository only but in the background 
+            // it's calling dbContext.save and is saving changes to all repos
             await _favoriteRepository.SaveChangesAsync();
-            await _offerRepository.SaveChangesAsync();
-            await _propertyRepository.SaveChangesAsync();
-            await _purchaseRepository.SaveChangesAsync();
             _transaction.Complete();
         }
         catch
