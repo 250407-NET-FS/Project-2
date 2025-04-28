@@ -26,7 +26,7 @@ public class FavoriteController : ControllerBase{
     // public async Task<ActionResult<IEnumerable<Favorite>>> GetAllFavorites(){
     //     try
     //     {
-    //         return Ok(await _favoriteService.GetAllAsync());
+    //         return Ok(await _favoriteService.GetAllFavoritesAsync());
     //     }
     //     catch (Exception e)
     //     {
@@ -45,7 +45,7 @@ public class FavoriteController : ControllerBase{
     //         //to whatever we need it to be
     //         if (!ModelState.IsValid)
     //             return BadRequest(ModelState);
-    //         var created = await _favoriteService.CreateAsync(dto);
+    //         var created = await _favoriteService.CreateFavoriteAsync(dto);
     //         //If we pass model binding based on the rules we set via Data Annotations
     //         //inside of our CreateFavoriteDto, and this object is created
     //         //We can not just echo back what the user sent in, but we can return

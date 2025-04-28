@@ -20,13 +20,14 @@ public class PurchaseController : ControllerBase{
     //     _purchaseService = _purchaseService;
     // }
 
-    // // Get: api/purchase
+    // // Get: api/admin/purchase
     // // Endpoint to retrieve all Purchases
+    // [Authorize(Roles = "Admin")]
     // [HttpGet]
     // public async Task<ActionResult<IEnumerable<Purchase>>> GetAllPurchases(){
     //     try
     //     {
-    //         return Ok(await _purchaseService.GetAllAsync());
+    //         return Ok(await _purchaseService.GetAllPurchasesAsync());
     //     }
     //     catch (Exception e)
     //     {
@@ -45,7 +46,7 @@ public class PurchaseController : ControllerBase{
     //         //to whatever we need it to be
     //         if (!ModelState.IsValid)
     //             return BadRequest(ModelState);
-    //         var created = await _purchaseService.CreateAsync(dto);
+    //         var created = await _purchaseService.CreatePurchaseAsync(dto);
     //         //If we pass model binding based on the rules we set via Data Annotations
     //         //inside of our CreatePurchaseDto, and this object is created
     //         //We can not just echo back what the user sent in, but we can return
@@ -58,5 +59,13 @@ public class PurchaseController : ControllerBase{
     //     }
     // }
 
-
+    // // Get: api/purchase/user
+    // // Get all purchases by user
+    // public async Task<ActionResult<Purchase>> GetAllPurchasesByUser([FromBody] Guid id){
+    //     try{
+    //         return await Ok(_purchaseService.GetAllPurchasesByUserAsync(id));
+    //     } catch(Exception e){
+    //         return BadRequest(e.Message);
+    //     }
+    // }
 }

@@ -40,7 +40,7 @@ public class PropertyController : ControllerBase{
     //     ){
     //     try
     //     {
-    //         return Ok(await _propertyService.GetAllAsync(country, state, city, zip, address,
+    //         return Ok(await _propertyService.GetAllPropertiesAsync(country, state, city, zip, address,
     //         minprice, maxprice, bedrooms, bathrooms, forsale));
     //     }
     //     catch (Exception e)
@@ -49,7 +49,7 @@ public class PropertyController : ControllerBase{
     //     }
     // }
 
-    // // Get: api/property/admin
+    // // Get: api/admin/property
     // // Get all properties Admin Only
     // [Authorize(Roles = "Admin")]
     // [HttpDelete]
@@ -73,7 +73,7 @@ public class PropertyController : ControllerBase{
     //         //to whatever we need it to be
     //         if (!ModelState.IsValid)
     //             return BadRequest(ModelState);
-    //         var created = await _propertyService.CreateAsync(dto);
+    //         var created = await _propertyService.CreatePropertyAsync(dto);
     //         //If we pass model binding based on the rules we set via Data Annotations
     //         //inside of our CreatePropertyDto, and this object is created
     //         //We can not just echo back what the user sent in, but we can return
@@ -87,7 +87,7 @@ public class PropertyController : ControllerBase{
     // }
 
     // // Put: api/property
-    // // Updates property attributes based on what is not null
+    // // Updates property attributes based on what is not null owner only
     // [Authorize]
     // [HttpPut]
     // public async Task<ActionResult<Property>> UpdateProperty([FromBody] UpdatePropertyDTO dto){
@@ -99,7 +99,7 @@ public class PropertyController : ControllerBase{
     // }
 
     // // Delete: api/property
-    // // Deletes property by property id
+    // // Deletes property by property id owner only
     // [Authorize]
     // [HttpDelete]
     // public async Task<ActionResult<bool>> DeleteProperty([FromBody] DeletePropertyDTO dto){
@@ -110,7 +110,7 @@ public class PropertyController : ControllerBase{
     //     }
     // }
 
-    // // Delete: api/property/admin/{id}
+    // // Delete: api/admin/property/{id}
     // // Deletes property by property id admin only
     // [Authorize(Roles = "Admin")]
     // [HttpDelete]
