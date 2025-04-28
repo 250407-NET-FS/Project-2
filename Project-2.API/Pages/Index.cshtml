@@ -1,5 +1,5 @@
 ﻿@page
-@model IndexModel
+@model LayoutModel
 @{
     ViewData["Title"] = "Home page";
 }
@@ -18,9 +18,9 @@
                 <div class="col">
                     <label for="states">State:</label>
                     <select name="states" id="states">
-                        @foreach (string state in Model.States) {
+                        @* @foreach (string state in Model.States) {
                             <option value="@state">@state</option>
-                        }
+                        } *@
                     </select>
                     <label for="price-range">Price Range:</label>
                     <input type="number" for="price-range" />
@@ -32,7 +32,7 @@
                     <a asp-page-handler="decrementpropertyoffset" class="btn btn-outline-dark">←</a>
                 </div>
                 <!--Total Property amount can be below view capacity-->
-                @if (Model.Offset + 5 > Model.Properties.Count) {
+                @* @if (Model.Offset + 5 > Model.Properties.Count) {
                     Model.Capacity = Model.Properties.Count;
                 } else {
                     Model.Capacity = Model.Offset + 5;
@@ -45,7 +45,7 @@
                         <p>@Model.Properties[i].ListDate</p>
                         <p>Starting Price: @Model.Properties[i].StartingPrice</p>
                     </div>                        
-                }
+                } *@
                 <div class="col">
                     <a asp-page-handler="incrementpropertyoffset" class="btn btn-outline-dark">→</a>
                 </div>

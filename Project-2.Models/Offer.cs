@@ -11,7 +11,7 @@ public class Offer(Guid UserID, Guid PropertyID, decimal BidAmount)
     public Guid OfferID { get; set; } = Guid.NewGuid();
     [Required]
     [ForeignKey("UserID")]
-    public Guid UserID { get; set; } = UserID;    
+    public Guid UserID { get; set; } = UserID;
     [Required]
     [ForeignKey("PropertyID")]
     public Guid PropertyID { get; set; } = PropertyID;

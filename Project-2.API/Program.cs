@@ -21,6 +21,7 @@ builder.Services.AddDbContext<JazaContext>(options =>
     options.UseSqlServer(connectionString));
 
 // Add services to the container.
+builder.Services.AddRazorPages();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -119,6 +120,9 @@ else {
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.MapStaticAssets();
+app.MapRazorPages()
+   .WithStaticAssets();
 
 app.UseAuthorization();
 
