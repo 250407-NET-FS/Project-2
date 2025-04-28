@@ -71,12 +71,12 @@ namespace Project_2.Tests
             // Test for property not found
             _propertyRepositoryMock.Setup(x => x.GetByIdAsync(offerDto.PropertyId)).ReturnsAsync((Property)null);
             var exception = await Assert.ThrowsAsync<Exception>(() => _offerService.AddAsync(offerDto));
-            Assert.Equal("Property cannot be null", exception.Message);
+            Assert.Equal("Property does not exist", exception.Message);
 
             // Test for user not found
             _userRepositoryMock.Setup(x => x.GetByIdAsync(offerDto.UserId)).ReturnsAsync((User)null);
             exception = await Assert.ThrowsAsync<Exception>(() => _offerService.AddAsync(offerDto));
-            Assert.Equal("User cannot be null", exception.Message);
+            Assert.Equal("User does not exist", exception.Message);
 
             // Test for invalid bid amount
             offerDto.BidAmount = -1.0m; // Invalid bid amount

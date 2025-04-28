@@ -51,12 +51,12 @@ public class OfferService : IOfferService
         // check if property exists
         Property property = await _propertyRepository.GetByIdAsync(dto.PropertyId);
         if (property is null)
-            throw new Exception("Property cannot be null");
+            throw new Exception("Property does not exist");
 
         // check if user exists
         User user = await _userRepository.GetByIdAsync(dto.UserId);
         if (user is null)
-            throw new Exception("User cannot be null");
+            throw new Exception("User does not exist");
 
         // check if the Bid Ammount is a postive number
         if (dto.BidAmount <= 0.00m)
