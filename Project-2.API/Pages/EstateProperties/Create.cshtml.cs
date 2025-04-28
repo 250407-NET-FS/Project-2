@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Project_2.API;
 using Project_2.Models;
 
-namespace Project_2.Pages.EstateProperties {
+namespace Project_2.Pages.Pages.EstateProperties {
     public class CreateModel: PageModel {
         private readonly PropertyController _controller;
 
@@ -15,15 +15,15 @@ namespace Project_2.Pages.EstateProperties {
             return Page();
         }
 
-        [BindProperty]
-        public CreatePropertyDto? PropertyInfo {get; set;}
+        //[BindProperty]
+        //public CreatePropertyDto? PropertyInfo {get; set;}
 
         public async Task<IActionResult> OnPostAsync() {
             if (!ModelState.IsValid) {
                 return Page();
             }
 
-            await _controller.CreateOffer(PropertyInfo);
+            //await _controller.CreateOffer(PropertyInfo);
             return RedirectToPage("./EstateProperties");
         }
     }
