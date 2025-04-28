@@ -1,20 +1,11 @@
-using Microsoft.EntityFrameworkCore;
-using Project_2.Data;
 using Project_2.Models;
 
-namespace Project_2.Services.Services;
+namespace Project_2.Services;
 
 public interface IOfferService
 {
-
-    public Task<IEnumerable<Offer>> GetAllAsync();
-
-    public Task<Offer?> GetByIdAsync(Guid guid);
-
-    public Task AddAsync(Offer offer);
-    public Task RemoveAsync(Offer offer);
-
-    public Task<IEnumerable<Offer>> GetAllForProperty();
-
-    public Task<IEnumerable<Offer>> GetAllByUser();
+    Task<IEnumerable<Offer>> GetAllAsync();
+    Task<Offer?> GetByIdAsync(Guid guid);
+    Task AddAsync(Offer offer);
+    Task<IEnumerable<Offer>> GetAllForProperty(Guid propertyId);
 }
