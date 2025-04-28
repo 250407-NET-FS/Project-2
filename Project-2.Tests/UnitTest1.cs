@@ -193,15 +193,15 @@ namespace Project_2.Tests
             // Arrange
             OfferSearchDTO searchDto = new OfferSearchDTO
             {
-                OfferId = Guid.NewGuid(),
+                OfferId = null,
                 UserId = Guid.NewGuid(),
                 PropertyId = Guid.NewGuid()
             };
 
             List<Offer> offers = new List<Offer>
             {
-                new Offer(Guid.NewGuid(), Guid.NewGuid(), 100.0m),
-                new Offer(Guid.NewGuid(), Guid.NewGuid(), 150.0m)
+                new Offer(searchDto.UserId ?? Guid.Empty, searchDto.PropertyId ?? Guid.Empty, 100.0m),
+                new Offer(searchDto.UserId ?? Guid.Empty, searchDto.PropertyId ?? Guid.Empty, 150.0m)
             };
 
             _offerRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(offers);
