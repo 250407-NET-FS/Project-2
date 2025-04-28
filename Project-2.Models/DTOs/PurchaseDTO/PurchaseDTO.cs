@@ -8,6 +8,7 @@ public class CreatePurchaseDTO
     public Guid PropertyId { get; set; }
     [Required]
     public Guid UserId { get; set; }
+    [Required]
     public Guid OfferId { get; set; }
     
 }
