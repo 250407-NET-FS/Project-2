@@ -26,7 +26,7 @@ public class UserController : ControllerBase{
     // // Get: api/admin/user
     // // Endpoint to retrieve all Users Admin Only
     // [Authorize(Roles = "Admin")]
-    // [HttpGet]
+    // [HttpGet("/api/admin/user")]
     // public async Task<ActionResult<IEnumerable<User>>> GetAllUsers(){
     //     try
     //     {
@@ -41,7 +41,7 @@ public class UserController : ControllerBase{
     // // Delete: api/admin/user/id/{id}
     // // Delete user by id Admin Only
     // [Authorize(Roles = "Admin")]
-    // [HttpDelete]
+    // [HttpDelete("/api/admin/user/id/{id}")]
     // public async Task<ActionResult<bool>> DeleteUserById([FromRoute] Guid id){
     //     try{
     //         return await Ok(_userService.DeleteUserByIdAsync(id));
@@ -53,7 +53,7 @@ public class UserController : ControllerBase{
     // // Get: api/admin/user/id/{id}
     // // Get user by id Admin Only
     // [Authorize(Roles = "Admin")]
-    // [HttpGet]
+    // [HttpGet("api/admin/user/id/{id}")]
     // public async Task<ActionResult<UserDTO>> GetUserByIdAdmin([FromRoute] Guid id){
     //     try{
     //         return await Ok(_userService.GetUserByIdAdminAsync(id));
@@ -64,6 +64,7 @@ public class UserController : ControllerBase{
 
     // // Get: api/user
     // // Get user profile owner only
+    // [Authorize]
     // [HttpGet]
     // public async Task<ActionResult<UserDTO>> GetUserById(){
     //     try{

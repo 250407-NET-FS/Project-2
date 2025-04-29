@@ -31,7 +31,7 @@ public class PropertyRepository : BaseRepository<Property>, IPropertyRepository 
      * in the next SaveChanges() call. 
      * ENSURE that SaveChanges() is called after this, as it has no effect otherwise
      */
-    public void Update(Property propertyInfo) {
+    public void Update(UpdatePropertyDTO propertyInfo) {
         if (!_dbContext.Property.Any(p => p.PropertyID == propertyInfo.PropertyID)) {
             throw new Exception("No property found");
         }

@@ -13,10 +13,10 @@ namespace Project_2.API;
 [ApiController]
 [Route("api/auth")]
 public class AuthController : ControllerBase{
-    // private readonly UserManager<ApplicationUser> _userManager;
+    // private readonly UserManager<User> _userManager;
     // private readonly IAuthService _authService;
 
-    // public AuthController(UserManager<ApplicationUser> userManager, IAuthService authService)
+    // public AuthController(UserManager<User> userManager, IAuthService authService)
     // {
     //     _userManager = userManager;
     //     _authService = authService;
