@@ -8,31 +8,9 @@ using Project_2.Models;
 using Project_2.Services;
 using Project_2.Data;
 using Project_2.Models.DTOs;
-using Project_2.Services.Services;
 
 namespace Project_2.Tests
 {
-    // public class FavoriteServiceTests
-    // {
-    //     private readonly Mock<IFavoriteRepository> _favoriteRepositoryMock;
-    //     private readonly Mock<IPropertyRepository> _propertyRepositoryMock;
-    //     private readonly Mock<IUserRepository> _userRepositoryMock;
-    //     private readonly FavoriteService _favoriteService;
-
-    //     public FavoriteServiceTests()
-    //     {
-    //         _favoriteRepositoryMock = new Mock<IFavoriteRepository>();
-    //         _propertyRepositoryMock = new Mock<IPropertyRepository>();
-    //         _userRepositoryMock = new Mock<IUserRepository>();
-
-    //         _favoriteService = new FavoriteService(
-    //             _favoriteRepositoryMock.Object,
-    //             _propertyRepositoryMock.Object,
-    //             _userRepositoryMock.Object
-    //         );
-    //     }
-    // }
-
     public class OfferServiceTests
     {
         private readonly Mock<IOfferRepository> _offerRepositoryMock;
@@ -58,21 +36,23 @@ namespace Project_2.Tests
         public async Task AddAsync_ShouldAddOffer_AndHandleErrors()
         {
             // Arrange valid data
-            Property property = new Property("CountryName", "StateName", "CityName", "StreetName", "ZipCode", 1000.0m, 3, 500.0m);
+            OfferNewDTO offerDto = new OfferNewDTO
+            {
+                PropertyId = Guid.NewGuid(),
+                UserId = Guid.NewGuid(),
+                BidAmount = 100.0m
+            };
 
+            Property property = new Property("CountryName", "StateName", "CityName", "StreetName", "ZipCode", 1000.0m, 3, 500.0m)
+            {
+                PropertyID = offerDto.PropertyId
+            };
             // Important: IdentityUser expects string ID, so use .ToString()
             User user = new User
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = offerDto.UserId.ToString(),
                 UserName = "TestUser",
                 Email = "testuser@example.com"
-            };
-
-            OfferNewDTO offerDto = new OfferNewDTO
-            {
-                PropertyId = property.PropertyID,
-                UserId = Guid.Parse(user.Id),
-                BidAmount = 100.0m
             };
 
             _propertyRepositoryMock.Setup(x => x.GetByIdAsync(offerDto.PropertyId)).ReturnsAsync(property);
@@ -91,14 +71,16 @@ namespace Project_2.Tests
             // Test for property not found
             _propertyRepositoryMock.Setup(x => x.GetByIdAsync(offerDto.PropertyId)).ReturnsAsync((Property)null);
             var exception = await Assert.ThrowsAsync<Exception>(() => _offerService.AddAsync(offerDto));
-            Assert.Equal("Property does not exist", exception.Message);
+            Assert.Equal("Property cannot be null", exception.Message);
 
             // Test for user not found
+            _propertyRepositoryMock.Setup(x => x.GetByIdAsync(offerDto.PropertyId)).ReturnsAsync(property);
             _userRepositoryMock.Setup(x => x.GetByIdAsync(offerDto.UserId)).ReturnsAsync((User)null);
             exception = await Assert.ThrowsAsync<Exception>(() => _offerService.AddAsync(offerDto));
-            Assert.Equal("User does not exist", exception.Message);
+            Assert.Equal("User cannot be null", exception.Message);
 
             // Test for invalid bid amount
+            _userRepositoryMock.Setup(x => x.GetByIdAsync(offerDto.UserId)).ReturnsAsync(user);
             offerDto.BidAmount = -1.0m; // Invalid bid amount
             exception = await Assert.ThrowsAsync<Exception>(() => _offerService.AddAsync(offerDto));
             Assert.Equal("Bid amount must be greater than zero", exception.Message);
