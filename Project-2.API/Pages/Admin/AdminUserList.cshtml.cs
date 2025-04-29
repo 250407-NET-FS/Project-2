@@ -14,7 +14,6 @@ namespace Project_2.Pages.Pages.Admin {
 
         [BindProperty]
         public List<User>? UserList {get; set;}
-        public int ListIndex {get; set;}
 
         public async Task<IActionResult> OnDeleteAsync(Guid id) {
             // User user = _controller.DeleteUserById(id);
