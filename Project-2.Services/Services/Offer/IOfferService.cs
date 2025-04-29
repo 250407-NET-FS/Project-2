@@ -5,11 +5,11 @@ namespace Project_2.Services;
 
 public interface IOfferService
 {
-    public Task<IEnumerable<OfferResponseDTO>> GetAllAsync();
-    public Task<OfferResponseDTO?> GetByIdAsync(Guid id);
-    public Task<OfferResponseDTO> AddAsync(OfferNewDTO dto);
-    public Task RemoveAsync(Guid offerId);
-    public Task<IEnumerable<OfferResponseDTO>> GetAllForProperty(Guid propertyId);
-    public Task<IEnumerable<OfferResponseDTO>> GetAllByUser(Guid userId);
-    public Task<IEnumerable<OfferResponseDTO>> SearchOffersAsync(OfferSearchDTO dto);
+    Task<IEnumerable<OfferResponseDTO>> GetAllAsync();
+    Task<OfferResponseDTO?> GetByIdAsync(Guid id);
+    Task<OfferResponseDTO> AddAsync(OfferNewDTO dto);
+    Task RemoveAsync(Guid offerId);
+    Task<IEnumerable<OfferResponseDTO>> GetAllForProperty(Guid propertyId);
+    Task<IEnumerable<OfferResponseDTO>> GetAllByUser(Guid userId);
+    Task<IEnumerable<OfferResponseDTO>> SearchOffersAsync(OfferSearchDTO dto);
 }
