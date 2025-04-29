@@ -14,7 +14,7 @@ public class FavoriteRepository : BaseRepository<Favorite>, IFavoriteRepository 
         return await _dbContext.Favorite.Where(f => f.PropertyID == propertyId).ToListAsync();
     }
 
-    public  async Task<IEnumerable<Favorite>> GetAllByUser(Guid userId) {
+    public  async Task<IEnumerable<Favorite>> GetAllByUser(string userId) {
         return await _dbContext.Favorite.Where(f => f.UserID == userId).ToListAsync();
     }
 }

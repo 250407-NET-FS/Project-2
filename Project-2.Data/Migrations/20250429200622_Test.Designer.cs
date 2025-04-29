@@ -12,8 +12,8 @@ using Project_2.Data;
 namespace Project_2.Data.Migrations
 {
     [DbContext(typeof(JazaContext))]
-    [Migration("20250424011830_Test2")]
-    partial class Test2
+    [Migration("20250429200622_Test")]
+    partial class Test
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -167,11 +167,12 @@ namespace Project_2.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("OwnerID")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("PropertyID")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("FavoriteID");
 
@@ -180,7 +181,7 @@ namespace Project_2.Data.Migrations
 
             modelBuilder.Entity("Project_2.Models.Offer", b =>
                 {
-                    b.Property<Guid>("FavoriteID")
+                    b.Property<Guid>("OfferID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -197,7 +198,7 @@ namespace Project_2.Data.Migrations
                     b.Property<Guid>("UserID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("FavoriteID");
+                    b.HasKey("OfferID");
 
                     b.ToTable("Offers");
                 });
@@ -215,10 +216,18 @@ namespace Project_2.Data.Migrations
                     b.Property<int>("Bedrooms")
                         .HasColumnType("int");
 
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<string>("Country")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("ForSale")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("ListDate")
                         .HasColumnType("datetime2");
@@ -292,6 +301,10 @@ namespace Project_2.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");

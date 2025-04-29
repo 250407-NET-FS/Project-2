@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Project_2.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Test2 : Migration
+    public partial class Test : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,6 +30,7 @@ namespace Project_2.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -55,7 +56,7 @@ namespace Project_2.Data.Migrations
                 columns: table => new
                 {
                     FavoriteID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OwnerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PropertyID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -68,7 +69,7 @@ namespace Project_2.Data.Migrations
                 name: "Offers",
                 columns: table => new
                 {
-                    FavoriteID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OfferID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PropertyID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     BidAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
@@ -76,7 +77,7 @@ namespace Project_2.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Offers", x => x.FavoriteID);
+                    table.PrimaryKey("PK_Offers", x => x.OfferID);
                 });
 
             migrationBuilder.CreateTable(
@@ -86,13 +87,15 @@ namespace Project_2.Data.Migrations
                     PropertyID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Country = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     State = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ZipCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     StreetAddress = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     StartingPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Bedrooms = table.Column<int>(type: "int", nullable: false),
                     Bathrooms = table.Column<decimal>(type: "decimal(10,1)", precision: 10, scale: 1, nullable: false),
                     ListDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    OwnerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    OwnerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ForSale = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
