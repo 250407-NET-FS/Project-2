@@ -12,9 +12,11 @@ namespace Project_2.Pages.Pages.Auth
         private readonly ILogger<LoginModel> _logger;
         private readonly UserManager<User> _userManager;
         private readonly IUserService _userService;
+        private readonly SignInManager<User> _signInManager;
 
 
         public LoginModel(
+            SignInManager<User> signInManager,
             IUserService userService,
             ILogger<LoginModel> logger,
             ILogger<LayoutModel> layoutLogger,
@@ -24,6 +26,7 @@ namespace Project_2.Pages.Pages.Auth
             _logger = logger;
             _userManager = userManager;
             _userService = userService;
+            _signInManager = signInManager;
         }
 
         public IActionResult OnGet()
@@ -58,17 +61,17 @@ namespace Project_2.Pages.Pages.Auth
                 token,
                 new CookieOptions
                 {
+                    Path     = "/",     
                     HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.Strict,
+                    Secure = false,
+                    SameSite = SameSiteMode.Lax,
                     Expires = DateTimeOffset.UtcNow.AddHours(1)
                 }
             );
-
-            Response.Headers.Add("Refresh", "3;URL=" + Url.Page("../Index"));
-
+            
             TempData["SuccessMessage"] = "Login successful! Redirecting to home in 3 seconds…";
-            return Page();
+
+            return RedirectToPage("../Index");
         }
     }
 }
