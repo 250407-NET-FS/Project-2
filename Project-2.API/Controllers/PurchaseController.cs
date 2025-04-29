@@ -1,7 +1,8 @@
 using Project_2.Models;
-using Project_2.Services;
+using Project_2.Services.Services;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 
 namespace Project_2.API;
 
@@ -13,12 +14,14 @@ namespace Project_2.API;
 [Route("api/purchase")]
 public class PurchaseController : ControllerBase{
 
-    // private readonly IPurchaseService _purchaseService;
+    private readonly IPurchaseService _purchaseService;
+    private readonly UserManager<User> _userManager;
 
-    // public PurchaseController(IPurchaseService _purchaseService)
-    // {
-    //     _purchaseService = _purchaseService;
-    // }
+    public PurchaseController(IPurchaseService purchaseService, UserManager<User> userManager)
+    {
+        _purchaseService = purchaseService;
+        _userManager = userManager;
+    }
 
     // // Get: api/admin/purchase
     // // Endpoint to retrieve all Purchases
@@ -61,11 +64,17 @@ public class PurchaseController : ControllerBase{
 
     // // Get: api/purchase/user
     // // Get all purchases by user
-    // public async Task<ActionResult<Purchase>> GetAllPurchasesByUser([FromBody] Guid id){
+    // public async Task<ActionResult<Purchase>> GetAllPurchasesByUser(){
     //     try{
-    //         return await Ok(_purchaseService.GetAllPurchasesByUserAsync(id));
+    //         User? user = await GetCurrentUserAsync();
+    //         return await Ok(_purchaseService.GetAllPurchasesByUserAsync(user?.Id));
     //     } catch(Exception e){
     //         return BadRequest(e.Message);
     //     }
+    // }
+
+    // private async Task<User?> GetCurrentUserAsync()
+    // {
+    //     return await _userManager.GetUserAsync(HttpContext.User);
     // }
 }

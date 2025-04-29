@@ -1,10 +1,11 @@
 using Project_2.Models;
-using Project_2.Services;
+using Project_2.Services.Services;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace Project_2.API;
 
@@ -16,12 +17,14 @@ namespace Project_2.API;
 [Route("api/property")]
 public class PropertyController : ControllerBase{
 
-    //private readonly IPropertyService _propertyService;
+    private readonly IPropertyService _propertyService;
+    private readonly UserManager<User> _userManager;
 
-    // public PropertyController(IPropertyService _propertyService)
-    // {
-    //     _propertyService = _propertyService;
-    // }
+    public PropertyController(IPropertyService propertyService, UserManager<User> userManager)
+    {
+        _propertyService = propertyService;
+        _userManager = userManager;
+    }
 
     // // Get: api/property
     // // Endpoint to retrieve all Properties
@@ -92,7 +95,8 @@ public class PropertyController : ControllerBase{
     // [HttpPut]
     // public async Task<ActionResult<Property>> UpdateProperty([FromBody] UpdatePropertyDTO dto){
     //     try{
-    //         return await Ok(_propertyService.UpdatePropertyAsync(dto));
+    //         User? user = await GetCurrentUserAsync();
+    //         return await Ok(_propertyService.UpdatePropertyAsync(dto, user?.Id));
     //     } catch(Exception e){
     //         return BadRequest(e.Message);
     //     }
@@ -104,7 +108,8 @@ public class PropertyController : ControllerBase{
     // [HttpDelete]
     // public async Task<ActionResult<bool>> DeleteProperty([FromBody] DeletePropertyDTO dto){
     //     try{
-    //         return await Ok(_propertyService.DeletePropertyAsync(dto));
+    //         User? user = await GetCurrentUserAsync();
+    //         return await Ok(_propertyService.DeletePropertyAsync(dto, user?.Id));
     //     } catch(Exception e){
     //         return BadRequest(e.Message);
     //     }
@@ -134,64 +139,9 @@ public class PropertyController : ControllerBase{
     //     }
     // }
 
-    // // Get: api/property/country/{country}
-    // // Get properties by country
-    // [HttpGet]
-    // [Route("api/property/country/{country}")]
-    // public async Task<ActionResult<IEnumerable<Property>>> GetPropertiesByCountry([FromRoute] string country){
-    //     try{
-    //         return await Ok(_propertyService.GetPropertiesByCountryAsync(country));
-    //     } catch(Exception e){
-    //         return BadRequest(e.Message);
-    //     }
-    // }
-
-    // // Get: api/property/state/{state}
-    // // Get properties by state
-    // [HttpGet]
-    // [Route("api/property/state{state}")]
-    // public async Task<ActionResult<IEnumerable<Property>>> GetPropertiesByState([FromRoute] string state){
-    //     try{
-    //         return await Ok(_propertyService.GetPropertiesByStateAsync(state));
-    //     } catch(Exception e){
-    //         return BadRequest(e.Message);
-    //     }
-    // }
-
-    // // Get: api/property/city/{city}
-    // // Get properties by city
-    // [HttpGet]
-    // [Route("api/property/city/{city}")]
-    // public async Task<ActionResult<IEnumerable<Property>>> GetPropertiesByCity([FromRoute] string city){
-    //     try{
-    //         return await Ok(_propertySevice.GetPropertiesByCityAsync(city));
-    //     } catch(Exception e){
-    //         return BadRequest(e.Message);
-    //     }
-    // }
-
-    // // Get: api/property/zip/{zip}
-    // // Get properties by zipcode
-    // [HttpGet]
-    // [Route("api/property/zip/{zip}")]
-    // public async Task<ActionResult<IEnumerable<Property>>> GetPropertiesByZip([FromRoute] string zip){
-    //     try{
-    //         return await Ok(_propertyService.GetPropertiesByZipAsync(zip));
-    //     } catch(Exception e){
-    //         return BadRequest(e.Message);
-    //     }
-    // }
-
-    // // Get: api/property/streetaddress/{address}
-    // // Get properties by street address
-    // [HttpGet]
-    // [Route("api/property/streetaddress/{address}")]
-    // public async Task<ActionResult<IEnumerable<Property>>> GetPropertiesByAddress([FromRoute] string address){
-    //     try{
-    //         return await Ok(_propertService.GetPropertiesByAddressAsync(address));
-    //     } catch(Exception e){
-    //         return BadRequest(e.Message);
-    //     }
-    // }
+    private async Task<User?> GetCurrentUserAsync()
+    {
+        return await _userManager.GetUserAsync(HttpContext.User);
+    }
 
 }

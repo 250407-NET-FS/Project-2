@@ -2,6 +2,7 @@ using Project_2.Models;
 using Project_2.Services;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 
 namespace Project_2.API;
 
@@ -13,12 +14,14 @@ namespace Project_2.API;
 [Route("api/user")]
 public class UserController : ControllerBase{
 
-    //private readonly IUserService _userService;
+    private readonly IUserService _userService;
+    private readonly UserManager<User> _userManager;
 
-    // public UserController(IUserService _userService)
-    // {
-    //     _userService = _userService;
-    // }
+    public UserController(IUserService userService, UserManager<User> userManager)
+    {
+        _userService = userService;
+        _userManager = userManager;
+    }
 
     // // Get: api/admin/user
     // // Endpoint to retrieve all Users Admin Only
@@ -60,14 +63,20 @@ public class UserController : ControllerBase{
     // }
 
     // // Get: api/user
-    // // Get user by id
+    // // Get user profile owner only
     // [HttpGet]
-    // public async Task<ActionResult<UserDTO>> GetUserById([FromBody] Guid id){
+    // public async Task<ActionResult<UserDTO>> GetUserById(){
     //     try{
-    //         return await Ok(_userService.GetUserByIdAsync(id));
+    //         User? user = await GetCurrentUserAsync();
+    //         return await Ok(_userService.GetUserByIdAsync(user?.Id));
     //     } catch(Exception e){
     //         return BadRequest(e.Message);
     //     }
+    // }
+
+    // private async Task<User?> GetCurrentUserAsync()
+    // {
+    //     return await _userManager.GetUserAsync(HttpContext.User);
     // }
 
 }
