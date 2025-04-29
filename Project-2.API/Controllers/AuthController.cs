@@ -41,7 +41,7 @@ public class AuthController : ControllerBase{
     //     //We are going to attempt to add the user to the db, if they are added we will return
     //     //an Ok with a success message
     //     //If not, we return some error
-    //     var result = await _userManager.CreateAsync(user, newUser.Password);
+    //     var result = await _userManager.CreateUserAsync(user, newUser.Password);
 
     //     // result above is of type IdentityResult
     //     // It contains info about an AspNetCore.Identity related database operation

@@ -2,6 +2,7 @@ using Project_2.Models;
 using Project_2.Services;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 
 namespace Project_2.API;
 
@@ -13,21 +14,23 @@ namespace Project_2.API;
 [Route("api/user")]
 public class UserController : ControllerBase{
 
-    //private readonly IUserService _userService;
+    private readonly IUserService _userService;
+    private readonly UserManager<User> _userManager;
 
-    // public UserController(IUserService _userService)
-    // {
-    //     _userService = _userService;
-    // }
+    public UserController(IUserService userService, UserManager<User> userManager)
+    {
+        _userService = userService;
+        _userManager = userManager;
+    }
 
-    // // Get: api/user
+    // // Get: api/admin/user
     // // Endpoint to retrieve all Users Admin Only
     // [Authorize(Roles = "Admin")]
     // [HttpGet]
     // public async Task<ActionResult<IEnumerable<User>>> GetAllUsers(){
     //     try
     //     {
-    //         return Ok(await _userService.GetAllAsync());
+    //         return Ok(await _userService.GetAllUsersAsync());
     //     }
     //     catch (Exception e)
     //     {
@@ -35,42 +38,7 @@ public class UserController : ControllerBase{
     //     }
     // }
 
-    // //POST: api/user
-    // //Create a new user
-    // [HttpPost] // In this method, we explicity tell ASP to look for our dto in the body of the request
-    // public async Task<ActionResult<UserDto>> CreateUser([FromBody] CreateUserDto dto)
-    // {
-    //     try
-    //     {
-    //         //Explicitly checking the modelstate to make sure that out dto conforms
-    //         //to whatever we need it to be
-    //         if (!ModelState.IsValid)
-    //             return BadRequest(ModelState);
-    //         var created = await _userService.CreateAsync(dto);
-    //         //If we pass model binding based on the rules we set via Data Annotations
-    //         //inside of our CreateUserDto, and this object is created
-    //         //We can not just echo back what the user sent in, but we can return
-    //         //the actual object as it exists in our DB with its generated id and everything
-    //         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         return BadRequest(e.Message);
-    //     }
-    // }
-
-    // // Get: api/user/id/{id}
-    // // Get user by id
-    // [HttpGet]
-    // public async Task<ActionResult<User>> GetUserById([FromRoute] Guid id){
-    //     try{
-    //         return await Ok(_userService.GetUserByIdAsync(id));
-    //     } catch(Exception e){
-    //         return BadRequest(e.Message);
-    //     }
-    // }
-
-    // // Delete: api/user/id/{id}
+    // // Delete: api/admin/user/id/{id}
     // // Delete user by id Admin Only
     // [Authorize(Roles = "Admin")]
     // [HttpDelete]
@@ -80,6 +48,35 @@ public class UserController : ControllerBase{
     //     } catch(Exception e){
     //         return BadRequest(e.Message);
     //     }
+    // }
+
+    // // Get: api/admin/user/id/{id}
+    // // Get user by id Admin Only
+    // [Authorize(Roles = "Admin")]
+    // [HttpGet]
+    // public async Task<ActionResult<UserDTO>> GetUserByIdAdmin([FromRoute] Guid id){
+    //     try{
+    //         return await Ok(_userService.GetUserByIdAdminAsync(id));
+    //     } catch(Exception e){
+    //         return BadRequest(e.Message);
+    //     }
+    // }
+
+    // // Get: api/user
+    // // Get user profile owner only
+    // [HttpGet]
+    // public async Task<ActionResult<UserDTO>> GetUserById(){
+    //     try{
+    //         User? user = await GetCurrentUserAsync();
+    //         return await Ok(_userService.GetUserByIdAsync(user?.Id));
+    //     } catch(Exception e){
+    //         return BadRequest(e.Message);
+    //     }
+    // }
+
+    // private async Task<User?> GetCurrentUserAsync()
+    // {
+    //     return await _userManager.GetUserAsync(HttpContext.User);
     // }
 
 }
