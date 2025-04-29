@@ -69,7 +69,7 @@ builder
         {
             OnMessageReceived = ctx =>
             {
-                // grab the cookie named "jwt"
+                // grab the cookie named "jwt" and then User.Identity?.IsAuthenticated should work
                 if (ctx.Request.Cookies.TryGetValue("jwt", out var token))
                     ctx.Token = token;
                 return Task.CompletedTask;
