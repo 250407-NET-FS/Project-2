@@ -27,6 +27,21 @@
                     else {
                         <p>@Model.UserList[i].PhoneNumber (Unconfirmed)</p>
                     }
+                    @*
+                    @if (!Model.UserList[i].IsDeactivated) {
+                        <button class="btn btn-danger" asp-page-handler="deactivateAsync">Deactivate User</button>
+                    }
+                    else {
+                        <button class="btn btn-danger" asp-page-handler="deactivateAsync">Activate User</button>
+
+                    }
+                    @if (!Model.UserList[i].IsBanned) {
+                        <button class="btn btn-danger" asp-page-handler="BanAsync">Ban User</button>
+                    }
+                    else {
+                        <button class="btn btn-danger" asp-page-handler="BanAsync">Unban User</button>
+                    }
+                    *@
                     <button class="btn btn-danger" asp-page-handler="deleteAsync">Delete User</button>
                 </div>
             }
