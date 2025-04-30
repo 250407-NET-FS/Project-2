@@ -1,4 +1,5 @@
 using Project_2.Models;
+using Project_2.Models.DTOs;
 using Project_2.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
@@ -49,7 +50,7 @@ public class UserController : ControllerBase
     {
         try
         {
-            return Ok(await _userService.GetUserByIdAdminAsync(id));
+            return Ok(await _userService.GetUserByIdAsync(id));
         }
         catch (Exception e)
         {
