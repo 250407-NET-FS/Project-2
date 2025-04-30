@@ -8,40 +8,39 @@
   <h1 class="display-4">Welcome To JAZA!</h1>
   <p>A place where you find your next home</p>
 
-  <h3>Filter By</h3>
-  <select asp-for="Offset" asp-items="@(new SelectList(Model.States))"></select>
-
-  <h3>Listings</h3>
-  <div class="row">
-    <div class="col">
-      <a asp-page-handler="DecrementPropertyOffset"
-         asp-route-offset="@Model.Offset"
-         class="btn btn-outline-dark">←</a>
+  <h3>Listings (Page @Model.Page of @Model.TotalPages)</h3>
+  <div class="row align-items-start gx-4 gy-4">
+    <div class="col-auto">
+      <a asp-page="./Index"
+         asp-route-page="@(Model.Page - 1)"
+         class="btn btn-outline-dark"
+         aria-disabled="@(Model.Page <= 1)">
+        ← Previous
+      </a>
     </div>
 
-    @for (int i = Model.Offset; i < Model.Capacity; i++)
+    @foreach (var prop in Model.Paged)
     {
-      <div class="col">
+      <div class="col text-start" css>
         <p>
           <a asp-page="./EstateProperties.Retrieve"
-             asp-route-id="@Model.Properties[i].PropertyID">
-            @Model.Properties[i].PropertyID
+             asp-route-id="@prop.PropertyID">
+            @prop.PropertyID
           </a>
         </p>
-        <p>
-          @Model.Properties[i].StreetAddress,
-          @Model.Properties[i].State
-          @Model.Properties[i].ZipCode
-        </p>
-        <p>@Model.Properties[i].ListDate:MM/dd/yyyy</p>
-        <p>Starting Price: @Model.Properties[i].StartingPrice:C</p>
+        <p>@prop.StreetAddress, @prop.State @prop.ZipCode</p>
+        <p>@prop.ListDate:MM/dd/yyyy</p>
+        <p>Starting Price: @prop.StartingPrice:C</p>
       </div>
     }
 
-    <div class="col">
-      <a asp-page-handler="IncrementPropertyOffset"
-         asp-route-offset="@Model.Offset"
-         class="btn btn-outline-dark">→</a>
+    <div class="col-auto">
+      <a asp-page="./Index"
+         asp-route-page="@(Model.Page + 1)"
+         class="btn btn-outline-dark"
+         aria-disabled="@(Model.Page >= Model.TotalPages)">
+        Next →
+      </a>
     </div>
   </div>
 </div>

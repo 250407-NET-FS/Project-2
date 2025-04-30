@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore;
 using System.Security.Claims;
+using Project_2.Services.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -81,7 +82,13 @@ builder
 builder.Services.AddAuthorization();
 
 //Services
+builder.Services.AddScoped<Project_2.Services.Services.PropertyService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
+builder.Services.AddScoped<IPropertyService, PropertyService>();
+
+
+
 
 
 

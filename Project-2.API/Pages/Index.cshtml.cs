@@ -3,48 +3,53 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Project_2.Models;
 using Project_2.API;
 using Microsoft.AspNetCore.Identity;
+using Project_2.Services.Services;
 
-namespace Project_2.Pages;
-
-public class IndexModel(
-    ILogger<IndexModel> logger,
-    UserManager<User> manager//,
-    // PropertyController propertyController
-    ) : LayoutModel(logger, manager)
+namespace Project_2.Pages
 {
-    private readonly ILogger<IndexModel> _logger = logger;
-    // private readonly UserController _userController = userController;
-    // private readonly PropertyController _propertyController = propertyController;
+    public class IndexModel : LayoutModel
+    {
+        private const int PageSize = 5;
+        private readonly IPropertyService _propertyService;
 
-    public new User? User {get; set;}
-    public required IList<Property> Properties {get; set;}
-    public required ISet<string> States {get; set;}
-    public int Offset {get; set;} = 0;
-    public int Capacity {get; set;}
-    
-    // public IActionResult OnGet() {
-    //     Properties = _propertyController.GetAllProperties();
-    //     foreach (Property property in Properties) {
-    //         States.Add(property.State!);
-    //     }
-    //     return Page();
-    // }
-    // public async Task OnGetUserAsync() {
-    //     User = await _userController.GetAsync();
-    // }
+        public IndexModel(ILogger<IndexModel> log,
+                          UserManager<User> userManager,
+                          IPropertyService propertyService)
+          : base(log, userManager)
+        {
+            _propertyService = propertyService;
+            Properties = new List<Property>();
+            States = new HashSet<string>();
+        }
 
-    // public async Task OnGetPropertyListAsync() {
-    //     Properties = await _propertyController.GetAllAsync();
-    // }
 
-    public void OnIncrementPropertyOffset() {
-        if (Offset < Properties.Count - 1) {
-            Offset++;
+        [BindProperty(SupportsGet = true)]
+        public int Page { get; set; } = 1; //changed by frontend button
+
+        public IList<Property> Properties { get; set; }
+        public ISet<string> States { get; set; }
+        public IEnumerable<Property> Paged { get; set; }
+        public int TotalPages { get; set; }
+
+        public async Task OnGetAsync()
+        {
+            var all = (await _propertyService.GetPropertiesAsync("", "", "", "", "", -1, -1, -1, -1, false))
+                      .ToList();
+
+            Properties = all;
+            States = all.Where(p => !string.IsNullOrEmpty(p.State))
+                          .Select(p => p.State!)
+                          .Distinct()
+                          .ToHashSet();
+
+
+            TotalPages = (int)Math.Ceiling(all.Count / (double)PageSize); //total number of pages if we where to check ALL properties for real
+            Page = Math.Clamp(Page, 1, TotalPages);
+
+            Paged = all
+                .Skip((Page - 1) * PageSize) // gets the page we want 
+                .Take(PageSize);
         }
     }
-    public void OnDecrementPropertyOffset() {
-        if (Offset > 0) {
-            Offset--;
-        }
-    }
+
 }
