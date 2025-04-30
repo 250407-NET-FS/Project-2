@@ -48,12 +48,12 @@ public class FavoriteService : IFavoriteService
         // check if property exists
         Property property = await _propertyRepository.GetByIdAsync(dto.PropertyId);
         if (property is null)
-            throw new Exception("Property does not exist");
+            throw new Exception("Property cannot be null");
 
         // check if user exists
         User user = await _userRepository.GetByIdAsync(dto.UserId);
         if (user is null)
-            throw new Exception("User does not exist");
+            throw new Exception("User cannot be null");
 
         // create new favorite using dto
         Favorite favorite = new Favorite(dto.PropertyId, dto.UserId);
