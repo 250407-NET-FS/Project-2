@@ -55,7 +55,7 @@ public class PropertyController : ControllerBase{
     // // Get: api/admin/property
     // // Get all properties Admin Only
     // [Authorize(Roles = "Admin")]
-    // [HttpDelete]
+    // [HttpDelete("/api/admin/property")]
     // public async Task<ActionResult<Property>> GetAllPropertiesAdmin(){
     //     try{
     //         return await Ok(_propertyService.GetAllPropertiesAdminAsync());
@@ -118,7 +118,7 @@ public class PropertyController : ControllerBase{
     // // Delete: api/admin/property/{id}
     // // Deletes property by property id admin only
     // [Authorize(Roles = "Admin")]
-    // [HttpDelete]
+    // [HttpDelete("/api/admin/property/{id}")]
     // public async Task<ActionResult<bool>> DeletePropertyAdmin([FromRoute] Guid id){
     //     try{
     //         return await Ok(_propertyService.DeletePropertyAdminAsync(id));
@@ -129,8 +129,7 @@ public class PropertyController : ControllerBase{
 
     // // Get: api/property/id/{id}
     // // Get property by id
-    // [HttpGet]
-    // [Route("api/property/id/{id}")]
+    // [HttpGet("id/{id}")]
     // public async Task<ActionResult<Property>> GetPropertyById([FromRoute] Guid id){
     //     try{
     //         return await OK(_propertyService.GetPropertyByIdAsync(id))

@@ -2,14 +2,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Project_2.Models;
 using Project_2.API;
+using Microsoft.AspNetCore.Identity;
 
 namespace Project_2.Pages;
 
 public class IndexModel(
-    ILogger<IndexModel> logger//,
-    // UserController userController,
+    ILogger<IndexModel> logger,
+    UserManager<User> manager//,
     // PropertyController propertyController
-    ) : PageModel
+    ) : LayoutModel(logger, manager)
 {
     private readonly ILogger<IndexModel> _logger = logger;
     // private readonly UserController _userController = userController;

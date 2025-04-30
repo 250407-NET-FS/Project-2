@@ -26,7 +26,7 @@ public class PurchaseController : ControllerBase{
     // // Get: api/admin/purchase
     // // Endpoint to retrieve all Purchases
     // [Authorize(Roles = "Admin")]
-    // [HttpGet]
+    // [HttpGet("/api/admin/purhcase")]
     // public async Task<ActionResult<IEnumerable<Purchase>>> GetAllPurchases(){
     //     try
     //     {
@@ -64,6 +64,7 @@ public class PurchaseController : ControllerBase{
 
     // // Get: api/purchase/user
     // // Get all purchases by user
+    // [HttpGet("user")]
     // public async Task<ActionResult<Purchase>> GetAllPurchasesByUser(){
     //     try{
     //         User? user = await GetCurrentUserAsync();

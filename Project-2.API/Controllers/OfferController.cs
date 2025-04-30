@@ -60,7 +60,7 @@ public class OfferController : ControllerBase{
 
     // // Get: api/offer/id/{id}
     // // Get offer by id
-    // [HttpGet]
+    // [HttpGet("id/{id}")]
     // public async Task<ActionResult<Offer>> GetOfferById([FromRoute] Guid id){
     //     try{
     //         return await Ok(_offerService.GetOfferByIdAsync(id));
@@ -71,7 +71,7 @@ public class OfferController : ControllerBase{
 
     // // Get: api/offer/user/{id}
     // // Get all offer from user
-    // [HttpGet]
+    // [HttpGet("user/{id}")]
     // public async Task<ActionResult<IEnumerable<User>>> GetAllOffersFromUser([FromRoute] Guid id){
     //     try{
     //         return await Ok(_offerService.GetAllOffersFromUserAsync(id));
@@ -82,7 +82,7 @@ public class OfferController : ControllerBase{
 
     // // Get: api/offer/property/{id}
     // // Get all offers for property
-    // [HttpGet]
+    // [HttpGet("property/{id}")]
     // public async Task<ActionResult<IEnumerable<Property>>> GetAllOffersForProperty([FromRoute] Guid id){
     //     try{
     //         return await Ok(_offerService.GetAllOffersForPropertyAsync(id));
