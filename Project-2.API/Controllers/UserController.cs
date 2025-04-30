@@ -63,7 +63,8 @@ public class UserController : ControllerBase
     [HttpDelete("/api/admin/user/id/{id}")]
     public async Task<ActionResult<bool>> DeleteUserById([FromRoute] Guid id){
         try{
-            return Ok(await _userService.DeleteUserByIdAsync(id));
+            await _userService.DeleteUserByIdAsync(id);
+            return Ok(true);
         } catch(Exception e){
             return BadRequest(e.Message);
         }
