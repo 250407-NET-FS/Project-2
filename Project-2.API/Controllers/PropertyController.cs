@@ -56,7 +56,7 @@ public class PropertyController : ControllerBase{
     // Get all properties Admin Only
     [Authorize(Roles = "Admin")]
     [HttpGet("/api/admin/property")]
-    public async Task<ActionResult<Property>> GetAllPropertiesAdmin(){
+    public async Task<ActionResult<IEnumerable<Property>>> GetAllPropertiesAdmin(){
         try{
             return Ok(await _propertyService.GetPropertiesAsync("", "", "", "", "", -1, -1, -1, -1, false));
         } catch(Exception e){
