@@ -38,7 +38,7 @@ public class FavoriteController : ControllerBase{
     //POST: api/favorite
     //Create a new favorite
     [HttpPost] // In this method, we explicity tell ASP to look for our dto in the body of the request
-    public async Task<ActionResult<FavoritesDTO>> CreateFavorite([FromBody] FavoritesDTO dto)
+    public async Task<ActionResult<FavoritesDTO>> MarkUnmarkFavorite([FromBody] FavoritesDTO dto)
     {
         try
         {
@@ -48,13 +48,8 @@ public class FavoriteController : ControllerBase{
                 return BadRequest(ModelState);
             }
 
-            var created = await _favoriteService.AddFavoriteAsync(dto);
-
-            //If we pass model binding based on the rules we set via Data Annotations
-            //inside of our CreateFavoriteDto, and this object is created
-            //We can not just echo back what the user sent in, but we can return
-            //the actual object as it exists in our DB with its generated id and everything
-            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+            await _favoriteService.MarkUnmarkFavoriteAsync(dto);
+            return Ok();
         }
         catch (Exception e)
         {

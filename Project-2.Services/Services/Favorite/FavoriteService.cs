@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Project_2.Data;
 using Project_2.Models;
 using Project_2.Models.DTOs;
@@ -9,13 +9,13 @@ public class FavoriteService : IFavoriteService
 {
     private readonly IFavoriteRepository _favoriteRepository;
     private readonly IPropertyRepository _propertyRepository;
-    private readonly IUserRepository _userRepository;
+    private readonly UserManager<User> _userManager;
 
-    public FavoriteService(IFavoriteRepository favoriteRepository, IPropertyRepository propertyRepository, IUserRepository userRepository)
+    public FavoriteService(IFavoriteRepository favoriteRepository, IPropertyRepository propertyRepository, UserManager<User> userManager)
     {
         _favoriteRepository = favoriteRepository;
         _propertyRepository = propertyRepository;
-        _userRepository = userRepository;
+        _userManager = userManager;
     }
 
     public async Task<IEnumerable<Favorite>> GetAllFavoritesAsync()
@@ -32,15 +32,23 @@ public class FavoriteService : IFavoriteService
             throw new Exception("Property does not exist");
 
         // check if user exists
-        User? user = await _userRepository.GetByIdAsync(dto.UserId);
+        User? user = await _userManager.FindByIdAsync(dto.UserId.ToString());
         if (user is null)
             throw new Exception("User does not exist");
 
-        // create new favorite using dto
-        Favorite favorite = new Favorite(dto.PropertyId, dto.UserId);
+        IEnumerable<Favorite> favs = await _favoriteRepository.GetAllByUser(dto.UserId);
+        Favorite? favoriteToRemove = favs.FirstOrDefault(f => f!.PropertyID == dto.PropertyId, null);
 
-        // add to database
-        await _favoriteRepository.AddAsync(favorite);
+        if (favoriteToRemove is null) {
+            // no favorite exists, favorite it
+            Favorite favorite = new Favorite(dto.PropertyId, dto.UserId);
+            await _favoriteRepository.AddAsync(favorite);
+        }
+        else {
+            // favorite exists, unfavorite it
+            _favoriteRepository.Remove(favoriteToRemove);
+        }
+
         // save database
         await _favoriteRepository.SaveChangesAsync();
     }
@@ -71,7 +79,7 @@ public class FavoriteService : IFavoriteService
     public async Task<IEnumerable<FavoriteListForUserDTO>> GetAllByUserAsync(Guid userId)
     {
         // check if user exist
-        User? user = await _userRepository.GetByIdAsync(userId);
+        User? user = await _userManager.FindByIdAsync(userId.ToString());
         if (user is null)
             throw new Exception("User does not exist");
 
