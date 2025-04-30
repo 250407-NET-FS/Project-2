@@ -55,7 +55,7 @@ public class PropertyController : ControllerBase{
     // Get: api/admin/properties
     // Get all properties Admin Only
     [Authorize(Roles = "Admin")]
-    [HttpDelete("/api/admin/property")]
+    [HttpGet("/api/admin/property")]
     public async Task<ActionResult<Property>> GetAllPropertiesAdmin(){
         try{
             return Ok(await _propertyService.GetPropertiesAsync("", "", "", "", "", -1, -1, -1, -1, false));
