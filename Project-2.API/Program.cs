@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore;
+using System.Security.Claims;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,9 +37,9 @@ builder
         options.Password.RequireNonAlphanumeric = false;
         options.Password.RequireUppercase = true;
     })
-    .AddRoles<IdentityRole>()
+    .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<JazaContext>()
-    .AddSignInManager<SignInManager<User>>();
+    .AddSignInManager();
 
 
 SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]));
@@ -60,9 +61,22 @@ builder
             ValidateAudience = true,
             ValidAudience = builder.Configuration["Jwt:Audience"],
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero
+            ClockSkew = TimeSpan.Zero,
+            NameClaimType = ClaimTypes.Name
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = ctx =>
+            {
+                // grab the cookie named "jwt" and then User.Identity?.IsAuthenticated should work
+                if (ctx.Request.Cookies.TryGetValue("jwt", out var token))
+                    ctx.Token = token;
+                return Task.CompletedTask;
+            },
         };
     });
+
 
 builder.Services.AddAuthorization();
 
@@ -113,7 +127,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-else {
+else
+{
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
@@ -121,11 +136,13 @@ else {
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.MapStaticAssets();
-app.MapRazorPages()
-   .WithStaticAssets();
 
+app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapRazorPages()
+   .WithStaticAssets();
 app.MapControllers();
 
 
