@@ -1,55 +1,47 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+  ViewData["Title"] = "Home";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome To JAZA!</h1>
-    <p>A place where you find your next home</p>
-    <section>
-        <h3>Listings</h3>
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <p>Filter By: </p>
-                </div>
-                <div class="col">
-                    <label for="states">State:</label>
-                    <select name="states" id="states">
-                        @* @foreach (string state in Model.States) {
-                            <option value="@state">@state</option>
-                        } *@
-                    </select>
-                    <label for="price-range">Price Range:</label>
-                    <input type="number" for="price-range" />
-                    <input type="number" for="price-range" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <a asp-page-handler="decrementpropertyoffset" class="btn btn-outline-dark">←</a>
-                </div>
-                <!--Total Property amount can be below view capacity-->
-                @* @if (Model.Offset + 5 > Model.Properties.Count) {
-                    Model.Capacity = Model.Properties.Count;
-                } else {
-                    Model.Capacity = Model.Offset + 5;
-                }
-                @for (int i = Model.Offset; i < Model.Capacity; i++) {
-                    <div class="col">
-                        <img src="../wwwroot/11993-NOQXLF.jpg"/>
-                        <p><a asp-page="./EstateProperties.Retrieve" asp-route-id="@Model.Properties[i].PropertyID">@Model.Properties[i].PropertyID</a></p>
-                        <p>@Model.Properties[i].StreetAddress, @Model.Properties[i].State @Model.Properties[i].ZipCode</p>
-                        <p>@Model.Properties[i].ListDate</p>
-                        <p>Starting Price: @Model.Properties[i].StartingPrice</p>
-                    </div>                        
-                } *@
-                <div class="col">
-                    <a asp-page-handler="incrementpropertyoffset" class="btn btn-outline-dark">→</a>
-                </div>
-            </div>
-        </div>
+  <h1 class="display-4">Welcome To JAZA!</h1>
+  <p>A place where you find your next home</p>
 
-    </section>
+  <h3>Filter By</h3>
+  <select asp-for="Offset" asp-items="@(new SelectList(Model.States))"></select>
+
+  <h3>Listings</h3>
+  <div class="row">
+    <div class="col">
+      <a asp-page-handler="DecrementPropertyOffset"
+         asp-route-offset="@Model.Offset"
+         class="btn btn-outline-dark">←</a>
+    </div>
+
+    @for (int i = Model.Offset; i < Model.Capacity; i++)
+    {
+      <div class="col">
+        <p>
+          <a asp-page="./EstateProperties.Retrieve"
+             asp-route-id="@Model.Properties[i].PropertyID">
+            @Model.Properties[i].PropertyID
+          </a>
+        </p>
+        <p>
+          @Model.Properties[i].StreetAddress,
+          @Model.Properties[i].State
+          @Model.Properties[i].ZipCode
+        </p>
+        <p>@Model.Properties[i].ListDate:MM/dd/yyyy</p>
+        <p>Starting Price: @Model.Properties[i].StartingPrice:C</p>
+      </div>
+    }
+
+    <div class="col">
+      <a asp-page-handler="IncrementPropertyOffset"
+         asp-route-offset="@Model.Offset"
+         class="btn btn-outline-dark">→</a>
+    </div>
+  </div>
 </div>

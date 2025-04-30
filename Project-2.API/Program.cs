@@ -39,8 +39,8 @@ builder
     })
     .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<JazaContext>()
-    .AddSignInManager();
-
+    .AddSignInManager()
+    .AddRoleManager<RoleManager<IdentityRole<Guid>>>();
 
 SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]));
 
@@ -82,6 +82,7 @@ builder.Services.AddAuthorization();
 
 //Services
 builder.Services.AddScoped<IUserService, UserService>();
+
 
 
 //swagger
@@ -146,21 +147,23 @@ app.MapRazorPages()
 app.MapControllers();
 
 
-//For first timec
-// using (var scope = app.Services.CreateScope())
-// {
-//     var services = scope.ServiceProvider;
+// For first timec
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
 
-//     try
-//     {
-//         await RolesInitalizer.SeedRoles(services);
-//     }
-//     catch (Exception ex)
-//     {
-//         var logger = services.GetRequiredService<ILogger<Program>>();
-//         logger.LogError(ex, "Error seeding roles");
-//     }
-// }
+    try
+    {
+        await Seeder.SeedAdmin(services);
+        await Seeder.SeedUser(services);
+        await Seeder.SeedProperty(services);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Error seeding roles");
+    }
+}
 
 
 app.Run();
