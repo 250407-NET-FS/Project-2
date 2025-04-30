@@ -4,5 +4,5 @@ namespace Project_2.Data;
 
 public interface IFavoriteRepository : IBaseRepository<Favorite> {
     public Task<IEnumerable<Favorite>> GetAllForProperty(Guid propertyId);
-    public Task<IEnumerable<Favorite>> GetAllByUser(string userId);
+    public Task<IEnumerable<Favorite>> GetAllByUser(Guid userId);
 }

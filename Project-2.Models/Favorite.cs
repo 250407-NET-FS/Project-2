@@ -11,7 +11,7 @@ public class Favorite
     public Guid FavoriteID { get; set; } = Guid.NewGuid();
     [Required]
     [ForeignKey("UserID")]
-    public string UserID { get; set; } 
+    public Guid UserID { get; set; } 
     [Required]
     [ForeignKey("PropertyID")]
     public Guid PropertyID { get; set; }
@@ -19,4 +19,9 @@ public class Favorite
     public DateTime Date { get; set; } = DateTime.Now;
 
     public Favorite(){}
+
+    public Favorite(Guid propertyId, Guid userId){
+        PropertyID = propertyId;
+        UserID = userId;
+    }
 }

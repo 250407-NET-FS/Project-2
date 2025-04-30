@@ -53,6 +53,8 @@ namespace Project_2.Pages.Pages.Auth
                 return Page();
             }
 
+            
+
             var token = await _userService.GenerateToken(user);
 
             Response.Cookies.Append

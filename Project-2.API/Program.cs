@@ -37,7 +37,7 @@ builder
         options.Password.RequireNonAlphanumeric = false;
         options.Password.RequireUppercase = true;
     })
-    .AddRoles<IdentityRole>()
+    .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<JazaContext>()
     .AddSignInManager();
 
