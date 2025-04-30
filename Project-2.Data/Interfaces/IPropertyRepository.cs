@@ -1,4 +1,5 @@
 using Project_2.Models;
+using Project_2.Models.DTOs;
 
 namespace Project_2.Data;
 
@@ -6,12 +7,14 @@ public interface IPropertyRepository : IBaseRepository<Property> {
     public Task<IEnumerable<Property>> GetAllWithFilters(
         string country,
         string state,
+        string city,
         string zip,
         string address,
         decimal priceMax,
         decimal priceMin,
         int numBedroom,
-        decimal numBathroom);
+        decimal numBathroom,
+        bool forSale);
 
-    public void Update(Property propertyInfo);
+    public void Update(PropertyUpdateDTO propertyInfo);
 }
