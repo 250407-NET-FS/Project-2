@@ -22,10 +22,12 @@ namespace Project_2.Pages
         
         public bool IsLoggedIn() => User.Identity?.IsAuthenticated ?? false;
 
-        public IActionResult OnLogout()
+        public IActionResult OnPostLogout()
         {
-
-            return RedirectToPage("/Index");
+            Response.Cookies.Delete("jwt", new CookieOptions { Path = "/" });
+        
+            return RedirectToPage("./Index");
+           
         }
     }
 }
