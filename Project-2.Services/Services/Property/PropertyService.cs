@@ -30,7 +30,7 @@ public class PropertyService : IPropertyService
         await _propertyRepository.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(Property property)
+    public async Task UpdateAsync(PropertyUpdateDTO property)
     {
         _propertyRepository.Update(property);
         await _propertyRepository.SaveChangesAsync();
