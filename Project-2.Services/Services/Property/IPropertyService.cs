@@ -1,21 +1,23 @@
 using Project_2.Models;
+using Project_2.Models.DTOs;
 
 namespace Project_2.Services.Services;
 
 public interface IPropertyService
 {
-    Task<IEnumerable<Property>> ShowAvailablePropertiesAsync(
+    Task<IEnumerable<Property>> GetPropertiesAsync(
         string country,
         string state,
+        string city,
         string zip,
         string address,
         decimal minprice,
         decimal maxprice,
         int bedrooms,
-        decimal bathrooms);
-    Task<Property?> GetByIdAsync(Guid guid);
-    Task AddNewPropertyAsync(Property property);
-    Task MarkForSaleAsync(Guid propertyId);
-    Task MarkSoldAsync(Guid propertyId, Guid newOwnerId);
-    Task RemoveProperty(Guid propertyId, Guid currentUserId);
+        decimal bathrooms,
+        bool forsale);
+    Task<Property?> GetPropertyByIdAsync(Guid guid);
+    Task<Guid> AddNewPropertyAsync(PropertyAddDTO propertyInfo);
+    Task UpdatePropertyAsync(PropertyUpdateDTO dto, Guid userId);
+    Task RemovePropertyAsync(Guid propertyId, Guid? currentUserId);
 }

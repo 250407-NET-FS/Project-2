@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Project_2.Models;
+using Project_2.Models.DTOs;
 
 namespace Project_2.Data;
 
@@ -14,12 +15,14 @@ public class PropertyRepository : BaseRepository<Property>, IPropertyRepository 
     public async Task<IEnumerable<Property>> GetAllWithFilters(
         string country,
         string state,
+        string city,
         string zip,
         string address,
         decimal priceMax,
         decimal priceMin,
         int numBedroom,
-        decimal numBathroom
+        decimal numBathroom,
+        bool forSale
     ) {
         IQueryable<Property> query = _dbContext.Property.Where(p => 1 == 1);
         if (!country.IsNullOrEmpty()) {
@@ -27,6 +30,9 @@ public class PropertyRepository : BaseRepository<Property>, IPropertyRepository 
         }
         if (!state.IsNullOrEmpty()) {
             query = query.Where(p => p.State == state);
+        }
+        if (!city.IsNullOrEmpty()) {
+            query = query.Where(p => p.City == city);
         }
         if (!zip.IsNullOrEmpty()) {
             query = query.Where(p => p.ZipCode == zip);
@@ -46,6 +52,9 @@ public class PropertyRepository : BaseRepository<Property>, IPropertyRepository 
         if (numBathroom != -1) {
             query = query.Where(p => p.Bathrooms >= numBathroom);
         }
+        if (forSale) {
+            query = query.Where(p => p.ForSale);
+        }
         return await query.ToListAsync();
     }
 
@@ -57,44 +66,21 @@ public class PropertyRepository : BaseRepository<Property>, IPropertyRepository 
         if (!_dbContext.Property.Any(p => p.PropertyID == propertyInfo.PropertyID)) {
             throw new Exception("No property found");
         }
-        Property property = _dbContext.Property.Where(p => p.PropertyID == propertyInfo.PropertyID);
+        Property property = _dbContext.Property.Find(propertyInfo.PropertyID)!;
         
-        if(propertyInfo.Country is not null){
-            property.Country = propertyInfo.Country;
-        }
-        if(propertyInfo.State is not null){
-            property.State = propertyInfo.State;
-        }
-        if(propertyInfo.City is not null){
-            property.City = propertyInfo.City;
-        }
-        if(propertyInfo.ZipCode is not null){
-            property.ZipCode = propertyInfo.ZipCode;
-        }
-        if(propertyInfo.StreetAddress is not null){
-            property.StreetAddress = propertyInfo.StreetAddress;
-        }
-        if(propertyInfo.StartingPrice is not null){
-            property.StartingPrice = propertyInfo.StartingPrice;
-        }
-        if(propertyInfo.Bedrooms is not null){
-            property.Bedrooms = propertyInfo.Bedrooms;
-        }
-        if(propertyInfo.Bathrooms is not null){
-            property.Bathrooms = propertyInfo.Bathrooms;
-        }
-        if(propertyInfo.ListDate is not null){
-            property.ListDate = propertyInfo.ListDate;
-        }
-        if(propertyInfo.OwnerID is not null){
-            property.OwnerID = propertyInfo.OwnerID;
-        }
-        if(propertyInfo.StreetAddress is not null){
-            property.StreetAddress = propertyInfo.StreetAddress;
-        }
-        if(propertyInfo.ForSale is not null){
-            property.ForSale = propertyInfo.ForSale;
-        }
+        property.Country = propertyInfo.Country ?? property.Country;
+        property.State = propertyInfo.State ?? property.State;
+        property.City = propertyInfo.City ?? property.City;
+        property.ZipCode = propertyInfo.ZipCode ?? property.ZipCode;
+        property.StreetAddress = propertyInfo.StreetAddress ?? property.StreetAddress;
+        property.StartingPrice = propertyInfo.StartingPrice ?? property.StartingPrice;
+        property.Bedrooms = propertyInfo.Bedrooms ?? property.Bedrooms;
+        property.Bathrooms = propertyInfo.Bathrooms ?? property.Bathrooms;
+        property.ListDate = propertyInfo.ListDate ?? property.ListDate;
+        property.OwnerID = propertyInfo.OwnerID ?? property.OwnerID;
+        property.StreetAddress = propertyInfo.StreetAddress;
+        property.ForSale = propertyInfo.ForSale ?? property.ForSale;
+
         _dbContext.Property.Update(property);
     }
 }   

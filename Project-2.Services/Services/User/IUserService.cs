@@ -6,7 +6,7 @@ namespace Project_2.Services;
 public interface IUserService{
     Task<string> GenerateToken(User user);
     Task<List<User>> GetAllUsersAsync();
-    Task<User?> GetUserByIdAsync(string userId);
+    Task<User?> GetUserByIdAsync(Guid? userId);
     Task<User> GetLoggedInUserAsync(ClaimsPrincipal user);
-    Task DeleteUserByIdAsync(string userId);
+    Task DeleteUserByIdAsync(Guid? userId);
 }
