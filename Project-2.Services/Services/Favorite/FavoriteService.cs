@@ -29,12 +29,12 @@ public class FavoriteService : IFavoriteService
         // check if property exists
         Property? property = await _propertyRepository.GetByIdAsync(dto.PropertyId);
         if (property is null)
-            throw new Exception("Property does not exist");
+            throw new Exception("Property cannot be null");
 
         // check if user exists
         User? user = await _userManager.FindByIdAsync(dto.UserId.ToString());
         if (user is null)
-            throw new Exception("User does not exist");
+            throw new Exception("User cannot be null");
 
         IEnumerable<Favorite> favs = await _favoriteRepository.GetAllByUser(dto.UserId);
         Favorite? favoriteToRemove = favs.FirstOrDefault(f => f!.PropertyID == dto.PropertyId, null);

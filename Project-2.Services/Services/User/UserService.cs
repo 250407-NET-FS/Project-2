@@ -46,16 +46,16 @@ public class UserService : IUserService
         return await _userManager.Users.ToListAsync();
     }
 
-    public async Task<User?> GetUserByIdAsync(string userId) {
-        return await _userManager.FindByIdAsync(userId);
+    public async Task<User?> GetUserByIdAsync(Guid? userId) {
+        return await _userManager.FindByIdAsync(userId.ToString()!);
     }
 
     public async Task<User> GetLoggedInUserAsync(ClaimsPrincipal user) {
         return (await _userManager.GetUserAsync(user))!;
     }
 
-    public async Task DeleteUserByIdAsync(string userId) {
-        User? userToDelete = await _userManager.FindByIdAsync(userId.ToString());
+    public async Task DeleteUserByIdAsync(Guid? userId) {
+        User? userToDelete = await _userManager.FindByIdAsync(userId.ToString()!);
         if (userToDelete is null) {
             throw new Exception("User not found");
         }
