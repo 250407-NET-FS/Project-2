@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Project_2.Data;
 
-public class JazaContext : IdentityDbContext<User, IdentityRole, string>
+public class JazaContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
 {
     public JazaContext(DbContextOptions<JazaContext> options) : base(options) { }
 

@@ -1,0 +1,98 @@
+Meeting Minutes
+Date: 4/22/25
+Attendees: Isaac, Lucas, Roberto, Edmund, Andric, Amable
+Scribe: Andric
+Scrum Master: Isaac
+
+Daily Stand-up
+
+Andric: 
+Helped design
+Will create favorites data access class
+No blockers
+
+Isaac: 
+Created models
+Will scaffold controllers
+No blockers
+
+Lucas
+Scaffolded project skeleton into layers
+Researched C#/HTML connections
+Created web layer
+Will add basic links to home page for client
+What links should be provided to home page?
+Will be addressed later
+Property listings
+Login/logout
+
+Roberto
+Created data access for users
+Will create properties data access/(maybe service)
+No blockers
+Edmund
+
+Created ERD
+Will create SQL seeding script
+No blockers
+
+Amable
+Researched login credential mechanisms
+Will scaffold authentication classes
+Blocked by tomorrow’s lesson on tokens
+
+Extra talks
+Reviewed user data access classes
+move saveChanges method outside of individual functions
+Reviewed models
+string price -> decimal price
+
+Planning
+What controllers should be created?
+User
+Property
+Purchases
+Offers
+Favorites
+Clarification on where property data should be stored
+Private firebase
+Create registration page to get email/phone number
+
+
+
+========================================================================
+Meeting Minutes
+Date: 4/23/25
+Attendees: Isaac, Lucas, Roberto, Edmund, Andric, Amable
+Scribe: Edmund
+Scrum Master: Isaac
+
+Daily standup 
+
+Edmund 
+Schema diagram done, 
+Sql data types a bit of a unknown but use schema as guide
+Seed script 
+
+Lucas
+Updated front end functionality (cont)
+Need controllers for routing 
+Login controllers (oauth)
+
+Roberto
+Service, implementation
+Refactor repo to not hold property checks
+
+Andric
+data access 
+
+Amable
+Researching oath implementation
+Implementation of authorization
+
+Isaac
+Controller scaffolding
+Endpoints structure
+
+	
+	

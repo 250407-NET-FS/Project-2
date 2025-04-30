@@ -1,0 +1,42 @@
+@page "owner/properties"
+@using Project_2.Pages.Pages.Owner
+@model PropertyModel
+@{
+    ViewData["Title"] = "Owner Property List";
+}
+
+<div class="container">
+    <h1 class="text-center">Property List</h1>
+    @for (int i = 0; i < Model.PropertyList!.Count; i += 4) {
+        <div class="row">
+            @for (int j = i; j < Model.PropertyList.Count; j++) {
+                if (j == i + 4) {
+                    break;
+                }
+                <div class="col">
+                    <img src="../wwwroot/11993-NOQXLF.jpg"/>
+                    <h2>Starting Price: @Model.PropertyList[i].StartingPrice</h2>
+                    <h2>@Model.PropertyList[i].StreetAddress,</h2>
+                    <h2>
+                        @Model.PropertyList[i].City, @Model.PropertyList[i].State,
+                        @Model.PropertyList[i].Country @Model.PropertyList[i].ZipCode
+                    </h2>
+                    <p>
+                        @Model.PropertyList[i].Bedrooms bedrooms | 
+                        @Model.PropertyList[i].Bathrooms bathrooms
+                    </p>
+                    @if (@Model.PropertyList[i].ForSale) {
+                        <p>For Sale</p>
+                    }
+                    else {
+                        <p>Closed</p>
+                    }
+                    <p>Listed: @Model.PropertyList[i].ListDate</p>
+                    <p>Listed By: @Model.Owner</p>
+                    <button class="btn btn-danger" asp-page="owner/properties/{id}">Edit Property</button>
+                    <button class="btn btn-danger" asp-page-handler="deleteAsync">Delete Property</button>
+                </div>
+            }
+        </div>
+    }
+</div>

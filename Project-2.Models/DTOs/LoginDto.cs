@@ -8,7 +8,7 @@ public class RegisterDto
     [EmailAddress]
     public string? Email { get; set; }
 
-    [Required]
+    
     public string? FullName { get; set; }
 
     [Required]
