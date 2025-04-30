@@ -1,4 +1,5 @@
 using Project_2.Models;
+using Project_2.Models.DTOs;
 using Project_2.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
@@ -28,7 +29,7 @@ public class UserController : ControllerBase
     // Get: api/admin/user
     // Endpoint to retrieve all Users Admin Only
     [Authorize(Roles = "Admin")]
-    [HttpGet]
+    [HttpGet("/api/admin/user")]
     public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
     {
         try
@@ -41,23 +42,15 @@ public class UserController : ControllerBase
         }
     }
 
-    // Delete: api/admin/user/id/{id}
-    // Delete user by id Admin Only
+    // Get: api/admin/user/id/{id}
+    // Get user by id Admin Only
     [Authorize(Roles = "Admin")]
-    [HttpDelete]
-    public async Task<ActionResult> DeleteUserById([FromRoute] Guid id)
+    [HttpGet("/api/admin/user/id/{id}")]
+    public async Task<ActionResult<UserDTO>> GetUserByAdminId([FromRoute] Guid id)
     {
-        User userToDelete = await _userManager.FindByIdAsync(id.ToString());
-        if (userToDelete == null)
-        {
-            return NotFound(false);
-        }
-
         try
         {
-
-            var result = await _userManager.DeleteAsync(userToDelete);
-            return Ok(result.Succeeded);
+            return Ok(await _userService.GetUserByIdAsync(id));
         }
         catch (Exception e)
         {
@@ -65,64 +58,35 @@ public class UserController : ControllerBase
         }
     }
 
-    // Get: api/admin/user/id/{id}
-    // // Get user by id Admin Only
-    // [Authorize(Roles = "Admin")]
-    // [HttpGet]
-    // public async Task<ActionResult<UserDTO>> GetUserByIdAdmin([FromRoute] Guid id)
-    // {
-    // [HttpGet("/api/admin/user")]
-    // public async Task<ActionResult<IEnumerable<User>>> GetAllUsers(){
-    //     try
-    //     {
-    //         return await Ok(_userService.GetUserByIdAdminAsync(id));
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         return BadRequest(e.Message);
-    //     }
-    // }
+    // Delete: api/admin/user/id/{id}
+    // Delete user by id Admin Only
+    [Authorize(Roles = "Admin")]
+    [HttpDelete("/api/admin/user/id/{id}")]
+    public async Task<ActionResult<bool>> DeleteUserById([FromRoute] Guid id){
+        try{
+            await _userService.DeleteUserByIdAsync(id);
+            return Ok(true);
+        } catch(Exception e){
+            return BadRequest(e.Message);
+        }
+    }
 
-    // // Delete: api/admin/user/id/{id}
-    // // Delete user by id Admin Only
-    // [Authorize(Roles = "Admin")]
-    // [HttpDelete("/api/admin/user/id/{id}")]
-    // public async Task<ActionResult<bool>> DeleteUserById([FromRoute] Guid id){
-    //     try{
-    //         return await Ok(_userService.DeleteUserByIdAsync(id));
-    //     } catch(Exception e){
-    //         return BadRequest(e.Message);
-    //     }
-    // }
-
-    // // Get: api/admin/user/id/{id}
-    // // Get user by id Admin Only
-    // [Authorize(Roles = "Admin")]
-    // [HttpGet("api/admin/user/id/{id}")]
-    // public async Task<ActionResult<UserDTO>> GetUserByIdAdmin([FromRoute] Guid id){
-    //     try{
-    //         return await Ok(_userService.GetUserByIdAdminAsync(id));
-    //     } catch(Exception e){
-    //         return BadRequest(e.Message);
-    //     }
-    // }
-
-    // // Get: api/user
-    // // Get user profile owner only
-    // [Authorize]
-    // [HttpGet]
-    // public async Task<ActionResult<UserDTO>> GetUserById()
-    // {
-    //     try
-    //     {
-    //         User? user = await GetCurrentUserAsync();
-    //         return await Ok(_userService.GetUserByIdAsync(user?.Id));
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         return BadRequest(e.Message);
-    //     }
-    // }
+    // Get: api/user
+    // Get user profile owner only
+    [Authorize]
+    [HttpGet]
+    public async Task<ActionResult<UserDTO>> GetUserById()
+    {
+        try
+        {
+            User? user = await GetCurrentUserAsync();
+            return Ok(await _userService.GetUserByIdAsync(user?.Id));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 
     private async Task<User?> GetCurrentUserAsync()
     {

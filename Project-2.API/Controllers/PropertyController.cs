@@ -5,6 +5,7 @@ using Project_2.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Project_2.Models.DTOs;
 
 namespace Project_2.API;
 
