@@ -18,40 +18,21 @@ public class FavoriteService : IFavoriteService
         _userRepository = userRepository;
     }
 
-    public async Task<IEnumerable<FavoriteResponseDTO>> GetAllAsync()
+    public async Task<IEnumerable<Favorite>> GetAllFavoritesAsync()
     {
         IEnumerable<Favorite> favorites = await _favoriteRepository.GetAllAsync();
-        return favorites.Select(f => new FavoriteResponseDTO
-        {
-            FavoriteId = f.FavoriteID,
-            UserId = f.UserID,
-            PropertyId = f.PropertyID,
-            Date = f.Date
-        });
+        return favorites;
     }
 
-    public async Task<FavoriteResponseDTO?> GetByIdAsync(Guid id)
-    {
-        Favorite? favorite = await _favoriteRepository.GetByIdAsync(id);
-        if (favorite is null) throw new Exception("Favorite not found");
-        return new FavoriteResponseDTO
-        {
-            FavoriteId = favorite.FavoriteID,
-            UserId = favorite.UserID,
-            PropertyId = favorite.PropertyID,
-            Date = favorite.Date
-        };
-    }
-
-    public async Task<FavoriteResponseDTO> AddAsync(FavoritesAddDTO dto)
+    public async Task MarkUnmarkFavoriteAsync(FavoritesDTO dto)
     {
         // check if property exists
-        Property property = await _propertyRepository.GetByIdAsync(dto.PropertyId);
+        Property? property = await _propertyRepository.GetByIdAsync(dto.PropertyId);
         if (property is null)
             throw new Exception("Property does not exist");
 
         // check if user exists
-        User user = await _userRepository.GetByIdAsync(dto.UserId);
+        User? user = await _userRepository.GetByIdAsync(dto.UserId);
         if (user is null)
             throw new Exception("User does not exist");
 
@@ -62,34 +43,17 @@ public class FavoriteService : IFavoriteService
         await _favoriteRepository.AddAsync(favorite);
         // save database
         await _favoriteRepository.SaveChangesAsync();
-
-        return new FavoriteResponseDTO
-        {
-            FavoriteId = favorite.FavoriteID,
-            UserId = favorite.UserID,
-            PropertyId = favorite.PropertyID,
-            Date = favorite.Date
-        };
     }
 
-    public async Task RemoveAsync(Guid favoriteId)
-    {
-        // Get favorite to be removed
-        Favorite favorite = await _favoriteRepository.GetByIdAsync(favoriteId);
-
-        // if favorite did not exist throw error
-        if (favorite is null)
-            throw new Exception("Favorite not found");
-
-        // remove favorite from databse
-        _favoriteRepository.Remove(favorite);
-        await _favoriteRepository.SaveChangesAsync();
+    public async Task<bool> CheckFavoritedAsync(FavoritesDTO dto) {
+        IEnumerable<Favorite> favs = await _favoriteRepository.GetAllByUser(dto.UserId);
+        return favs.Any(f => f.PropertyID == dto.PropertyId);
     }
 
-    public async Task<IEnumerable<FavoriteResponseDTO>> GetAllForProperty(Guid propertyId)
+    public async Task<IEnumerable<FavoritesDTO>> GetAllForPropertyAsync(Guid propertyId)
     {
         // check if property exist
-        Property property = await _propertyRepository.GetByIdAsync(propertyId);
+        Property? property = await _propertyRepository.GetByIdAsync(propertyId);
         if (property is null)
             throw new Exception("Property does not exist");
 
@@ -97,30 +61,26 @@ public class FavoriteService : IFavoriteService
         IEnumerable<Favorite> favorites = await _favoriteRepository.GetAllForProperty(propertyId);
 
         // return the list of property's favorites with dto
-        return favorites.Select(f => new FavoriteResponseDTO
+        return favorites.Select(f => new FavoritesDTO
         {
-            FavoriteId = f.FavoriteID,
             UserId = f.UserID,
             PropertyId = f.PropertyID,
-            Date = f.Date
         });
     }
 
-    public async Task<IEnumerable<FavoriteResponseDTO>> GetAllByUser(Guid userId)
+    public async Task<IEnumerable<FavoriteListForUserDTO>> GetAllByUserAsync(Guid userId)
     {
         // check if user exist
-        User user = await _userRepository.GetByIdAsync(userId);
+        User? user = await _userRepository.GetByIdAsync(userId);
         if (user is null)
             throw new Exception("User does not exist");
 
         // get list of favorites for user
-        IEnumerable<Favorite> favorites = await _favoriteRepository.GetAllForProperty(userId);
+        IEnumerable<Favorite> favorites = await _favoriteRepository.GetAllByUser(userId);
 
         // return the list of user's favorites with dto
-        return favorites.Select(f => new FavoriteResponseDTO
+        return favorites.Select(f => new FavoriteListForUserDTO
         {
-            FavoriteId = f.FavoriteID,
-            UserId = f.UserID,
             PropertyId = f.PropertyID,
             Date = f.Date
         });
