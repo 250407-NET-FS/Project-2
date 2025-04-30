@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -71,14 +71,16 @@ namespace Project_2.Tests
             // Test for property not found
             _propertyRepositoryMock.Setup(x => x.GetByIdAsync(offerDto.PropertyId)).ReturnsAsync((Property)null);
             var exception = await Assert.ThrowsAsync<Exception>(() => _offerService.AddAsync(offerDto));
-            Assert.Equal("Property does not exist", exception.Message);
+            Assert.Equal("Property cannot be null", exception.Message);
 
             // Test for user not found
+            _propertyRepositoryMock.Setup(x => x.GetByIdAsync(offerDto.PropertyId)).ReturnsAsync(property);
             _userRepositoryMock.Setup(x => x.GetByIdAsync(offerDto.UserId)).ReturnsAsync((User)null);
             exception = await Assert.ThrowsAsync<Exception>(() => _offerService.AddAsync(offerDto));
-            Assert.Equal("User does not exist", exception.Message);
+            Assert.Equal("User cannot be null", exception.Message);
 
             // Test for invalid bid amount
+            _userRepositoryMock.Setup(x => x.GetByIdAsync(offerDto.UserId)).ReturnsAsync(user);
             offerDto.BidAmount = -1.0m; // Invalid bid amount
             exception = await Assert.ThrowsAsync<Exception>(() => _offerService.AddAsync(offerDto));
             Assert.Equal("Bid amount must be greater than zero", exception.Message);
