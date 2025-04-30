@@ -1,15 +1,14 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Project_2.API;
 using Project_2.Models;
 
 namespace Project_2.Pages.Offers {
-    public class CreateModel: PageModel {
-        private readonly OfferController _controller;
-
-        public CreateModel(OfferController controller) {
-            _controller = controller;
-        }
+    public class CreateModel(ILogger<LayoutModel> logger, UserManager<User> manager,
+        OfferController controller
+    ): LayoutModel(logger, manager) {
+        private readonly OfferController _controller = controller;
 
         public IActionResult OnGet() {
             return Page();
