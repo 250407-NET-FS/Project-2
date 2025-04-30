@@ -1,29 +1,24 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Project_2.API;
 using Project_2.Models;
 
 namespace Project_2.Pages.Pages.EstateProperties {
-    public class RetrieveModel: PageModel {
-        private readonly PropertyController _propertyController;
-        private readonly UserController _userController;
-        private readonly FavoriteController _favoriteController;
-
-        public RetrieveModel(
+    public class RetrieveModel(
+            ILogger<LayoutModel> logger,
+            UserManager<User> manager,
             PropertyController propertyController,
-            UserController userController,
             FavoriteController favoriteController
-            ) {
-            _userController = userController;
-            _propertyController = propertyController;
-            _favoriteController = favoriteController;
-        }
+            ): LayoutModel(logger, manager) {
+        private readonly PropertyController _propertyController = propertyController;
+        private readonly FavoriteController _favoriteController = favoriteController;
+        private readonly ILogger<LayoutModel> _logger = logger;
 
         public async Task<IActionResult> OnGet(Guid id) {
             //Property = await _propertyController.GetPropertyById(id);
-            //User = await _userController.GetUserById(Property.OwnerID);
-
+            //User = await User.getUserById(Property.OwnerID);
             DaysListed = DateTime.Now.Subtract(Property!.ListDate).Days;
             return Page();
         }

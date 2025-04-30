@@ -1,15 +1,13 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Project_2.API;
 using Project_2.Models;
 
 namespace Project_2.Pages.Purchases {
-    public class CreateModel: PageModel {
+    public class CreateModel(ILogger<LayoutModel> logger, UserManager<User> manager, PurchaseController controller): LayoutModel(logger, manager) {
         private readonly PurchaseController _controller;
 
-        public CreateModel(PurchaseController controller) {
-            _controller = controller;
-        }
 
         public IActionResult OnGet() {
             return Page();
