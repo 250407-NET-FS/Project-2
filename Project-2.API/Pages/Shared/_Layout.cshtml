@@ -29,17 +29,17 @@
                         </li>
                         @if (Model.IsLoggedIn()) {
                             <li class="nav-item">
-                                @Model.User!.Email
+                                @Model.User!.FindFirst("Email")
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page-handler="logout">Logout</a>
                             </li>
                         } else {
                             <li class="nav-item pull-right">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Login">Login</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Auth/Login">Login</a>
                             </li>
                             <li class="nav-item pull-right">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Register">Register</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Auth/Register">Register</a>
                             </li>
                         }
 

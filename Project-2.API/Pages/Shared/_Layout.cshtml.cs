@@ -1,26 +1,31 @@
+// /Pages/Shared/LayoutModel.cs
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Identity;
+using Project_2.Services;
 using Project_2.Models;
-using Project_2.API;
 
-namespace Project_2.Pages.Pages {
-    public class LayoutModel(
-    ILogger<IndexModel> logger//,
-    //UserController userController
-    ): PageModel {
-        private readonly ILogger<IndexModel> _logger = logger;
-        //private readonly UserController _userController = userController;
+namespace Project_2.Pages
+{
+    public class LayoutModel : PageModel
+    {
 
-        public new User? User {get; set;}
+        private readonly ILogger<LayoutModel> _logger;
 
-        public bool IsLoggedIn() {
-            return User is not null;
+
+        public LayoutModel(ILogger<LayoutModel> logger, UserManager<User> userManager)
+        {
+            _logger = logger;
         }
+
+        
+        public bool IsLoggedIn() => User.Identity?.IsAuthenticated ?? false;
 
         public IActionResult OnLogout()
         {
-            User = null;
-            return RedirectToPage("./Index");
+
+            return RedirectToPage("/Index");
         }
     }
 }
