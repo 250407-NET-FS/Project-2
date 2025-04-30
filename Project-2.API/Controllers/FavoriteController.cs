@@ -11,7 +11,7 @@ namespace Project_2.API;
 // hint: If you use the [EntityName]Controller convention, we can essentially
 // parameterize the route name
 [ApiController]
-[Route("api/favorite")]
+[Route("api/favorites")]
 public class FavoriteController : ControllerBase{
 
     private readonly IFavoriteService _favoriteService;
@@ -21,13 +21,13 @@ public class FavoriteController : ControllerBase{
         _favoriteService = favoriteService;
     }
 
-    // Get: api/favorite
+    // Get: api/favorites
     // Endpoint to retrieve all Favorites
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Favorite>>> GetAllFavorites(){
         try
         {
-            return Ok(await _favoriteService.GetAllAsync());
+            return Ok(await _favoriteService.GetAllFavoritesAsync());
         }
         catch (Exception e)
         {
@@ -38,21 +38,22 @@ public class FavoriteController : ControllerBase{
     //POST: api/favorite
     //Create a new favorite
     [HttpPost] // In this method, we explicity tell ASP to look for our dto in the body of the request
-    public async Task<ActionResult<FavoritesAddDTO>> CreateFavorite([FromBody] FavoritesAddDTO dto)
+    public async Task<ActionResult<FavoritesDTO>> MarkUnmarkFavorite([FromBody] FavoritesDTO dto)
     {
         try
         {
             //Explicitly checking the modelstate to make sure that out dto conforms
             //to whatever we need it to be
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
-            return Ok(await _favoriteService.AddAsync(dto));
+            }
+
+            await _favoriteService.MarkUnmarkFavoriteAsync(dto);
+            return Ok();
         }
         catch (Exception e)
         {
             return BadRequest(e.Message);
         }
     }
-
-
 }

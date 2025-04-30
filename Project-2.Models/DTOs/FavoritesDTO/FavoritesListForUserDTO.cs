@@ -2,11 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Project_2.Models.DTOs;
 
-public class FavoritesRemoveDTO
+public class FavoriteListForUserDTO
 {
-    [Required]
     public Guid PropertyId { get; set; }
-    [Required]
-    public Guid UserId { get; set; }
 
+    public DateTime Date { get; set; }
 }

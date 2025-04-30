@@ -1,10 +1,9 @@
 using Project_2.Models;
+using Project_2.Models.DTOs;
 using Project_2.Services.Services;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Project_2.Models.DTOs;
 
@@ -39,12 +38,12 @@ public class PropertyController : ControllerBase{
         [FromQuery] decimal minprice = -1,
         [FromQuery] decimal maxprice = -1,
         [FromQuery] int bedrooms = -1,
-        [FromQuery] float bathrooms = -1,
+        [FromQuery] decimal bathrooms = -1,
         [FromQuery] bool forsale = false
         ){
         try
         {
-            return Ok(await _propertyService.ShowAvailablePropertiesAsync(country, state, city, zip, address,
+            return Ok(await _propertyService.GetPropertiesAsync(country, state, city, zip, address,
             minprice, maxprice, bedrooms, bathrooms, forsale));
         }
         catch (Exception e)
@@ -59,8 +58,7 @@ public class PropertyController : ControllerBase{
     [HttpDelete("/api/admin/property")]
     public async Task<ActionResult<Property>> GetAllPropertiesAdmin(){
         try{
-            return Ok(await _propertyService.ShowAvailablePropertiesAsync("", "",
-            "", "", "", -1, -1, -1, -1, false));
+            return Ok(await _propertyService.GetPropertiesAsync("", "", "", "", "", -1, -1, -1, -1, false));
         } catch(Exception e){
             return BadRequest(e.Message);
         }
@@ -70,15 +68,18 @@ public class PropertyController : ControllerBase{
     //Create a new property
     [Authorize]
     [HttpPost] // In this method, we explicity tell ASP to look for our dto in the body of the request
-    public async Task<ActionResult<Property>> CreateProperty([FromBody] PropertyAddDTO dto)
+    public async Task<ActionResult<Guid>> CreateProperty([FromBody] PropertyAddDTO dto)
     {
         try
         {
             //Explicitly checking the modelstate to make sure that out dto conforms
             //to whatever we need it to be
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
-            return Ok(await _propertyService.AddNewPropertyAsync(dto));
+            }
+
+            Guid newPropertyID = await _propertyService.AddNewPropertyAsync(dto);
+            return Ok(newPropertyID);
         }
         catch (Exception e)
         {
@@ -90,10 +91,11 @@ public class PropertyController : ControllerBase{
     // Updates property attributes based on what is not null owner only
     [Authorize]
     [HttpPut]
-    public async Task<ActionResult<Property>> UpdateProperty([FromBody] PropertyUpdateDTO dto){
+    public async Task<ActionResult> UpdateProperty([FromBody] PropertyUpdateDTO dto){
         try{
             User? user = await GetCurrentUserAsync();
-            return Ok(await _propertyService.UpdatePropertyAsync(dto, user?.Id));
+            await _propertyService.UpdatePropertyAsync(dto, user!.Id);
+            return Ok();
         } catch(Exception e){
             return BadRequest(e.Message);
         }
@@ -102,11 +104,12 @@ public class PropertyController : ControllerBase{
     // Delete: api/property
     // Deletes property by property id owner only
     [Authorize]
-    [HttpDelete("id/{id}")]
-    public async Task<ActionResult<bool>> DeleteProperty([FromRoute] Guid id){
+    [HttpDelete]
+    public async Task<ActionResult> DeleteProperty([FromBody] Guid propertyId){
         try{
             User? user = await GetCurrentUserAsync();
-            return Ok(await _propertyService.RemovePropertyAsync(id, user?.Id));
+            await _propertyService.RemovePropertyAsync(propertyId, user!.Id);
+            return Ok();
         } catch(Exception e){
             return BadRequest(e.Message);
         }
@@ -116,9 +119,10 @@ public class PropertyController : ControllerBase{
     // Deletes property by property id admin only
     [Authorize(Roles = "Admin")]
     [HttpDelete("/api/admin/property/{id}")]
-    public async Task<ActionResult<bool>> DeletePropertyAdmin([FromRoute] Guid id){
+    public async Task<IActionResult> DeletePropertyAdmin([FromRoute] Guid id){
         try{
-            return Ok(await _propertyService.DeletePropertyAdminAsync(id));
+            await _propertyService.RemovePropertyAsync(id, null);
+            return Ok();
         } catch(Exception e){
             return BadRequest(e.Message);
         }
@@ -126,10 +130,10 @@ public class PropertyController : ControllerBase{
 
     // Get: api/property/id/{id}
     // Get property by id
-    [HttpGet("id/{id}")]
+    [HttpGet("{id}")]
     public async Task<ActionResult<Property>> GetPropertyById([FromRoute] Guid id){
         try{
-            return Ok(await _propertyService.GetByIdAsync(id));
+            return Ok(await _propertyService.GetPropertyByIdAsync(id));
         } catch (Exception e){
             return BadRequest(e.Message);
         }
