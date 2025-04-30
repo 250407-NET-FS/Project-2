@@ -71,6 +71,8 @@ public class UserController : ControllerBase
     // [HttpGet]
     // public async Task<ActionResult<UserDTO>> GetUserByIdAdmin([FromRoute] Guid id)
     // {
+    // [HttpGet("/api/admin/user")]
+    // public async Task<ActionResult<IEnumerable<User>>> GetAllUsers(){
     //     try
     //     {
     //         return await Ok(_userService.GetUserByIdAdminAsync(id));
@@ -81,8 +83,33 @@ public class UserController : ControllerBase
     //     }
     // }
 
+    // // Delete: api/admin/user/id/{id}
+    // // Delete user by id Admin Only
+    // [Authorize(Roles = "Admin")]
+    // [HttpDelete("/api/admin/user/id/{id}")]
+    // public async Task<ActionResult<bool>> DeleteUserById([FromRoute] Guid id){
+    //     try{
+    //         return await Ok(_userService.DeleteUserByIdAsync(id));
+    //     } catch(Exception e){
+    //         return BadRequest(e.Message);
+    //     }
+    // }
+
+    // // Get: api/admin/user/id/{id}
+    // // Get user by id Admin Only
+    // [Authorize(Roles = "Admin")]
+    // [HttpGet("api/admin/user/id/{id}")]
+    // public async Task<ActionResult<UserDTO>> GetUserByIdAdmin([FromRoute] Guid id){
+    //     try{
+    //         return await Ok(_userService.GetUserByIdAdminAsync(id));
+    //     } catch(Exception e){
+    //         return BadRequest(e.Message);
+    //     }
+    // }
+
     // // Get: api/user
     // // Get user profile owner only
+    // [Authorize]
     // [HttpGet]
     // public async Task<ActionResult<UserDTO>> GetUserById()
     // {
