@@ -1,3 +1,4 @@
+using Xunit;
 using Project_2.Models;
 using Project_2.Services.Services;
 using Project_2.Data;
@@ -57,7 +58,8 @@ namespace Project_2.Tests
         public async Task GetByIdAsync_ShouldReturnPurchaseById()
         {
             var purchaseId = Guid.NewGuid();
-            var expectedPurchase = new Purchase(purchaseId, Guid.NewGuid(), 100000);
+            var propertyId = Guid.NewGuid();
+            var expectedPurchase = new Purchase(purchaseId, propertyId, 100000);
 
             _purchaseRepositoryMock
                 .Setup(repo => repo.GetByIdAsync(purchaseId))
@@ -141,7 +143,6 @@ namespace Project_2.Tests
 
             //check removeallforproperty runs
             offerRepoMock.Verify(repo => repo.RemoveAllForProperty(propertyId));
-            //check commit async runs
             _unitOfWorkMock.Verify(uow => uow.CommitAsync());
         }
     }
