@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Project_2.Models;
 
 namespace Project_2.Data;
@@ -10,8 +11,29 @@ public class PropertyRepository : BaseRepository<Property>, IPropertyRepository 
         _dbContext = context;
     }
 
-    public async Task<IEnumerable<Property>> GetAllWithFilters(decimal priceMin, decimal priceMax, int numBedroom, decimal numBathroom) {
+    public async Task<IEnumerable<Property>> GetAllWithFilters(
+        string country,
+        string state,
+        string zip,
+        string address,
+        decimal priceMax,
+        decimal priceMin,
+        int numBedroom,
+        decimal numBathroom
+    ) {
         IQueryable<Property> query = _dbContext.Property.Where(p => 1 == 1);
+        if (!country.IsNullOrEmpty()) {
+            query = query.Where(p => p.Country == country);
+        }
+        if (!state.IsNullOrEmpty()) {
+            query = query.Where(p => p.State == state);
+        }
+        if (!zip.IsNullOrEmpty()) {
+            query = query.Where(p => p.ZipCode == zip);
+        }
+        if (!address.IsNullOrEmpty()) {
+            query = query.Where(p => p.StreetAddress == address);
+        }
         if (priceMax > 0) {
             query = query.Where(p => p.StartingPrice <= priceMax);
         }
