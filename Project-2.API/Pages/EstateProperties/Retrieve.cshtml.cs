@@ -7,6 +7,7 @@ using Project_2.Models;
 using Project_2.Models.DTOs;
 
 namespace Project_2.Pages.Pages.EstateProperties {
+    [BindProperties]
     public class RetrieveModel(
             ILogger<LayoutModel> logger,
             UserManager<User> manager,
@@ -28,7 +29,6 @@ namespace Project_2.Pages.Pages.EstateProperties {
             return Page();
         }
 
-        [BindProperty]
         public Property? Property {get; set;}
         public new User? User {get; set;}
         public FavoritesDTO? BookmarkInfo {get; set;}
