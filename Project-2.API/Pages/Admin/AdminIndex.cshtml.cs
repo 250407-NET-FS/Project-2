@@ -2,18 +2,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Project_2.Models;
 using Project_2.API;
+using Microsoft.AspNetCore.Identity;
 
 namespace Project_2.Pages.Pages.Admin;
 
 public class AdminIndexModel(
     ILogger<IndexModel> logger,
-    UserController userController,
+    UserManager<User> userManager,
     PropertyController propertyController
-    ) : PageModel
+
+    ) : LayoutModel(logger, userManager)
 {
     private readonly ILogger<IndexModel> _logger = logger;
-    private readonly UserController _userController = userController;
+    private readonly UserManager<User> _userManager = userManager;
     private readonly PropertyController _propertyController = propertyController;
+
+
 
     public User? Admin {get; set;}
 }
