@@ -19,6 +19,8 @@ namespace Project_2.Pages.Pages.Admin
         public async Task<IActionResult> OnGetAsync()
         {
             UserList = await _userManager.Users.ToListAsync();
+            var admin = await _userManager.GetUserAsync(User);
+            AdminGuid = admin?.Id ?? Guid.Empty;
             return Page();
         }
 
@@ -26,6 +28,7 @@ namespace Project_2.Pages.Pages.Admin
         public List<User>? UserList { get; set; }
         [BindProperty]
         public bool isBanned {get; set;}
+        public Guid AdminGuid {get; private set;}
 
         // public async Task<IActionResult> OnDeactivate(Guid id) {
         //     if (!UserList.Find(u => u.Id.Equals(id)).isDeactivated) {
