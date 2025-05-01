@@ -86,7 +86,7 @@ builder.Services.AddScoped<Project_2.Services.Services.PropertyService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
 builder.Services.AddScoped<IPropertyService, PropertyService>();
-
+builder.Services.AddScoped<PropertyController>();
 
 
 

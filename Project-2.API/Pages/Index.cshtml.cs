@@ -51,5 +51,4 @@ namespace Project_2.Pages
                 .Take(PageSize);
         }
     }
-
 }

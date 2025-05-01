@@ -31,6 +31,7 @@
         <p>@prop.StreetAddress, @prop.State @prop.ZipCode</p>
         <p>@prop.ListDate:MM/dd/yyyy</p>
         <p>Starting Price: @prop.StartingPrice:C</p>
+        <p>Owned by: @prop.OwnerID</p>
       </div>
     }
 
@@ -43,4 +44,10 @@
       </a>
     </div>
   </div>
+   <a class="nav-link text-dark" asp-area="" asp-page="/EstateProperties/Create">Create a listing></a>
+   <a class="nav-link text-dark" asp-area="" asp-page="/EstateProperties/Retrieve">Retrieve a listing></a>
+   <a class="nav-link text-dark" asp-area="" asp-page="/EstateProperties/Update">Update a listing></a>
+
 </div>
+
+
