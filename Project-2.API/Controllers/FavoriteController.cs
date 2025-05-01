@@ -41,7 +41,7 @@ public class FavoriteController : ControllerBase{
     }
 
     // Get: api/favorites/{propertyId}
-    [HttpGet]
+    [HttpGet("{propertyId}")]
     public async Task<ActionResult<IEnumerable<Favorite>>> CheckIfFavorited(Guid propertyId){
         try
         {
