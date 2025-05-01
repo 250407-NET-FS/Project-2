@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Project_2.Pages.Pages.Auth
 {
+    [BindProperties]
     public class LoginModel : LayoutModel
     {
         private readonly ILogger<LoginModel> _logger;
@@ -34,7 +35,6 @@ namespace Project_2.Pages.Pages.Auth
             return Page();
         }
 
-        [BindProperty]
         // PageModel has its own User object idependent of the model layer
         public LoginDto? UserInfo { get; set; }
 

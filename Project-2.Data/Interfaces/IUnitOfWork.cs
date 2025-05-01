@@ -7,6 +7,6 @@ public interface IUnitOfWork
     IPropertyRepository PropertyRepo { get; }
     IPurchaseRepository PurchaseRepo { get; }
 
-    public Task BeginTransaction();
+    public void BeginTransaction();
     public Task CommitAsync();
 }

@@ -7,6 +7,7 @@ using Project_2.Models.DTOs;
 
 namespace Project_2.Pages.Pages.EstateProperties
 {
+    [BindProperties]
     public class CreateModel(
         ILogger<LayoutModel> logger, UserManager<User> userManager,
         PropertyController controller
@@ -20,7 +21,6 @@ namespace Project_2.Pages.Pages.EstateProperties
             return Page();
         }
 
-        [BindProperty]
         public PropertyAddDTO? PropertyInfo { get; set; }
 
         public async Task<IActionResult> OnPostAsync()

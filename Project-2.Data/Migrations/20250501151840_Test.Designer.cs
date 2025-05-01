@@ -12,8 +12,8 @@ using Project_2.Data;
 namespace Project_2.Data.Migrations
 {
     [DbContext(typeof(JazaContext))]
-    [Migration("20250430153030_changed_user_guid")]
-    partial class changed_user_guid
+    [Migration("20250501151840_Test")]
+    partial class Test
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
