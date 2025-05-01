@@ -425,7 +425,7 @@ obj/
 .ionide
 
 ### EF Generated Migrations Files
-Migrations/*
+*/Migrations/*
 
 ### Web Root Files
 */wwwroot
@@ -433,3 +433,4 @@ Migrations/*
 # End of https://www.toptal.com/developers/gitignore/api/dotnetcore,csharp,dotenv,visualstudiocode
 Project-2.API/Project-2.API.csproj
 .vscode/
+*/appsettings.json

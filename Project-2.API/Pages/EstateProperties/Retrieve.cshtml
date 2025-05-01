@@ -1,4 +1,4 @@
-@page "api/property/id/{id}"
+@page "{id}"
 @model EstateProperties.RetrieveModel
 @{
     ViewData["Title"] = Model.Property!.StreetAddress;
@@ -21,7 +21,7 @@
 
 <div class="row">
     <div class="col">
-        <img src="../wwwroot/11993-NOQXLF.jpg"/>
+        @* <img src="../wwwroot/11993-NOQXLF.jpg"/> *@
     </div>
 </div>
 <div class="row">

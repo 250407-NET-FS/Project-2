@@ -5,26 +5,31 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Project_2.API;
 using Project_2.Models;
 using Project_2.Models.DTOs;
+using Project_2.Services.Services;
 
 namespace Project_2.Pages.Pages.EstateProperties {
     [BindProperties]
     public class RetrieveModel(
             ILogger<LayoutModel> logger,
             UserManager<User> manager,
-            PropertyController propertyController,
-            FavoriteController favoriteController,
-            UserController userController,
-            Favorite favorite
+            PropertyService propertyService,
+            FavoriteController favoriteController
             ): LayoutModel(logger, manager) {
-        private readonly PropertyController _propertyController = propertyController;
+
         private readonly FavoriteController _favoriteController = favoriteController;
         private readonly ILogger<LayoutModel> _logger = logger;
 
-        private readonly UserController _userController = userController;
+        private readonly UserManager<User> _userManager = manager;
+         private readonly PropertyService _propertyService = propertyService;
+        
 
         public async Task<IActionResult> OnGet(Guid id) {
-            Property = await GetProperty(id);
-            User = await manager.FindByIdAsync(Property.OwnerID.ToString());
+            Property = await _propertyService.GetPropertyByIdAsync(id);
+
+
+            User = await manager.FindByIdAsync(Property.OwnerID.ToString()) ?? throw new Exception($"No user with ID {Property.OwnerID}");
+
+
             DaysListed = DateTime.Now.Subtract(Property!.ListDate).Days;
             return Page();
         }
@@ -46,12 +51,6 @@ namespace Project_2.Pages.Pages.EstateProperties {
             }
 
             return RedirectToPage();
-        }
-
-        public async Task<Property> GetProperty(Guid id)
-        {
-            var property = await _propertyController.GetPropertyById(id);
-            return property.Value;
         }
     }
 }

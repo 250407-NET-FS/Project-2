@@ -93,7 +93,7 @@ builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
 builder.Services.AddScoped<IPropertyService, PropertyService>();
 builder.Services.AddScoped<IFavoriteService, FavoriteService>();
 builder.Services.AddScoped<PropertyController>();
-
+builder.Services.AddScoped<FavoriteController>();
 builder.Services.AddScoped<UserController>();
 
 
