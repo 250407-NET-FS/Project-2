@@ -31,6 +31,10 @@ namespace Project_2.Pages
         public IEnumerable<Property> Paged { get; set; }
         public int TotalPages { get; set; }
 
+        public async Task<IActionResult> OnRetrieveAsync(Guid id) {
+            return RedirectToPage($"./EstateProperties/Retrieve/{id}");
+        }
+
         public async Task OnGetAsync()
         {
             var all = (await _propertyService.GetPropertiesAsync("", "", "", "", "", -1, -1, -1, -1, false, null))

@@ -23,17 +23,17 @@
     {
       <div class="col text-start" css>
         <p>
-          <a asp-page="./EstateProperties.Retrieve"
-             asp-route-id="@prop.PropertyID">
-            @prop.PropertyID
-          </a>
+        <a asp-page="/EstateProperties/Retrieve" 
+        asp-route-id="@prop.PropertyID">
+        @prop.PropertyID
+        </a> 
         </p>
         <p>@prop.StreetAddress, @prop.State @prop.ZipCode</p>
         <p>@prop.ListDate:MM/dd/yyyy</p>
         <p>Starting Price: @prop.StartingPrice:C</p>
         <p>Owned by: @prop.OwnerID</p>
-        <a class="btn btn-outline-dark nav-link text-dark" asp-route-id="@prop.PropertyID" asp-page="/EstateProperties/Retrieve/">Retrieve a listing></a>
-        <a class="btn btn-outline-dark nav-link text-dark" asp-route-id="@prop.PropertyID" asp-page="/EstateProperties/Update/">Update a listing></a>
+        <a class="btn btn-outline-dark nav-link text-dark" asp-route-id="@prop.PropertyID" asp-page-handler="Retrieve">Retrieve a listing></a>
+        <a class="btn btn-outline-dark nav-link text-dark" asp-route-id="@prop.PropertyID" asp-page="/EstateProperties/Update/{id}">Update a listing></a>
       </div>
     }
 
