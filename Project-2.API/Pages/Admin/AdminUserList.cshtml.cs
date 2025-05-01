@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Identity;
 using Project_2.API;
 using Project_2.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Project_2.Pages.Pages.Admin
 {
+    [Authorize(Roles = "Admin")]
     class UserModel(
         ILogger<LayoutModel> logger, UserManager<User> userManager, UserController controller
         ) : LayoutModel(logger, userManager)

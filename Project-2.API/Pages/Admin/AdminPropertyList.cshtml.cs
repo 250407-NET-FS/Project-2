@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,6 +8,7 @@ using Project_2.Services.Services;
 
 namespace Project_2.Pages.Pages.Admin
 {
+    [Authorize(Roles = "Admin")]
     class PropertyModel(PropertyService propertyService, ILogger<IndexModel> logger,
        UserManager<User> userManager
        ) : LayoutModel(logger, userManager)

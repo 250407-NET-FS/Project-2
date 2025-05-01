@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Project_2.Models;
 using Project_2.API;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Project_2.Pages.Pages.Admin;
-
+[Authorize(Roles = "Admin")]
 public class AdminIndexModel(
     ILogger<IndexModel> logger,
     UserManager<User> userManager,
