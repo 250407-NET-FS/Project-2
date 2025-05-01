@@ -433,3 +433,4 @@ obj/
 # End of https://www.toptal.com/developers/gitignore/api/dotnetcore,csharp,dotenv,visualstudiocode
 Project-2.API/Project-2.API.csproj
 .vscode/
+*/appsettings.json

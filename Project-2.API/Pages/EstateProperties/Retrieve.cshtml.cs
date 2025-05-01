@@ -12,15 +12,13 @@ namespace Project_2.Pages.Pages.EstateProperties {
             ILogger<LayoutModel> logger,
             UserManager<User> manager,
             PropertyController propertyController,
-            FavoriteController favoriteController,
-            UserController userController,
-            Favorite favorite
+            FavoriteController favoriteController
             ): LayoutModel(logger, manager) {
         private readonly PropertyController _propertyController = propertyController;
         private readonly FavoriteController _favoriteController = favoriteController;
         private readonly ILogger<LayoutModel> _logger = logger;
 
-        private readonly UserController _userController = userController;
+        private readonly UserManager<User> _userManager = manager;
 
         public async Task<IActionResult> OnGet(Guid id) {
             Property = await GetProperty(id);
@@ -51,6 +49,7 @@ namespace Project_2.Pages.Pages.EstateProperties {
         public async Task<Property> GetProperty(Guid id)
         {
             var property = await _propertyController.GetPropertyById(id);
+            Console.WriteLine(property.Value);
             return property.Value;
         }
     }
