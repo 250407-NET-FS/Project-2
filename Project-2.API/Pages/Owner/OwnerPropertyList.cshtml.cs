@@ -7,6 +7,7 @@ using Project_2.Services.Services;
 
 namespace Project_2.Pages.Pages.Owner
 {
+    [BindProperties]
     class PropertyModel(ILogger<LayoutModel> logger, UserManager<User> userManager, PropertyService propertyService, UserController userController) : LayoutModel(logger, userManager)
     {
         private readonly ILogger<LayoutModel> _logger = logger;
@@ -26,7 +27,6 @@ namespace Project_2.Pages.Pages.Owner
             return Page();
         }
 
-        [BindProperty]
         public List<Property>? PropertyList { get; set; }
         public User? Owner { get; set; }
 

@@ -6,6 +6,7 @@ using Project_2.Models;
 using Project_2.Models.DTOs;
 
 namespace Project_2.Pages.Purchases {
+    [BindProperties]
     public class CreateModel(ILogger<LayoutModel> logger, UserManager<User> manager, PurchaseController controller): LayoutModel(logger, manager) {
         private readonly PurchaseController _controller;
 
@@ -14,7 +15,6 @@ namespace Project_2.Pages.Purchases {
             return Page();
         }
 
-        [BindProperty]
         public Purchase? Purchase {get; set;}
 
         public async Task<IActionResult> OnPostAsync(CreatePurchaseDTO dto) {
