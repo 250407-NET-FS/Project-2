@@ -7,14 +7,17 @@
 
 <div class="container">
     <h1 class="text-center">Property List</h1>
-    @for (int i = 0; i < Model.PropertyList!.Count; i += 4) {
+    @for (int i = 0; i < Model.PropertyList!.Count; i += 4)
+    {
         <div class="row">
-            @for (int j = i; j < Model.PropertyList.Count; j++) {
-                if (j == i + 4) {
+            @for (int j = i; j < Model.PropertyList.Count; j++)
+            {
+                if (j == i + 4)
+                {
                     break;
                 }
                 <div class="col">
-                    <img src="../wwwroot/11993-NOQXLF.jpg"/>
+                    <img src="../wwwroot/11993-NOQXLF.jpg" />
                     <h2>Starting Price: @Model.PropertyList[i].StartingPrice</h2>
                     <h2>@Model.PropertyList[i].StreetAddress,</h2>
                     <h2>
@@ -22,18 +25,28 @@
                         @Model.PropertyList[i].Country @Model.PropertyList[i].ZipCode
                     </h2>
                     <p>
-                        @Model.PropertyList[i].Bedrooms bedrooms | 
+                        @Model.PropertyList[i].Bedrooms bedrooms |
                         @Model.PropertyList[i].Bathrooms bathrooms
                     </p>
-                    @if (@Model.PropertyList[i].ForSale) {
+                    @if (@Model.PropertyList[i].ForSale)
+                    {
                         <p>For Sale</p>
                     }
-                    else {
+                    else
+                    {
                         <p>Closed</p>
                     }
                     <p>Listed: @Model.PropertyList[i].ListDate</p>
                     <p>Listed By: @Model.OwnerList[i]</p>
-                    <button class="btn btn-danger" asp-page-handler="deleteAsync">Delete Property</button>
+                    @{
+                        var prop = Model.PropertyList[i]; var owner = Model.OwnerList[i];
+                    }
+                    <form method="post" asp-page-handler="Delete" asp-route-propertyId="@prop.PropertyID"
+                        asp-route-ownerId="@owner.Id">
+                        <button type="submit" class="btn btn-danger">
+                            Delete Listing
+                        </button>
+                    </form>
                 </div>
             }
         </div>
