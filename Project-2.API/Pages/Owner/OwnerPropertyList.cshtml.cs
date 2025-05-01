@@ -32,8 +32,12 @@ namespace Project_2.Pages.Pages.Owner
 
         public async Task<IActionResult> OnDeleteAsync(Guid id)
         {
-            // Property property = _propertyService.DeleteProperty(id);
-            // PropertyList!.Remove(property);
+            var user = await _userManager.GetUserAsync(User);
+            if (user is null){
+                return RedirectToPage("../Auth/Login");
+            }
+            await _propertyService.RemovePropertyAsync(id, user.Id);
+            PropertyList = (await _propertyService.GetPropertiesAsync("", "", "", "", "", -1, -1, -1, -1, false, user.Id)).ToList();
             return Page();
         }
     }
