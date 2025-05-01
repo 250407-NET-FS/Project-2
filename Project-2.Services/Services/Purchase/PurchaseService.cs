@@ -28,16 +28,19 @@ public class PurchaseService : IPurchaseService
     public async Task AcceptOffer(CreatePurchaseDTO purchaseDTO)
     {
         Property? property = (await _unitOfWork.PropertyRepo.GetByIdAsync(purchaseDTO.PropertyId))!;
-        if (property is null || property.ForSale == false) {
+        if (property is null || property.ForSale == false)
+        {
             throw new Exception("Property not for sale");
         }
 
-        if (property.OwnerID != purchaseDTO.UserId) {
+        if (property.OwnerID != purchaseDTO.UserId)
+        {
             throw new Exception("Unauthorized");
         }
 
         Offer? offer = (await _unitOfWork.OfferRepo.GetByIdAsync(purchaseDTO.OfferId))!;
-        if (offer is null) {
+        if (offer is null)
+        {
             throw new Exception("Offer does not exist");
         }
 
@@ -51,7 +54,7 @@ public class PurchaseService : IPurchaseService
         // Update property to reflect new ownership
         property.ForSale = false;
         property.OwnerID = offer.UserID;
-        _unitOfWork.PropertyRepo.Update(property);
+        // _unitOfWork.PropertyRepo.Update(property); //commented out by edmund, just needed this line out to compile
 
         await _unitOfWork.CommitAsync();
     }
