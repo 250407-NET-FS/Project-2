@@ -1,9 +1,12 @@
+
+using Microsoft.AspNetCore.Identity;
 using Moq;
 using Xunit;
 using Project_2.Models;
 using Project_2.Services;
 using Project_2.Data;
 using Project_2.Models.DTOs;
+
 
 // tests
 // Search offers
@@ -21,19 +24,22 @@ namespace Project_2.Tests
     {
         private readonly Mock<IOfferRepository> _offerRepositoryMock;
         private readonly Mock<IPropertyRepository> _propertyRepositoryMock;
-        private readonly Mock<IUserRepository> _userRepositoryMock;
+        private readonly Mock<UserManager<User>> _userManagerMock;
         private readonly OfferService _offerService;
 
         public OfferServiceTests()
         {
             _offerRepositoryMock = new Mock<IOfferRepository>();
             _propertyRepositoryMock = new Mock<IPropertyRepository>();
-            _userRepositoryMock = new Mock<IUserRepository>();
+
+            // Setup UserManager mock
+            var store = new Mock<IUserStore<User>>();
+            _userManagerMock = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
 
             _offerService = new OfferService(
+                _userManagerMock.Object,
                 _offerRepositoryMock.Object,
-                _propertyRepositoryMock.Object,
-                _userRepositoryMock.Object
+                _propertyRepositoryMock.Object
             );
         }
 
@@ -49,20 +55,19 @@ namespace Project_2.Tests
                 BidAmount = 100.0m
             };
 
-            Property property = new Property("CountryName", "StateName", "CityName", "StreetName", "ZipCode", 1000.0m, 3, 500.0m)
+            Property property = new Property("CountryName", "StateName", "CityName", "StreetName", "ZipCode", 1000.0m, 3, 500.0m, Guid.NewGuid())
             {
                 PropertyID = offerDto.PropertyId
             };
-            // Important: IdentityUser expects string ID, so use .ToString()
+
             User user = new User
             {
-                Id = offerDto.UserId,
                 UserName = "TestUser",
                 Email = "testuser@example.com"
             };
 
             _propertyRepositoryMock.Setup(x => x.GetByIdAsync(offerDto.PropertyId)).ReturnsAsync(property);
-            _userRepositoryMock.Setup(x => x.GetByIdAsync(offerDto.UserId)).ReturnsAsync(user);
+            _userManagerMock.Setup(x => x.FindByIdAsync(offerDto.UserId.ToString())).ReturnsAsync(user);
 
             _offerRepositoryMock.Setup(x => x.AddAsync(It.IsAny<Offer>())).Returns(Task.CompletedTask);
             _offerRepositoryMock.Setup(x => x.SaveChangesAsync()).Returns(Task.FromResult(1));
@@ -81,13 +86,13 @@ namespace Project_2.Tests
 
             // Test for user not found
             _propertyRepositoryMock.Setup(x => x.GetByIdAsync(offerDto.PropertyId)).ReturnsAsync(property);
-            _userRepositoryMock.Setup(x => x.GetByIdAsync(offerDto.UserId)).ReturnsAsync((User)null);
+            _userManagerMock.Setup(x => x.FindByIdAsync(offerDto.UserId.ToString())).ReturnsAsync((User)null);
             exception = await Assert.ThrowsAsync<Exception>(() => _offerService.AddAsync(offerDto));
             Assert.Equal("User cannot be null", exception.Message);
 
             // Test for invalid bid amount
-            _userRepositoryMock.Setup(x => x.GetByIdAsync(offerDto.UserId)).ReturnsAsync(user);
-            offerDto.BidAmount = -1.0m; // Invalid bid amount
+            _userManagerMock.Setup(x => x.FindByIdAsync(offerDto.UserId.ToString())).ReturnsAsync(user);
+            offerDto.BidAmount = -1.0m;
             exception = await Assert.ThrowsAsync<Exception>(() => _offerService.AddAsync(offerDto));
             Assert.Equal("Bid amount must be greater than zero", exception.Message);
         }
@@ -104,7 +109,6 @@ namespace Project_2.Tests
 
             await _offerService.RemoveAsync(offerId);
 
-
             _offerRepositoryMock.Verify(x => x.Remove(It.IsAny<Offer>()), Times.Once);
 
             _offerRepositoryMock.Setup(x => x.GetByIdAsync(offerId)).ReturnsAsync((Offer)null);
@@ -116,17 +120,14 @@ namespace Project_2.Tests
         [Fact]
         public async Task GetByIdAsync_ShouldReturnOffer_AndHandleErrors()
         {
-
             Guid offerId = Guid.NewGuid();
             Offer offer = new Offer(Guid.NewGuid(), Guid.NewGuid(), 100.0m) { OfferID = offerId };
 
             _offerRepositoryMock.Setup(x => x.GetByIdAsync(offerId)).ReturnsAsync(offer);
 
-
             var result = await _offerService.GetByIdAsync(offerId);
             Assert.NotNull(result);
             Assert.Equal(offerId, result.OfferId);
-
 
             _offerRepositoryMock.Setup(x => x.GetByIdAsync(offerId)).ReturnsAsync((Offer)null);
             var exception = await Assert.ThrowsAsync<Exception>(() => _offerService.GetByIdAsync(offerId));
@@ -144,17 +145,15 @@ namespace Project_2.Tests
                 new Offer(Guid.NewGuid(), Guid.NewGuid(), 150.0m)
             };
 
-            _propertyRepositoryMock.Setup(x => x.GetByIdAsync(propertyId)).ReturnsAsync(new Property("CountryName", "StateName", "CityName", "StreetName", "ZipCode", 1000.0m, 3, 500.0m) { PropertyID = propertyId });
+            _propertyRepositoryMock.Setup(x => x.GetByIdAsync(propertyId)).ReturnsAsync(new Property("CountryName", "StateName", "CityName", "StreetName", "ZipCode", 1000.0m, 3, 500.0m, Guid.NewGuid()) { PropertyID = propertyId });
             _offerRepositoryMock.Setup(x => x.GetAllForProperty(propertyId)).ReturnsAsync(offers);
 
-
-            var result = await _offerService.GetAllForProperty(propertyId);
+            var result = await _offerService.GetAllForPropertyAsync(propertyId);
             Assert.NotNull(result);
             Assert.Equal(2, result.Count());
 
-
             _propertyRepositoryMock.Setup(x => x.GetByIdAsync(propertyId)).ReturnsAsync((Property)null);
-            var exception = await Assert.ThrowsAsync<Exception>(() => _offerService.GetAllForProperty(propertyId));
+            var exception = await Assert.ThrowsAsync<Exception>(() => _offerService.GetAllForPropertyAsync(propertyId));
             Assert.Equal("Property does not exist", exception.Message);
         }
 
@@ -162,7 +161,6 @@ namespace Project_2.Tests
         [Fact]
         public async Task GetAllByUser_ShouldReturnOffers_AndHandleErrors()
         {
-            // Arrange
             Guid userId = Guid.NewGuid();
             List<Offer> offers = new List<Offer>
             {
@@ -170,23 +168,16 @@ namespace Project_2.Tests
                 new Offer(Guid.NewGuid(), userId, 150.0m)
             };
 
-            _userRepositoryMock.Setup(x => x.GetByIdAsync(userId))
-                .ReturnsAsync(new User
-                {
-                    Id = userId,
-                    UserName = "TestUser",
-                    Email = "testuser@example.com"
-                });
+            User user = new User { UserName = "TestUser", Email = "testuser@example.com" };
+            _userManagerMock.Setup(x => x.FindByIdAsync(userId.ToString())).ReturnsAsync(user);
             _offerRepositoryMock.Setup(x => x.GetAllByUser(userId)).ReturnsAsync(offers);
 
-            // Act & Assert for valid data
-            var result = await _offerService.GetAllByUser(userId);
+            var result = await _offerService.GetAllByUserAsync(userId);
             Assert.NotNull(result);
             Assert.Equal(2, result.Count());
 
-            // Test for user not found
-            _userRepositoryMock.Setup(x => x.GetByIdAsync(userId)).ReturnsAsync((User)null);
-            var exception = await Assert.ThrowsAsync<Exception>(() => _offerService.GetAllByUser(userId));
+            _userManagerMock.Setup(x => x.FindByIdAsync(userId.ToString())).ReturnsAsync((User)null);
+            var exception = await Assert.ThrowsAsync<Exception>(() => _offerService.GetAllByUserAsync(userId));
             Assert.Equal("User does not exist.", exception.Message);
         }
 
@@ -194,7 +185,6 @@ namespace Project_2.Tests
         [Fact]
         public async Task SearchOffersAsync_ShouldSearchOffers_AndHandleErrors()
         {
-
             OfferSearchDTO searchDto = new OfferSearchDTO
             {
                 OfferId = null,
@@ -214,7 +204,6 @@ namespace Project_2.Tests
             Assert.NotNull(result);
             Assert.Equal(2, result.Count());
 
-            // Test for no search criteria (null)
             searchDto = null;
             var exception = await Assert.ThrowsAsync<ArgumentException>(() => _offerService.SearchOffersAsync(searchDto));
             Assert.Equal("At least one search criterion (OfferId, UserId, or PropertyId) must be provided", exception.Message);

@@ -110,7 +110,7 @@ public class TestPurchase
         var offerId = Guid.NewGuid();
         decimal bidAmount = 100000;
 
-        var property = new Property("USA", "State", "City", "12345", "Test Street", 100000, 1, 1) { PropertyID = propertyId, OwnerID = ownerId, ForSale = true };
+        var property = new Property("USA", "State", "City", "12345", "Test Street", 100000, 1, 1, Guid.NewGuid()) { PropertyID = propertyId, OwnerID = ownerId, ForSale = true };
         var offer = new Offer(buyerId, propertyId, bidAmount) { OfferID = offerId };
         var purchaseDto = new CreatePurchaseDTO { PropertyId = propertyId, UserId = ownerId, OfferId = offerId };
 
@@ -137,7 +137,7 @@ public class TestPurchase
 
         // Setup property
         var property = new Property(
-            "usa", "colorado", "tesla", "1234", "test street", 100000, 1, 1)
+            "usa", "colorado", "tesla", "1234", "test street", 100000, 1, 1, Guid.NewGuid())
         {
             PropertyID = propertyId,
             OwnerID = ownerId,
@@ -199,7 +199,8 @@ public class TestPurchase
             "test street",
             100000,
             1,
-            1
+            1,
+            Guid.NewGuid()
         )
         {
             PropertyID = propertyId,

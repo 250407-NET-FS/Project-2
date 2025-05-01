@@ -48,7 +48,8 @@ namespace Project_2.Tests
                     "123 florida man st",
                     1,
                     100,
-                    20
+                    20,
+                    Guid.NewGuid()
                     ),
                     new Property(
                     "idk",
@@ -58,7 +59,8 @@ namespace Project_2.Tests
                     "123 oblivion",
                     111,
                     1,
-                    1
+                    1,
+                    Guid.NewGuid()
                     ),
                     new Property(
                     "CANADA",
@@ -68,7 +70,8 @@ namespace Project_2.Tests
                     "123 maple street",
                     9999999999,
                     100000,
-                    200000
+                    200000,
+                    Guid.NewGuid()
                     )
             };
             var propertyRepositoryMock = new Mock<IPropertyRepository>();
@@ -87,7 +90,7 @@ namespace Project_2.Tests
             var userId = Guid.NewGuid();
             var property = new Property(
                 "USA", "NY", "NYC", "10001",
-                "123 Test St", 500000, 3, 2)
+                "123 Test St", 500000, 3, 2, Guid.NewGuid())
             {
                 PropertyID = propertyId,
                 OwnerID = userId
@@ -141,7 +144,7 @@ namespace Project_2.Tests
             var unauthorizedUserId = Guid.NewGuid();
             var property = new Property(
                 "USA", "NY", "NYC", "10001",
-                "123 Test St", 500000, 3, 2)
+                "123 Test St", 500000, 3, 2, Guid.NewGuid())
             {
                 PropertyID = propertyId,
                 OwnerID = ownerId
@@ -190,7 +193,7 @@ namespace Project_2.Tests
             var propertyId = Guid.NewGuid();
             var expected = new Property(
                 "USA", "NY", "NYC", "10001",
-                "123 Test St", 500000, 3, 2)
+                "123 Test St", 500000, 3, 2, Guid.NewGuid())
             {
                 PropertyID = propertyId
             };
@@ -243,7 +246,7 @@ namespace Project_2.Tests
 
             var existingProperty = new Property(
                 "USA", "NY", "NYC", "10001",
-                "123 Test St", 500000, 3, 2)
+                "123 Test St", 500000, 3, 2, Guid.NewGuid())
             {
                 PropertyID = propertyId,
                 OwnerID = userId
@@ -286,7 +289,7 @@ namespace Project_2.Tests
             var propertyDTO = new PropertyUpdateDTO { PropertyID = propertyId };
             var existingProperty = new Property(
                 "USA", "NY", "NYC", "10001",
-                "123 Test St", 500000, 3, 2)
+                "123 Test St", 500000, 3, 2, Guid.NewGuid())
             {
                 PropertyID = propertyId,
                 OwnerID = userId

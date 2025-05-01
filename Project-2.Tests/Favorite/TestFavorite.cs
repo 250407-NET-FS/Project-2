@@ -228,7 +228,7 @@ namespace Project_2.Tests
                 UserId = Guid.NewGuid()
             };
 
-            var property = new Property("USA", "State", "City", "12345", "Test St", 100000, 3, 2)
+            var property = new Property("USA", "State", "City", "12345", "Test St", 100000, 3, 2, Guid.NewGuid())
             {
                 PropertyID = dto.PropertyId
             };
@@ -443,7 +443,7 @@ namespace Project_2.Tests
 
         private void SetupUserAndPropertyMocks(FavoritesDTO dto)
         {
-            var property = new Property("USA", "State", "City", "12345", "Test St", 100000, 3, 2)
+            var property = new Property("USA", "State", "City", "12345", "Test St", 100000, 3, 2, Guid.NewGuid())
             {
                 PropertyID = dto.PropertyId
             };
