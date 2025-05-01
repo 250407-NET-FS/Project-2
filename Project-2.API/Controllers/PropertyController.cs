@@ -5,7 +5,6 @@ using Project_2.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Project_2.Models.DTOs;
 
 namespace Project_2.API;
 
@@ -39,12 +38,13 @@ public class PropertyController : ControllerBase{
         [FromQuery] decimal maxprice = -1,
         [FromQuery] int bedrooms = -1,
         [FromQuery] decimal bathrooms = -1,
-        [FromQuery] bool forsale = false
+        [FromQuery] bool forsale = false,
+        [FromQuery] Guid? OwnerID = null
         ){
         try
         {
             return Ok(await _propertyService.GetPropertiesAsync(country, state, city, zip, address,
-            minprice, maxprice, bedrooms, bathrooms, forsale));
+            minprice, maxprice, bedrooms, bathrooms, forsale, OwnerID));
         }
         catch (Exception e)
         {
@@ -55,10 +55,10 @@ public class PropertyController : ControllerBase{
     // Get: api/admin/properties
     // Get all properties Admin Only
     [Authorize(Roles = "Admin")]
-    [HttpGet("/api/admin/property")]
+    [HttpGet("/api/admin/properties")]
     public async Task<ActionResult<IEnumerable<Property>>> GetAllPropertiesAdmin(){
         try{
-            return Ok(await _propertyService.GetPropertiesAsync("", "", "", "", "", -1, -1, -1, -1, false));
+            return Ok(await _propertyService.GetPropertiesAsync("", "", "", "", "", -1, -1, -1, -1, false, null));
         } catch(Exception e){
             return BadRequest(e.Message);
         }
@@ -104,7 +104,7 @@ public class PropertyController : ControllerBase{
     // Delete: api/property/{id}
     // Deletes property by property id owner only
     [Authorize]
-    [HttpDelete]
+    [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteProperty([FromRoute] Guid id){
         try{
             User? user = await GetCurrentUserAsync();
@@ -115,10 +115,10 @@ public class PropertyController : ControllerBase{
         }
     }
 
-    // Delete: api/admin/property/{id}
+    // Delete: api/admin/properties/{id}
     // Deletes property by property id admin only
     [Authorize(Roles = "Admin")]
-    [HttpDelete("/api/admin/property/{id}")]
+    [HttpDelete("/api/admin/properties/{id}")]
     public async Task<IActionResult> DeletePropertyAdmin([FromRoute] Guid id){
         try{
             await _propertyService.RemovePropertyAsync(id, null);
@@ -128,7 +128,7 @@ public class PropertyController : ControllerBase{
         }
     }
 
-    // Get: api/property/id/{id}
+    // Get: api/properties/id/{id}
     // Get property by id
     [HttpGet("id/{id}")]
     public async Task<ActionResult<Property>> GetPropertyById([FromRoute] Guid id){

@@ -3,28 +3,41 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Project_2.API;
 using Project_2.Models;
+using Project_2.Models.DTOs;
 
-namespace Project_2.Pages.Pages.EstateProperties {
+namespace Project_2.Pages.Pages.EstateProperties
+{
+    [BindProperties]
     public class CreateModel(
         ILogger<LayoutModel> logger, UserManager<User> userManager,
         PropertyController controller
-        ): LayoutModel(logger, userManager) {
+        ) : LayoutModel(logger, userManager)
+    {
         private readonly PropertyController _controller = controller;
+        private readonly UserManager<User> _userManager = userManager;
 
-        public IActionResult OnGet() {
+        public IActionResult OnGet()
+        {
             return Page();
         }
 
-        //[BindProperty]
-        //public CreatePropertyDto? PropertyInfo {get; set;}
+        public PropertyAddDTO? PropertyInfo { get; set; }
 
-        public async Task<IActionResult> OnPostAsync() {
-            if (!ModelState.IsValid) {
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid)
+            {
                 return Page();
             }
 
-            //await _controller.CreateOffer(PropertyInfo);
-            return RedirectToPage("./EstateProperties");
+            var user = await _userManager.GetUserAsync(User);
+            if (user is null){
+                return RedirectToPage("../Auth/Login");
+            }
+            PropertyInfo!.OwnerID = user.Id;
+
+            await _controller.CreateProperty(PropertyInfo);
+            return RedirectToPage("../Index");
         }
     }
 }

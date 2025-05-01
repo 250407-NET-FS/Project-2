@@ -15,7 +15,8 @@ public interface IPropertyService
         decimal maxprice,
         int bedrooms,
         decimal bathrooms,
-        bool forsale);
+        bool forsale,
+        Guid? OwnerId);
     Task<Property?> GetPropertyByIdAsync(Guid guid);
     Task<Guid> AddNewPropertyAsync(PropertyAddDTO propertyInfo);
     Task UpdatePropertyAsync(PropertyUpdateDTO dto, Guid userId);

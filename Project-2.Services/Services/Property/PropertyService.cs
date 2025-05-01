@@ -23,10 +23,11 @@ public class PropertyService : IPropertyService
         decimal maxPrice,
         int bedrooms,
         decimal bathrooms,
-        bool forSale
+        bool forSale,
+        Guid? OwnerId
     ) {
         IEnumerable<Property> propertyList = await _propertyRepository.GetAllWithFilters(country, state, city, zip, address,
-                                                    minPrice, maxPrice, bedrooms, bathrooms, forSale);
+                                                    minPrice, maxPrice, bedrooms, bathrooms, forSale, OwnerId);
         return propertyList;
     }
 
@@ -40,7 +41,7 @@ public class PropertyService : IPropertyService
         Property newProperty = new Property(propertyInfo.Country!, propertyInfo.State!,
                                             propertyInfo.City!, propertyInfo.ZipCode!,
                                             propertyInfo.StreetAddress!, propertyInfo.StartingPrice,
-                                            propertyInfo.Bedrooms, propertyInfo.Bathrooms);
+                                            propertyInfo.Bedrooms, propertyInfo.Bathrooms, propertyInfo.OwnerID);
 
         await _propertyRepository.AddAsync(newProperty);
 
@@ -77,7 +78,7 @@ public class PropertyService : IPropertyService
             throw new Exception("Property not found");
         }
 
-        if (userId is not null && propertyToRemove.OwnerID != userId) {
+        if (userId is not null && propertyToRemove.OwnerID != userId) { //we might want to check if role of user might be admin as another one
            throw new Exception("Unauthorized");
         }
 
