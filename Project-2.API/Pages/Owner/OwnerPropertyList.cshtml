@@ -33,8 +33,8 @@
                     }
                     <p>Listed: @Model.PropertyList[i].ListDate</p>
                     <p>Listed By: @Model.Owner</p>
-                    <button class="btn btn-danger" asp-page="owner/properties/{id}">Edit Property</button>
-                    <button class="btn btn-danger" asp-page-handler="deleteAsync">Delete Property</button>
+                    <button class="btn btn-danger" asp-page="owner/properties/{id}" asp-route-id="@Model.PropertyList[i].PropertyID">Edit Property</button>
+                    <button class="btn btn-danger" asp-page-handler="DeleteAsync" asp-route-id="@Model.PropertyList[i].PropertyID">Delete Property</button>
                 </div>
             }
         </div>
