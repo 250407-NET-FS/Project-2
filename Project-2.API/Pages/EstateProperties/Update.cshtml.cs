@@ -12,7 +12,6 @@ namespace Project_2.Pages.Pages.EstateProperties {
             ILogger<LayoutModel> logger,
             UserManager<User> userManager,
             PropertyController propertyController,
-            FavoritesDTO favoritesDTO,
             FavoriteController favoriteController
             ): LayoutModel(logger, userManager) {
         private readonly PropertyController _controller = propertyController;

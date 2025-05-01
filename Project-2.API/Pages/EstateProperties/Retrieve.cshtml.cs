@@ -22,7 +22,7 @@ namespace Project_2.Pages.Pages.EstateProperties {
 
         public async Task<IActionResult> OnGet(Guid id) {
             Property = await GetProperty(id);
-            User = await manager.FindByIdAsync(Property.OwnerID.ToString());
+            User = await _userManager.FindByIdAsync(Property.OwnerID.ToString());
             DaysListed = DateTime.Now.Subtract(Property!.ListDate).Days;
             return Page();
         }
@@ -49,7 +49,7 @@ namespace Project_2.Pages.Pages.EstateProperties {
         public async Task<Property> GetProperty(Guid id)
         {
             var property = await _propertyController.GetPropertyById(id);
-            Console.WriteLine(property.Value);
+            Console.WriteLine(property.Value is null);
             return property.Value;
         }
     }
