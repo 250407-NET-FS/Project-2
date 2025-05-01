@@ -15,4 +15,5 @@ public class PurchaseRepository : BaseRepository<Purchase>, IPurchaseRepository
     {
         return await _dbContext.Purchase.Where(f => f.OwnerID == userId).OrderByDescending(f => f.Date).ToListAsync();
     }
+
 }
