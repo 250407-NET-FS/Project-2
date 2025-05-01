@@ -30,9 +30,12 @@ public class PurchaseService : IPurchaseService
     public async Task<Purchase> AcceptOfferAsync(CreatePurchaseDTO purchaseDTO)
     {
         Property? property = (await _propertyRepository.GetByIdAsync(purchaseDTO.PropertyId))!;
+
         if (property is null || property.ForSale == false)
         {
+            // throw new Exception(property is null ? "a" : "b");
             throw new Exception("Property not for sale");
+
         }
 
         if (property.OwnerID != purchaseDTO.UserId)

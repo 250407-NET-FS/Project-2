@@ -9,6 +9,15 @@ using Project_2.Data;
 using Project_2.Models.DTOs;
 using Project_2.Services.Services;
 
+// test
+// get all favorites
+// add favorites
+// remove favorites
+// check favorites
+// get all user favorites
+// get all user favorites no user found throws exception
+// when property not found throw exception
+
 namespace Project_2.Tests
 {
     public class TestFavorite

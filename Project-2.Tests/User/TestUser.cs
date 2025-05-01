@@ -10,6 +10,13 @@ using Xunit;
 
 namespace Project_2.Tests;
 
+// test
+// generate a token
+// get user by id
+// check user logged in
+// delete user
+// delete user invalid id
+// delete user fails should throw exception
 public class UserServiceTests
 {
     private readonly Mock<UserManager<User>> _mockUserManager;

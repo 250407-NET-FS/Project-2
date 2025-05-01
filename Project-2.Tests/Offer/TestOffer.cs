@@ -1,13 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Moq;
 using Xunit;
 using Project_2.Models;
 using Project_2.Services;
 using Project_2.Data;
 using Project_2.Models.DTOs;
+
+// tests
+// Search offers
+// add offers
+// remove offers
+// get offer by id
+// get all offer for property
+// get all offers by user
+// search offer by dto passed in values
+
 
 namespace Project_2.Tests
 {
@@ -90,20 +96,17 @@ namespace Project_2.Tests
         [Fact]
         public async Task RemoveAsync_ShouldRemoveOffer_AndHandleErrors()
         {
-            // Arrange
             Guid offerId = Guid.NewGuid();
             Offer offer = new Offer(Guid.NewGuid(), Guid.NewGuid(), 100.0m) { OfferID = offerId };
 
             _offerRepositoryMock.Setup(x => x.GetByIdAsync(offerId)).ReturnsAsync(offer);
             _offerRepositoryMock.Setup(x => x.Remove(It.IsAny<Offer>()));
 
-            // Act & Assert for valid data
             await _offerService.RemoveAsync(offerId);
 
-            // Assert Remove method is called
+
             _offerRepositoryMock.Verify(x => x.Remove(It.IsAny<Offer>()), Times.Once);
 
-            // Test for offer not found
             _offerRepositoryMock.Setup(x => x.GetByIdAsync(offerId)).ReturnsAsync((Offer)null);
             var exception = await Assert.ThrowsAsync<Exception>(() => _offerService.RemoveAsync(offerId));
             Assert.Equal("Offer not found", exception.Message);
@@ -113,18 +116,18 @@ namespace Project_2.Tests
         [Fact]
         public async Task GetByIdAsync_ShouldReturnOffer_AndHandleErrors()
         {
-            // Arrange
+
             Guid offerId = Guid.NewGuid();
             Offer offer = new Offer(Guid.NewGuid(), Guid.NewGuid(), 100.0m) { OfferID = offerId };
 
             _offerRepositoryMock.Setup(x => x.GetByIdAsync(offerId)).ReturnsAsync(offer);
 
-            // Act & Assert for valid data
+
             var result = await _offerService.GetByIdAsync(offerId);
             Assert.NotNull(result);
             Assert.Equal(offerId, result.OfferId);
 
-            // Test for offer not found
+
             _offerRepositoryMock.Setup(x => x.GetByIdAsync(offerId)).ReturnsAsync((Offer)null);
             var exception = await Assert.ThrowsAsync<Exception>(() => _offerService.GetByIdAsync(offerId));
             Assert.Equal("Offer not found", exception.Message);
@@ -134,7 +137,6 @@ namespace Project_2.Tests
         [Fact]
         public async Task GetAllForProperty_ShouldReturnOffers_AndHandleErrors()
         {
-            // Arrange
             Guid propertyId = Guid.NewGuid();
             List<Offer> offers = new List<Offer>
             {
@@ -145,12 +147,12 @@ namespace Project_2.Tests
             _propertyRepositoryMock.Setup(x => x.GetByIdAsync(propertyId)).ReturnsAsync(new Property("CountryName", "StateName", "CityName", "StreetName", "ZipCode", 1000.0m, 3, 500.0m) { PropertyID = propertyId });
             _offerRepositoryMock.Setup(x => x.GetAllForProperty(propertyId)).ReturnsAsync(offers);
 
-            // Act & Assert for valid data
+
             var result = await _offerService.GetAllForProperty(propertyId);
             Assert.NotNull(result);
             Assert.Equal(2, result.Count());
 
-            // Test for property not found
+
             _propertyRepositoryMock.Setup(x => x.GetByIdAsync(propertyId)).ReturnsAsync((Property)null);
             var exception = await Assert.ThrowsAsync<Exception>(() => _offerService.GetAllForProperty(propertyId));
             Assert.Equal("Property does not exist", exception.Message);
@@ -192,7 +194,7 @@ namespace Project_2.Tests
         [Fact]
         public async Task SearchOffersAsync_ShouldSearchOffers_AndHandleErrors()
         {
-            // Arrange
+
             OfferSearchDTO searchDto = new OfferSearchDTO
             {
                 OfferId = null,
@@ -208,7 +210,6 @@ namespace Project_2.Tests
 
             _offerRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(offers);
 
-            // Act & Assert for valid search criteria
             var result = await _offerService.SearchOffersAsync(searchDto);
             Assert.NotNull(result);
             Assert.Equal(2, result.Count());

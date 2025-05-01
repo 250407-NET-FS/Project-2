@@ -6,6 +6,20 @@ using Project_2.Models.DTOs;
 using Moq;
 using Microsoft.EntityFrameworkCore;
 
+// tests
+// get all properties
+// remove a property
+// add new property
+// remove property when user is not owner
+// add new property but save fails
+// get property by id
+// get property not found
+// remove property that does not exist throw execption
+// update property fails throw exception
+// update property not found throw exception
+
+
+
 namespace Project_2.Tests
 {
     public class TestProperty
