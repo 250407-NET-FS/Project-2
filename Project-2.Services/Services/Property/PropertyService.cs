@@ -40,7 +40,7 @@ public class PropertyService : IPropertyService
         Property newProperty = new Property(propertyInfo.Country!, propertyInfo.State!,
                                             propertyInfo.City!, propertyInfo.ZipCode!,
                                             propertyInfo.StreetAddress!, propertyInfo.StartingPrice,
-                                            propertyInfo.Bedrooms, propertyInfo.Bathrooms);
+                                            propertyInfo.Bedrooms, propertyInfo.Bathrooms, propertyInfo.OwnerID);
 
         await _propertyRepository.AddAsync(newProperty);
 

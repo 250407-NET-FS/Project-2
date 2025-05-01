@@ -93,11 +93,9 @@ public static class Seeder
                 StreetAddress: "321 Pine St",
                 StartingPrice: 1000_000m,
                 Bedrooms: 3,
-                Bathrooms: 2.5m
-            )
-            {
-                OwnerID = user.Id     
-            };
+                Bathrooms: 2.5m,
+                OwnerID: user.Id
+            );
 
             db.Property.Add(property);
             await db.SaveChangesAsync();
