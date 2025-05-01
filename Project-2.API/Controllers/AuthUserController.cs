@@ -36,13 +36,13 @@ public class AuthUserController : ControllerBase{
         {
             UserName = newUser.Email,
             Email = newUser.Email,
-            FullName = newUser.FullName
+            FullName = newUser.FullName!
         };
 
         //We are going to attempt to add the user to the db, if they are added we will return
         //an Ok with a success message
         //If not, we return some error
-        var result = await _userManager.CreateAsync(user, newUser.Password);
+        var result = await _userManager.CreateAsync(user, newUser.Password!);
 
         // result above is of type IdentityResult
         // It contains info about an AspNetCore.Identity related database operation
@@ -63,10 +63,10 @@ public class AuthUserController : ControllerBase{
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         //Reach into the db and find the User with this email
-        var user = await _userManager.FindByEmailAsync(existingUser.Email);
+        var user = await _userManager.FindByEmailAsync(existingUser.Email!);
 
         //If we do not succeed...
-        if (user == null || !await _userManager.CheckPasswordAsync(user, existingUser.Password))
+        if (user == null || !await _userManager.CheckPasswordAsync(user, existingUser.Password!))
         {
             return Unauthorized("invalid Credentials");
         }

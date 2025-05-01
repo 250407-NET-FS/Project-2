@@ -6,28 +6,30 @@ namespace Project_2.Services.Services;
 
 public class PurchaseService : IPurchaseService
 {
+    private readonly IOfferRepository _offerRepository;
+    private readonly IPropertyRepository _propertyRepository;
     private readonly IPurchaseRepository _purchaseRepository;
-    private readonly IUnitOfWork _unitOfWork;
 
-    public PurchaseService(IPurchaseRepository purchaseRepository, IUnitOfWork unitOfWork)
+    public PurchaseService(IOfferRepository offerRepository, IPropertyRepository propertyRepository, IPurchaseRepository purchaseRepository)
     {
+        _offerRepository = offerRepository;
+        _propertyRepository = propertyRepository;
         _purchaseRepository = purchaseRepository;
-        _unitOfWork = unitOfWork;
     }
 
-    public async Task<IEnumerable<Purchase>> GetAllAsync()
+    public async Task<IEnumerable<Purchase>> GetAllPurchasesAsync()
     {
         return await _purchaseRepository.GetAllAsync();
     }
 
-    public async Task<Purchase?> GetByIdAsync(Guid id)
+    public async Task<IEnumerable<Purchase>> GetAllPurchasesByUserAsync(Guid userId)
     {
-        return await _purchaseRepository.GetByIdAsync(id);
+        return await _purchaseRepository.GetAllByUser(userId);
     }
 
-    public async Task AcceptOffer(CreatePurchaseDTO purchaseDTO)
+    public async Task<Purchase> AcceptOfferAsync(CreatePurchaseDTO purchaseDTO)
     {
-        Property? property = (await _unitOfWork.PropertyRepo.GetByIdAsync(purchaseDTO.PropertyId))!;
+        Property? property = (await _propertyRepository.GetByIdAsync(purchaseDTO.PropertyId))!;
         if (property is null || property.ForSale == false) {
             throw new Exception("Property not for sale");
         }
@@ -36,23 +38,25 @@ public class PurchaseService : IPurchaseService
             throw new Exception("Unauthorized");
         }
 
-        Offer? offer = (await _unitOfWork.OfferRepo.GetByIdAsync(purchaseDTO.OfferId))!;
+        Offer? offer = (await _offerRepository.GetByIdAsync(purchaseDTO.OfferId))!;
         if (offer is null) {
             throw new Exception("Offer does not exist");
         }
 
         // Insert record of new sale
         Purchase newPurchase = new Purchase(offer.UserID, property.PropertyID, offer.BidAmount); // use default datetime.now for time of purchase
-        await _unitOfWork.PurchaseRepo.AddAsync(newPurchase);
+        await _purchaseRepository.AddAsync(newPurchase);
 
         // Purge previous offers for the newly sold property
-        _unitOfWork.OfferRepo.RemoveAllForProperty(property.PropertyID);
+        _offerRepository.RemoveAllForProperty(property.PropertyID);
 
         // Update property to reflect new ownership
-        property.ForSale = false;
-        property.OwnerID = offer.UserID;
-        _unitOfWork.PropertyRepo.Update(property);
+        PropertyUpdateDTO propertyInfo = new PropertyUpdateDTO() { OwnerID = offer.UserID, ForSale = false };
+        _propertyRepository.Update(propertyInfo);
 
-        await _unitOfWork.CommitAsync();
+        // May appear to save property repository only but in the background
+        // it's calling dbContext.SaveChanges and is saving changes to all repos
+        await _propertyRepository.SaveChangesAsync();
+        return newPurchase;
     }
 }

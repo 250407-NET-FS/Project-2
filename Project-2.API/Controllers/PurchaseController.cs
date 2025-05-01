@@ -13,6 +13,7 @@ namespace Project_2.API;
 // hint: If you use the [EntityName]Controller convention, we can essentially
 // parameterize the route name
 [ApiController]
+[Authorize]
 [Route("api/purchase")]
 public class PurchaseController : ControllerBase{
 
@@ -43,14 +44,16 @@ public class PurchaseController : ControllerBase{
     //POST: api/purchase
     //Create a new purchase
     [HttpPost] // In this method, we explicity tell ASP to look for our dto in the body of the request
-    public async Task<ActionResult<PurchaseResponseDTO>> CreateOffer([FromBody] CreatePurchaseDTO dto)
+    public async Task<ActionResult<Purchase>> AcceptOffer([FromBody] CreatePurchaseDTO dto)
     {
         try
         {
             //Explicitly checking the modelstate to make sure that out dto conforms
             //to whatever we need it to be
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
+            }
+
             return Ok(await _purchaseService.AcceptOfferAsync(dto));
             
         }
@@ -66,14 +69,14 @@ public class PurchaseController : ControllerBase{
     public async Task<ActionResult<Purchase>> GetAllPurchasesByUser(){
         try{
             User? user = await GetCurrentUserAsync();
-            return Ok(await _purchaseService.GetAllPurchasesByUserAsync(user?.Id));
+            return Ok(await _purchaseService.GetAllPurchasesByUserAsync(user.Id));
         } catch(Exception e){
             return BadRequest(e.Message);
         }
     }
 
-    private async Task<User?> GetCurrentUserAsync()
+    private async Task<User> GetCurrentUserAsync()
     {
-        return await _userManager.GetUserAsync(HttpContext.User);
+        return (await _userManager.GetUserAsync(HttpContext.User))!;
     }
 }

@@ -5,7 +5,6 @@ using Project_2.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Project_2.Models.DTOs;
 
 namespace Project_2.API;
 
@@ -14,7 +13,7 @@ namespace Project_2.API;
 // hint: If you use the [EntityName]Controller convention, we can essentially
 // parameterize the route name
 [ApiController]
-[Route("api/property")]
+[Route("api/properties")]
 public class PropertyController : ControllerBase{
 
     private readonly IPropertyService _propertyService;
@@ -26,7 +25,7 @@ public class PropertyController : ControllerBase{
         _userManager = userManager;
     }
 
-    // Get: api/property
+    // Get: api/properties
     // Endpoint to retrieve all Properties
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Property>>> GetAllProperties(
@@ -53,11 +52,11 @@ public class PropertyController : ControllerBase{
         }
     }
 
-    // Get: api/admin/property
+    // Get: api/admin/properties
     // Get all properties Admin Only
     [Authorize(Roles = "Admin")]
-    [HttpDelete("/api/admin/property")]
-    public async Task<ActionResult<Property>> GetAllPropertiesAdmin(){
+    [HttpGet("/api/admin/properties")]
+    public async Task<ActionResult<IEnumerable<Property>>> GetAllPropertiesAdmin(){
         try{
             return Ok(await _propertyService.GetPropertiesAsync("", "", "", "", "", -1, -1, -1, -1, false, null));
         } catch(Exception e){
@@ -65,7 +64,7 @@ public class PropertyController : ControllerBase{
         }
     }
 
-    //POST: api/property
+    //Post: api/properties
     //Create a new property
     [Authorize]
     [HttpPost] // In this method, we explicity tell ASP to look for our dto in the body of the request
@@ -88,7 +87,7 @@ public class PropertyController : ControllerBase{
         }
     }
 
-    // Put: api/property
+    // Put: api/properties
     // Updates property attributes based on what is not null owner only
     [Authorize]
     [HttpPut]
@@ -102,24 +101,24 @@ public class PropertyController : ControllerBase{
         }
     }
 
-    // Delete: api/property
+    // Delete: api/property/{id}
     // Deletes property by property id owner only
     [Authorize]
-    [HttpDelete]
-    public async Task<ActionResult> DeleteProperty([FromBody] Guid propertyId){
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteProperty([FromRoute] Guid id){
         try{
             User? user = await GetCurrentUserAsync();
-            await _propertyService.RemovePropertyAsync(propertyId, user!.Id);
+            await _propertyService.RemovePropertyAsync(id, user!.Id);
             return Ok();
         } catch(Exception e){
             return BadRequest(e.Message);
         }
     }
 
-    // Delete: api/admin/property/{id}
+    // Delete: api/admin/properties/{id}
     // Deletes property by property id admin only
     [Authorize(Roles = "Admin")]
-    [HttpDelete("/api/admin/property/{id}")]
+    [HttpDelete("/api/admin/properties/{id}")]
     public async Task<IActionResult> DeletePropertyAdmin([FromRoute] Guid id){
         try{
             await _propertyService.RemovePropertyAsync(id, null);
@@ -129,9 +128,9 @@ public class PropertyController : ControllerBase{
         }
     }
 
-    // Get: api/property/id/{id}
+    // Get: api/properties/id/{id}
     // Get property by id
-    [HttpGet("{id}")]
+    [HttpGet("id/{id}")]
     public async Task<ActionResult<Property>> GetPropertyById([FromRoute] Guid id){
         try{
             return Ok(await _propertyService.GetPropertyByIdAsync(id));

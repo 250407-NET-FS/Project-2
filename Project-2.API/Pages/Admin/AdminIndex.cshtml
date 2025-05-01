@@ -1,4 +1,4 @@
-@page "admin/home"
+@page "/admin/home"
 @using Project_2.Pages.Pages.Admin
 @model AdminIndexModel
 @{
@@ -10,10 +10,10 @@
     <div class="container">
         <div class="row">
             <div class="col-6">
-                <button class="btn btn-danger">View All Users</button>
+                <button class="btn btn-danger" asp-page="../users">View All Users</button>
             </div>
             <div class="col-6">
-                <button class="btn btn-danger">View All Properties</button>
+                <button class="btn btn-danger" asp-page="../properties">View All Properties</button>
             </div>
         </div>
     </div>

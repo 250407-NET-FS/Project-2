@@ -53,8 +53,13 @@ public class FavoriteService : IFavoriteService
         await _favoriteRepository.SaveChangesAsync();
     }
 
-    public async Task<bool> CheckFavoritedAsync(FavoritesDTO dto) {
-        IEnumerable<Favorite> favs = await _favoriteRepository.GetAllByUser(dto.UserId);
+    public async Task<bool> CheckFavoritedAsync(FavoritesGetDTO dto) {
+        if (dto.UserId is null) {
+            // user not logged in
+            return false;
+        }
+
+        IEnumerable<Favorite> favs = await _favoriteRepository.GetAllByUser((Guid)dto.UserId);
         return favs.Any(f => f.PropertyID == dto.PropertyId);
     }
 
