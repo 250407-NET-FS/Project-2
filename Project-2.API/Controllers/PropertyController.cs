@@ -55,7 +55,7 @@ public class PropertyController : ControllerBase{
     // Get: api/admin/properties
     // Get all properties Admin Only
     [Authorize(Roles = "Admin")]
-    [HttpGet("/api/admin/property")]
+    [HttpGet("/api/admin/properties")]
     public async Task<ActionResult<IEnumerable<Property>>> GetAllPropertiesAdmin(){
         try{
             return Ok(await _propertyService.GetPropertiesAsync("", "", "", "", "", -1, -1, -1, -1, false));
@@ -104,7 +104,7 @@ public class PropertyController : ControllerBase{
     // Delete: api/property/{id}
     // Deletes property by property id owner only
     [Authorize]
-    [HttpDelete]
+    [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteProperty([FromRoute] Guid id){
         try{
             User? user = await GetCurrentUserAsync();
@@ -115,10 +115,10 @@ public class PropertyController : ControllerBase{
         }
     }
 
-    // Delete: api/admin/property/{id}
+    // Delete: api/admin/properties/{id}
     // Deletes property by property id admin only
     [Authorize(Roles = "Admin")]
-    [HttpDelete("/api/admin/property/{id}")]
+    [HttpDelete("/api/admin/properties/{id}")]
     public async Task<IActionResult> DeletePropertyAdmin([FromRoute] Guid id){
         try{
             await _propertyService.RemovePropertyAsync(id, null);
@@ -128,7 +128,7 @@ public class PropertyController : ControllerBase{
         }
     }
 
-    // Get: api/property/id/{id}
+    // Get: api/properties/id/{id}
     // Get property by id
     [HttpGet("id/{id}")]
     public async Task<ActionResult<Property>> GetPropertyById([FromRoute] Guid id){
