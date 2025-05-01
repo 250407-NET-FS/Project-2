@@ -3,22 +3,46 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Project_2.API;
 using Project_2.Models;
+using Project_2.Models.DTOs;
 
-namespace Project_2.Pages.Offers {
-    public class CreateModel(ILogger<LayoutModel> logger, UserManager<User> manager,
-        OfferController controller
-    ): LayoutModel(logger, manager) {
-        private readonly OfferController _controller = controller;
+namespace Project_2.Pages.Offers
+{
+    public class CreateModel : LayoutModel
+    {
+        private readonly OfferController _controller;
+        private readonly UserManager<User> _userManager;
 
-        public IActionResult OnGet() {
-            return Page();
+        public CreateModel(
+            ILogger<LayoutModel> logger,
+            UserManager<User> userManager,
+            OfferController controller
+        ) : base(logger, userManager)
+        {
+            _controller = controller;
+            _userManager = userManager;
         }
 
         [BindProperty]
-        public Offer? Offer {get; set;}
+        public OfferNewDTO Offer { get; set; } = new();
 
-        public async Task<IActionResult> OnPostAsync() {
-            //await _controller.PostAsync();
+        public IActionResult OnGet(Guid propertyId)
+        {
+            Offer.PropertyId = propertyId;
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid)
+                return Page();
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return RedirectToPage("../Auth/Login");
+
+            Offer.UserId = user.Id;
+
+            await _controller.CreateOffer(Offer);
             return RedirectToPage("./Index");
         }
     }

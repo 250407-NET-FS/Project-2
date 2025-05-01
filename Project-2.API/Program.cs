@@ -95,7 +95,9 @@ builder.Services.AddScoped<PropertyController>();
 
 builder.Services.AddScoped<UserController>();
 
-
+builder.Services.AddScoped<IOfferRepository, OfferRepository>();
+builder.Services.AddScoped<IOfferService, OfferService>();
+builder.Services.AddScoped<OfferController>();
 
 
 

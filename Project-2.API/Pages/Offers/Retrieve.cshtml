@@ -1,0 +1,24 @@
+@page
+@model Project_2.Pages.Offers.IndexModel
+
+<h2>Offers for Property @Model.PropertyId</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Amount</th>
+            <th>User ID</th>
+            <th>Created At</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var offer in Model.Offers)
+        {
+            <tr>
+                <td>@offer.BidAmount</td>
+                <td>@offer.UserID</td>
+                <td>@offer.Date.ToString("g")</td>
+            </tr>
+        }
+    </tbody>
+</table>

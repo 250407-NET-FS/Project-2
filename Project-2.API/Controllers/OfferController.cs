@@ -12,7 +12,8 @@ namespace Project_2.API;
 // parameterize the route name
 [ApiController]
 [Route("api/offer")]
-public class OfferController : ControllerBase{
+public class OfferController : ControllerBase
+{
 
     private readonly IOfferService _offerService;
 
@@ -24,7 +25,8 @@ public class OfferController : ControllerBase{
     // Get: api/offer
     // Endpoint to retrieve all Offers
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Offer>>> GetAllOffers(){
+    public async Task<ActionResult<IEnumerable<Offer>>> GetAllOffers()
+    {
         try
         {
             return Ok(await _offerService.GetAllAsync());
@@ -57,10 +59,14 @@ public class OfferController : ControllerBase{
     // Get: api/offer/id/{id}
     // Get offer by id
     [HttpGet("id/{id}")]
-    public async Task<ActionResult<Offer>> GetOfferById([FromRoute] Guid id){
-        try{
+    public async Task<ActionResult<Offer>> GetOfferById([FromRoute] Guid id)
+    {
+        try
+        {
             return Ok(await _offerService.GetByIdAsync(id));
-        } catch(Exception e){
+        }
+        catch (Exception e)
+        {
             return BadRequest(e.Message);
         }
     }
@@ -68,10 +74,14 @@ public class OfferController : ControllerBase{
     // Get: api/offer/user/{id}
     // Get all offer from user
     [HttpGet("user/{id}")]
-    public async Task<ActionResult<IEnumerable<OfferResponseDTO>>> GetAllOffersFromUser([FromRoute] Guid id){
-        try{
+    public async Task<ActionResult<IEnumerable<OfferResponseDTO>>> GetAllOffersFromUser([FromRoute] Guid id)
+    {
+        try
+        {
             return Ok(await _offerService.GetAllByUserAsync(id));
-        } catch(Exception e){
+        }
+        catch (Exception e)
+        {
             return BadRequest(e.Message);
         }
     }
@@ -79,10 +89,14 @@ public class OfferController : ControllerBase{
     // Get: api/offer/property/{id}
     // Get all offers for property
     [HttpGet("property/{id}")]
-    public async Task<ActionResult<IEnumerable<Property>>> GetAllOffersForProperty([FromRoute] Guid id){
-        try{
+    public async Task<ActionResult<IEnumerable<Offer>>> GetAllOffersForProperty([FromRoute] Guid id)
+    {
+        try
+        {
             return Ok(await _offerService.GetAllForPropertyAsync(id));
-        } catch(Exception e){
+        }
+        catch (Exception e)
+        {
             return BadRequest(e.Message);
         }
     }

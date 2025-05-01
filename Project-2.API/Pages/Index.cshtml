@@ -11,10 +11,8 @@
   <h3>Listings (Page @Model.Page of @Model.TotalPages)</h3>
   <div class="row align-items-start gx-4 gy-4">
     <div class="col-auto">
-      <a asp-page="./Index"
-         asp-route-page="@(Model.Page - 1)"
-         class="btn btn-outline-dark"
-         aria-disabled="@(Model.Page <= 1)">
+      <a asp-page="./Index" asp-route-page="@(Model.Page - 1)" class="btn btn-outline-dark"
+        aria-disabled="@(Model.Page <= 1)">
         ← Previous
       </a>
     </div>
@@ -23,31 +21,32 @@
     {
       <div class="col text-start" css>
         <p>
-          <a asp-page="./EstateProperties.Retrieve"
-             asp-route-id="@prop.PropertyID">
+          <a asp-page="./EstateProperties.Retrieve" asp-route-id="@prop.PropertyID">
             @prop.PropertyID
           </a>
         </p>
         <p>@prop.StreetAddress, @prop.State @prop.ZipCode</p>
-        <p>@prop.ListDate:MM/dd/yyyy</p>
-        <p>Starting Price: @prop.StartingPrice:C</p>
+        <p>@prop.ListDate:</p>
+        <p>Starting Price: @prop.StartingPrice:</p>
         <p>Owned by: @prop.OwnerID</p>
+        <div class="d-flex">
+          <a asp-page="/Offers/Create" asp-route-propertyId="@prop.PropertyID" class="btn btn-sm btn-primary">Make
+            Offer</a>
+          <button class="btn btn-sm btn-secondary ml-2"
+            onclick="location.href='/Offers/ViewDetails?propertyId=@prop.PropertyID'">View Offers</button>
+        </div>
       </div>
     }
 
     <div class="col-auto">
-      <a asp-page="./Index"
-         asp-route-page="@(Model.Page + 1)"
-         class="btn btn-outline-dark"
-         aria-disabled="@(Model.Page >= Model.TotalPages)">
+      <a asp-page="./Index" asp-route-page="@(Model.Page + 1)" class="btn btn-outline-dark"
+        aria-disabled="@(Model.Page >= Model.TotalPages)">
         Next →
       </a>
     </div>
   </div>
-   <a class="nav-link text-dark" asp-area="" asp-page="/EstateProperties/Create">Create a listing></a>
-   <a class="nav-link text-dark" asp-area="" asp-page="/EstateProperties/Retrieve">Retrieve a listing></a>
-   <a class="nav-link text-dark" asp-area="" asp-page="/EstateProperties/Update">Update a listing></a>
+  <a class="nav-link text-dark" asp-area="" asp-page="/EstateProperties/Create">Create a listing></a>
+  <a class="nav-link text-dark" asp-area="" asp-page="/EstateProperties/Retrieve">Retrieve a listing></a>
+  <a class="nav-link text-dark" asp-area="" asp-page="/EstateProperties/Update">Update a listing></a>
 
 </div>
-
-
