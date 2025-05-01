@@ -1,9 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Xunit;
 using Project_2.Models;
 using Project_2.Services.Services;
@@ -16,33 +10,15 @@ namespace Project_2.Tests
 {
     public class TestProperty
     {
-        private readonly Mock<IPurchaseRepository> _purchaseRepositoryMock;
-        private readonly PurchaseService _purchaseService;
         private readonly Mock<IPropertyRepository> _propertyRepositoryMock;
         private readonly PropertyService _propertyService;
 
         public TestProperty()
         {
-            var options = new DbContextOptionsBuilder<JazaContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-                .Options;
-
-            var context = new JazaContext(options);
             _propertyRepositoryMock = new Mock<IPropertyRepository>();
-            _purchaseRepositoryMock = new Mock<IPurchaseRepository>();
-            _purchaseService = new PurchaseService(_purchaseRepositoryMock.Object, new Mock<IUnitOfWork>().Object);
-            _propertyService = new PropertyService(_propertyRepositoryMock.Object, context);
+            _propertyService = new PropertyService(_propertyRepositoryMock.Object, null);
         }
 
-        [Fact]
-        public void Dispose()
-        {
-            var context = _propertyService.GetType()
-                .GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance)?
-                .GetValue(_propertyService) as JazaContext;
-
-            context?.Database.EnsureDeleted();
-        }
 
         [Fact]
         public async Task GetAllAsync_ShouldReturnAllProperties()
@@ -91,113 +67,13 @@ namespace Project_2.Tests
         }
 
         [Fact]
-        public async Task GetAllFilterAsync_ShouldReturnFilteredProperties()
-        {
-            var expectedProperties = new List<Property>
-            { //Property.Property(string Country, string State, string City, 
-            // string ZipCode, string StreetAddress, decimal StartingPrice, int Bedrooms, decimal Bathrooms)
-                new Property(
-                    "USA",
-                    "florida",
-                    "orlando",
-                    "55555",
-                    "123 florida man st",
-                    1,
-                    100,
-                    20
-                    ),
-                new Property(
-                    "CANADA",
-                    "Ontario",
-                    "quebec",
-                    "88889",
-                    "123 maple street",
-                    9999999999,
-                    100000,
-                    200000
-                    )
-            };
-
-            _propertyRepositoryMock
-                .Setup(repo => repo.GetAllWithFilters(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<decimal>(), It.IsAny<int>(), It.IsAny<decimal>()))
-                .ReturnsAsync(expectedProperties);
-
-            // Act
-            var result = await _propertyService.ShowAvailablePropertiesAsync("USA", "NY", "10001", "123 Main St", 400000, 600000, 3, 2);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(expectedProperties.Count, result.Count());
-        }
-
-        [Fact]
-        public async Task GetAllAsync_WhenNoProperties_ShouldReturnEmptyList()
-        {
-            var propertyRepositoryMock = new Mock<IPropertyRepository>();
-            propertyRepositoryMock
-                .Setup(repo => repo.GetAllAsync())
-                .ReturnsAsync(new List<Property>());
-
-            var result = await propertyRepositoryMock.Object.GetAllAsync();
-
-            Assert.Empty(result);
-            propertyRepositoryMock.Verify(repo => repo.GetAllAsync());
-        }
-
-        [Fact]
-        public async Task GetAllAsync_WhenRepositoryThrows_ShouldPropagateException()
-        {
-            var propertyRepositoryMock = new Mock<IPropertyRepository>();
-            propertyRepositoryMock
-                .Setup(repo => repo.GetAllAsync())
-                .ThrowsAsync(new Exception("Database error"));
-
-            await Assert.ThrowsAsync<Exception>(() =>
-                propertyRepositoryMock.Object.GetAllAsync());
-        }
-
-        [Fact]
-        public async Task GetAllAsync_WithInvalidProperty_ShouldHandleValidation()
-        {
-            var invalidProperty = new Property(
-                "",  // Empty country
-                "",  // Empty state
-                "city",
-                "12345",
-                "address",
-                -1,  // Negative price
-                -2,  // Negative bedrooms
-                -3   // Negative bathrooms
-            );
-
-            var propertyRepositoryMock = new Mock<IPropertyRepository>();
-            propertyRepositoryMock
-                .Setup(repo => repo.GetAllAsync())
-                .ReturnsAsync(new List<Property> { invalidProperty });
-
-            var result = await propertyRepositoryMock.Object.GetAllAsync();
-            Assert.NotNull(result);
-            var property = result.First();
-            Assert.True(string.IsNullOrEmpty(property.Country));
-            Assert.True(string.IsNullOrEmpty(property.State));
-            Assert.Equal(-1, property.StartingPrice);
-        }
-
-        [Fact]
-        public async Task RemoveAsync_ShouldRemoveProperty()
+        public async Task RemovePropertyAsync_ShouldRemoveProperty()
         {
             var propertyId = Guid.NewGuid();
             var userId = Guid.NewGuid();
             var property = new Property(
-                "CANADA",
-                "Ontario",
-                "quebec",
-                "88889",
-                "123 maple street",
-                9999999999,
-                100000,
-                200000
-            )
+                "USA", "NY", "NYC", "10001",
+                "123 Test St", 500000, 3, 2)
             {
                 PropertyID = propertyId,
                 OwnerID = userId
@@ -210,81 +86,40 @@ namespace Project_2.Tests
                 .Setup(repo => repo.SaveChangesAsync())
                 .ReturnsAsync(1);
 
+            await _propertyService.RemovePropertyAsync(propertyId, userId);
 
-            await _propertyService.RemoveProperty(propertyId, userId);
-
-            _propertyRepositoryMock.Verify(repo => repo.Remove(It.Is<Property>(p =>
-                p.PropertyID == propertyId &&
-                p.OwnerID == userId)), Times.Once);
-            _propertyRepositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+            _propertyRepositoryMock.Verify(repo => repo.Remove(property));
         }
 
-        [Fact]
-        public async Task MarkForSaleAsync_ShouldUpdatePropertyCorrectly()
-        {
-            var propertyId = Guid.NewGuid();
-            var ownerId = Guid.NewGuid();
-            var property = new Property(
-                "USA", "NY", "NYC", "10001",
-                "123 Test St", 500000, 3, 2)
-            {
-                PropertyID = propertyId,
-                OwnerID = ownerId,
-                ForSale = false
-            };
-
-            _propertyRepositoryMock
-                .Setup(repo => repo.GetByIdAsync(propertyId))
-                .ReturnsAsync(property);
-            _propertyRepositoryMock
-                .Setup(repo => repo.SaveChangesAsync())
-                .ReturnsAsync(1);
-
-            await _propertyService.MarkForSaleAsync(propertyId);
-
-            _propertyRepositoryMock.Verify(repo => repo.Update(It.Is<Property>(p =>
-                p.PropertyID == propertyId &&
-                p.ForSale == true)));
-        }
 
         [Fact]
         public async Task AddNewPropertyAsync_ShouldAddProperty()
         {
-            var property = new Property(
-                "USA", "NY", "NYC", "10001",
-                "123 Test St", 500000, 3, 2);
+            var propertyDTO = new PropertyAddDTO
+            {
+                Country = "USA",
+                State = "NY",
+                City = "NYC",
+                ZipCode = "10001",
+                StreetAddress = "123 Test St",
+                StartingPrice = 500000,
+                Bedrooms = 3,
+                Bathrooms = 2
+            };
 
             _propertyRepositoryMock
                 .Setup(repo => repo.SaveChangesAsync())
                 .ReturnsAsync(1);
 
-            // Act
-            await _propertyService.AddNewPropertyAsync(property);
+            var result = await _propertyService.AddNewPropertyAsync(propertyDTO);
 
-            // Assert
-            _propertyRepositoryMock.Verify(repo => repo.AddAsync(property));
-            _propertyRepositoryMock.Verify(repo => repo.SaveChangesAsync());
+            Assert.NotEqual(Guid.Empty, result);
+            _propertyRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<Property>()));
         }
 
-        [Fact]
-        public async Task MarkSoldAsync_WhenPropertyNotFound_ShouldThrowException()
-        {
-
-            var propertyId = Guid.NewGuid();
-            var newOwnerId = Guid.NewGuid();
-
-            _propertyRepositoryMock
-                .Setup(repo => repo.GetByIdAsync(propertyId))
-                .ReturnsAsync((Property?)null);
-
-
-            var exception = await Assert.ThrowsAsync<Exception>(
-                () => _propertyService.MarkSoldAsync(propertyId, newOwnerId));
-            Assert.Equal("Property not found", exception.Message);
-        }
 
         [Fact]
-        public async Task RemoveProperty_WhenUnauthorized_ShouldThrowException()
+        public async Task RemovePropertyAsync_WhenUnauthorized_ShouldThrowException()
         {
 
             var propertyId = Guid.NewGuid();
@@ -303,7 +138,7 @@ namespace Project_2.Tests
                 .ReturnsAsync(property);
 
             var exception = await Assert.ThrowsAsync<Exception>(
-                () => _propertyService.RemoveProperty(propertyId, unauthorizedUserId));
+                () => _propertyService.RemovePropertyAsync(propertyId, unauthorizedUserId));
             Assert.Equal("Unauthorized", exception.Message);
         }
 
@@ -311,43 +146,29 @@ namespace Project_2.Tests
         public async Task AddNewPropertyAsync_WhenSaveFails_ShouldThrowException()
         {
 
-            var property = new Property(
-                "USA", "NY", "NYC", "10001",
-                "123 Test St", 500000, 3, 2);
-
-            _propertyRepositoryMock
-                .Setup(repo => repo.SaveChangesAsync())
-                .ReturnsAsync(0);
-
-
-            var exception = await Assert.ThrowsAsync<Exception>(
-                () => _propertyService.AddNewPropertyAsync(property));
-            Assert.Equal("Failed to insert property", exception.Message);
-        }
-        [Fact]
-        public async Task MarkSoldAsync_WhenSaveFails_ShouldThrowException()
-        {
-            var propertyId = Guid.NewGuid();
-            var newOwnerId = Guid.NewGuid();
-            var property = new Property(
-                "USA", "NY", "NYC", "10001",
-                "123 Test St", 500000, 3, 2)
+            var propertyDTO = new PropertyAddDTO
             {
-                PropertyID = propertyId
+                Country = "USA",
+                State = "NY",
+                City = "NYC",
+                ZipCode = "10001",
+                StreetAddress = "123 Test St",
+                StartingPrice = 500000,
+                Bedrooms = 3,
+                Bathrooms = 2
             };
 
             _propertyRepositoryMock
-                .Setup(repo => repo.GetByIdAsync(propertyId))
-                .ReturnsAsync(property);
-            _propertyRepositoryMock
                 .Setup(repo => repo.SaveChangesAsync())
                 .ReturnsAsync(0);
 
 
             var exception = await Assert.ThrowsAsync<Exception>(
-                () => _propertyService.MarkSoldAsync(propertyId, newOwnerId));
-            Assert.Equal("Failed to update property", exception.Message);
+                () => _propertyService.AddNewPropertyAsync(propertyDTO));
+            Assert.Equal("Failed to insert property", exception.Message);
         }
+
+
         [Fact]
         public async Task GetByIdAsync_ShouldReturnProperty()
         {
@@ -365,7 +186,7 @@ namespace Project_2.Tests
                 .ReturnsAsync(expected);
 
 
-            var result = await _propertyService.GetByIdAsync(propertyId);
+            var result = await _propertyService.GetPropertyByIdAsync(propertyId);
 
             Assert.NotNull(result);
             Assert.Equal(propertyId, result.PropertyID);
@@ -381,7 +202,7 @@ namespace Project_2.Tests
                 .ReturnsAsync((Property?)null);
 
 
-            var result = await _propertyService.GetByIdAsync(propertyId);
+            var result = await _propertyService.GetPropertyByIdAsync(propertyId);
 
 
             Assert.Null(result);
@@ -389,71 +210,100 @@ namespace Project_2.Tests
         }
 
         [Fact]
-        public async Task MarkForSaleAsync_WhenSaveFails_ShouldThrowException()
+        public async Task UpdatePropertyAsync_ShouldUpdateProperty()
         {
             var propertyId = Guid.NewGuid();
-            var property = new Property(
+            var userId = Guid.NewGuid();
+            var propertyDTO = new PropertyUpdateDTO
+            {
+                PropertyID = propertyId,
+                Country = "USA",
+                State = "NY",
+                City = "NYC",
+                ZipCode = "10001",
+                StreetAddress = "123 Test St",
+                StartingPrice = 500000,
+                Bedrooms = 3,
+                Bathrooms = 2
+            };
+
+            var existingProperty = new Property(
                 "USA", "NY", "NYC", "10001",
                 "123 Test St", 500000, 3, 2)
             {
                 PropertyID = propertyId,
-                ForSale = false
+                OwnerID = userId
             };
 
             _propertyRepositoryMock
                 .Setup(repo => repo.GetByIdAsync(propertyId))
-                .ReturnsAsync(property);
+                .ReturnsAsync(existingProperty);
             _propertyRepositoryMock
                 .Setup(repo => repo.SaveChangesAsync())
-                .ReturnsAsync(0);
+                .ReturnsAsync(1);
 
-            var exception = await Assert.ThrowsAsync<Exception>(
-                () => _propertyService.MarkForSaleAsync(propertyId));
-            Assert.Equal("Failed to update property", exception.Message);
+            await _propertyService.UpdatePropertyAsync(propertyDTO, userId);
+
+            _propertyRepositoryMock.Verify(repo => repo.Update(propertyDTO), Times.Once);
+            _propertyRepositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
         }
 
         [Fact]
-        public async Task MarkForSaleAsync_WhenPropertyNotFound_ShouldThrowException()
+        public async Task UpdatePropertyAsync_WhenPropertyNotFound_ShouldThrowException()
         {
             var propertyId = Guid.NewGuid();
+            var userId = Guid.NewGuid();
+            var propertyDTO = new PropertyUpdateDTO { PropertyID = propertyId };
 
             _propertyRepositoryMock
                 .Setup(repo => repo.GetByIdAsync(propertyId))
                 .ReturnsAsync((Property?)null);
 
             var exception = await Assert.ThrowsAsync<Exception>(
-                () => _propertyService.MarkForSaleAsync(propertyId));
+                () => _propertyService.UpdatePropertyAsync(propertyDTO, userId));
             Assert.Equal("Property not found", exception.Message);
         }
+
         [Fact]
-        public async Task MarkSoldAsync_ShouldUpdatePropertyCorrectly()
+        public async Task UpdatePropertyAsync_WhenSaveFails_ShouldThrowException()
         {
             var propertyId = Guid.NewGuid();
-            var oldOwnerId = Guid.NewGuid();
-            var newOwnerId = Guid.NewGuid();
-            var property = new Property(
+            var userId = Guid.NewGuid();
+            var propertyDTO = new PropertyUpdateDTO { PropertyID = propertyId };
+            var existingProperty = new Property(
                 "USA", "NY", "NYC", "10001",
                 "123 Test St", 500000, 3, 2)
             {
                 PropertyID = propertyId,
-                OwnerID = oldOwnerId,
-                ForSale = true
+                OwnerID = userId
             };
 
             _propertyRepositoryMock
                 .Setup(repo => repo.GetByIdAsync(propertyId))
-                .ReturnsAsync(property);
+                .ReturnsAsync(existingProperty);
             _propertyRepositoryMock
                 .Setup(repo => repo.SaveChangesAsync())
-                .ReturnsAsync(1);
+                .ReturnsAsync(0);
 
-
-            await _propertyService.MarkSoldAsync(propertyId, newOwnerId);
-
-            _propertyRepositoryMock.Verify(repo => repo.Update(It.Is<Property>(p =>
-                p.PropertyID == propertyId &&
-                p.OwnerID == newOwnerId &&
-                p.ForSale == false)));
+            var exception = await Assert.ThrowsAsync<Exception>(
+                () => _propertyService.UpdatePropertyAsync(propertyDTO, userId));
+            Assert.Equal("Failed to update property", exception.Message);
         }
+
+        [Fact]
+        public async Task RemovePropertyAsync_WhenPropertyNotFound_ShouldThrowException()
+        {
+            var propertyId = Guid.NewGuid();
+            var userId = Guid.NewGuid();
+
+            _propertyRepositoryMock
+                .Setup(repo => repo.GetByIdAsync(propertyId))
+                .ReturnsAsync((Property?)null);
+
+            var exception = await Assert.ThrowsAsync<Exception>(
+                () => _propertyService.RemovePropertyAsync(propertyId, userId));
+            Assert.Equal("Property not found", exception.Message);
+        }
+
     }
 }

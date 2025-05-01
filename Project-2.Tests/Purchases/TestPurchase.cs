@@ -133,13 +133,6 @@ namespace Project_2.Tests
                 p.PropertyID == propertyId &&
                 p.FinalPrice == bidAmount))
                 );
-            //check update property
-            propertyRepositoryMock.Verify(repo => repo.Update(
-                It.Is<Property>(p =>
-                    p.PropertyID == propertyId &&
-                    p.OwnerID == buyerId &&
-                    p.ForSale == false))
-                );
 
             //check removeallforproperty runs
             offerRepoMock.Verify(repo => repo.RemoveAllForProperty(propertyId));

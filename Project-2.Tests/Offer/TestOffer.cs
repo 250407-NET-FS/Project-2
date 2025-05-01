@@ -50,7 +50,7 @@ namespace Project_2.Tests
             // Important: IdentityUser expects string ID, so use .ToString()
             User user = new User
             {
-                Id = offerDto.UserId.ToString(),
+                Id = offerDto.UserId,
                 UserName = "TestUser",
                 Email = "testuser@example.com"
             };
@@ -171,7 +171,7 @@ namespace Project_2.Tests
             _userRepositoryMock.Setup(x => x.GetByIdAsync(userId))
                 .ReturnsAsync(new User
                 {
-                    Id = userId.ToString(),
+                    Id = userId,
                     UserName = "TestUser",
                     Email = "testuser@example.com"
                 });
