@@ -27,7 +27,7 @@ public class UserService : IUserService
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Email, user.Email)
         };
-
+        
         var roles = await _userManager.GetRolesAsync(user);
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
         SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
