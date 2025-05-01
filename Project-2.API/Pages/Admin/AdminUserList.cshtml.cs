@@ -3,21 +3,27 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Identity;
 using Project_2.API;
 using Project_2.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace Project_2.Pages.Pages.Admin {
+namespace Project_2.Pages.Pages.Admin
+{
     class UserModel(
         ILogger<LayoutModel> logger, UserManager<User> userManager, UserController controller
-        ): LayoutModel(logger, userManager) {
+        ) : LayoutModel(logger, userManager)
+    {
         private readonly UserManager<User> _userManager = userManager;
-        private readonly UserController _controller = controller;
 
-        public async Task<IActionResult> OnGetAsync() {
-            //UserList = await _controller.GetAllUsers();
+
+        public async Task<IActionResult> OnGetAsync()
+        {
+            UserList = await _userManager.Users.ToListAsync();
             return Page();
         }
 
         [BindProperty]
-        public List<User>? UserList {get; set;}
+        public List<User>? UserList { get; set; }
+        [BindProperty]
+        public bool isBanned {get; set;}
 
         // public async Task<IActionResult> OnDeactivate(Guid id) {
         //     if (!UserList.Find(u => u.Id.Equals(id)).isDeactivated) {
@@ -28,20 +34,33 @@ namespace Project_2.Pages.Pages.Admin {
         //     }
         // }
 
+        
+        public async Task<IActionResult> OnPostBanAsync(Guid id)
+        {
+            User user = await _userManager.FindByIdAsync(id.ToString());
 
-        // public async Task<IActionResult> OnBan(Guid id) {
-        //     if (!UserList.Find(u => u.Id.Equals(id)).isBanned) {
-        //         UserList.Find(u => u.Id.Equals(id)).isBanned = true;
-        //     }
-        //     else {
-        //         UserList.Find(u => u.Id.Equals(id)).isBanned = false;
-        //     }
-        // }
+            await _userManager.SetLockoutEnabledAsync(user, true);
+            await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
 
-        public async Task<IActionResult> OnDeleteAsync(Guid id) {
-            // User user = _controller.DeleteUserById(id);
-            // UserList!.Remove(user);
-            return Page();
+
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostUnBanAsync(Guid id)
+        {
+            User user = await _userManager.FindByIdAsync(id.ToString());
+            await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow);
+            await _userManager.SetLockoutEnabledAsync(user, false);
+
+            return RedirectToPage();
+        }
+
+
+        public async Task<IActionResult> OnPostDeleteAsync(Guid id)
+        {
+            User user = await _userManager.FindByIdAsync(id.ToString());
+            await _userManager.DeleteAsync(user);
+            return RedirectToPage();
         }
     }
 }

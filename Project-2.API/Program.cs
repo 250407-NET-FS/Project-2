@@ -32,7 +32,7 @@ builder.Services.AddOpenApi();
 builder
     .Services.AddIdentityCore<User>(options =>
     {
-
+        options.Lockout.AllowedForNewUsers = false;
         options.Password.RequireDigit = true;
         options.Password.RequiredLength = 8;
         options.Password.RequireNonAlphanumeric = false;
