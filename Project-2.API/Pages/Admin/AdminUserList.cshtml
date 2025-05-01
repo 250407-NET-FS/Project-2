@@ -42,7 +42,7 @@
                         <button class="btn btn-danger" asp-page-handler="BanAsync">Unban User</button>
                     }
                     *@
-                    <button class="btn btn-danger" asp-page-handler="deleteAsync">Delete User</button>
+                    <button class="btn btn-danger" asp-page-handler="DeleteAsync" asp-route-id="@Model.UserList[i].Id">Delete User</button>
                 </div>
             }
         </div>
