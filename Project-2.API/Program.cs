@@ -32,7 +32,7 @@ builder.Services.AddOpenApi();
 builder
     .Services.AddIdentityCore<User>(options =>
     {
-
+        options.Lockout.AllowedForNewUsers = false;
         options.Password.RequireDigit = true;
         options.Password.RequiredLength = 8;
         options.Password.RequireNonAlphanumeric = false;
@@ -63,7 +63,8 @@ builder
             ValidAudience = builder.Configuration["Jwt:Audience"],
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero,
-            NameClaimType = ClaimTypes.Name
+            NameClaimType = ClaimTypes.Name,
+            RoleClaimType = ClaimTypes.Role,
         };
 
         options.Events = new JwtBearerEvents

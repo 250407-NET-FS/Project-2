@@ -26,8 +26,10 @@
           </a>
         </p>
         <p>@prop.StreetAddress, @prop.State @prop.ZipCode</p>
+
         <p>@prop.ListDate:</p>
         <p>Starting Price: @prop.StartingPrice:</p>
+
         <p>Owned by: @prop.OwnerID</p>
         <div class="d-flex">
           <a asp-page="/Offers/Create" asp-route-propertyId="@prop.PropertyID" class="btn btn-sm btn-primary">Make

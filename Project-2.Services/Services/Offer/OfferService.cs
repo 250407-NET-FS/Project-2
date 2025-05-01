@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Project_2.Data;
 using Project_2.Models;
@@ -8,15 +7,15 @@ namespace Project_2.Services;
 
 public class OfferService : IOfferService
 {
+    private readonly UserManager<User> _userManager;
     private readonly IOfferRepository _offerRepository;
     private readonly IPropertyRepository _propertyRepository;
-    private readonly UserManager<User> _userManager;
 
-    public OfferService(IOfferRepository offerRepository, IPropertyRepository propertyRepository, UserManager<User> userManager)
+    public OfferService(UserManager<User> userManager, IOfferRepository offerRepository, IPropertyRepository propertyRepository)
     {
+        _userManager = userManager;
         _offerRepository = offerRepository;
         _propertyRepository = propertyRepository;
-        _userManager = userManager;
     }
 
     public async Task<IEnumerable<OfferResponseDTO>> GetAllAsync()

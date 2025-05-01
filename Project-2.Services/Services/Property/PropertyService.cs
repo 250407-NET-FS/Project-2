@@ -78,7 +78,7 @@ public class PropertyService : IPropertyService
             throw new Exception("Property not found");
         }
 
-        if (userId is not null && propertyToRemove.OwnerID != userId) {
+        if (userId is not null && propertyToRemove.OwnerID != userId) { //we might want to check if role of user might be admin as another one
            throw new Exception("Unauthorized");
         }
 

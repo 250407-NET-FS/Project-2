@@ -43,6 +43,7 @@ namespace Project_2.Pages.Offers
             Offer.UserId = user.Id;
 
             await _controller.CreateOffer(Offer);
+
             return RedirectToPage("./Index");
         }
     }

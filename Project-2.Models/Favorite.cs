@@ -10,10 +10,10 @@ public class Favorite
     [Key]
     public Guid FavoriteID { get; set; } = Guid.NewGuid();
     [Required]
-    [ForeignKey("UserID")]
+    [ForeignKey(nameof(User))]
     public Guid UserID { get; set; } 
     [Required]
-    [ForeignKey("PropertyID")]
+    [ForeignKey(nameof(Property))]
     public Guid PropertyID { get; set; }
 
     public DateTime Date { get; set; } = DateTime.Now;
@@ -24,4 +24,10 @@ public class Favorite
         PropertyID = propertyId;
         UserID = userId;
     }
+
+    // Navigations
+    #nullable disable
+    public User User { get; init; }
+    public Property Property { get; init; }
+    #nullable restore
 }

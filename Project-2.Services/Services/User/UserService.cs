@@ -23,14 +23,14 @@ public class UserService : IUserService
     public async Task<string> GenerateToken(User user)
     {
         List<Claim> claims = new List<Claim> {
-            new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(ClaimTypes.Name, user.UserName!),
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.Email)
+            new Claim(ClaimTypes.Email, user.Email!)
         };
-
+        
         var roles = await _userManager.GetRolesAsync(user);
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
-        SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+        SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
         SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         JwtSecurityToken token = new JwtSecurityToken(
             issuer: _config["Jwt:Issuer"],

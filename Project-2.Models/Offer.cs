@@ -10,10 +10,10 @@ public class Offer(Guid UserID, Guid PropertyID, decimal BidAmount)
     [Key]
     public Guid OfferID { get; set; } = Guid.NewGuid();
     [Required]
-    [ForeignKey("UserID")]
+    [ForeignKey(nameof(User))]
     public Guid UserID { get; set; } = UserID;
     [Required]
-    [ForeignKey("PropertyID")]
+    [ForeignKey(nameof(Property))]
     public Guid PropertyID { get; set; } = PropertyID;
 
     [Required]
@@ -21,4 +21,10 @@ public class Offer(Guid UserID, Guid PropertyID, decimal BidAmount)
     public decimal BidAmount { get; set; } = BidAmount;
 
     public DateTime Date { get; set; } = DateTime.Now;
+    
+    // Navigations
+    #nullable disable
+    public User User { get; init; }
+    public Property Property { get; init; }
+    #nullable restore
 }
