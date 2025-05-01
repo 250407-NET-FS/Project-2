@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Project_2.Data;
 using Project_2.Models;
 using Project_2.Models.DTOs;
@@ -9,13 +10,13 @@ public class OfferService : IOfferService
 {
     private readonly IOfferRepository _offerRepository;
     private readonly IPropertyRepository _propertyRepository;
-    private readonly IUserRepository _userRepository;
+    private readonly UserManager<User> _userManager;
 
-    public OfferService(IOfferRepository offerRepository, IPropertyRepository propertyRepository, IUserRepository userRepository)
+    public OfferService(IOfferRepository offerRepository, IPropertyRepository propertyRepository, UserManager<User> userManager)
     {
         _offerRepository = offerRepository;
         _propertyRepository = propertyRepository;
-        _userRepository = userRepository;
+        _userManager = userManager;
     }
 
     public async Task<IEnumerable<OfferResponseDTO>> GetAllAsync()
@@ -54,7 +55,7 @@ public class OfferService : IOfferService
             throw new Exception("Property cannot be null");
 
         // check if user exists
-        User? user = await _userRepository.GetByIdAsync(dto.UserId);
+        User? user = await _userManager.FindByIdAsync(dto.UserId.ToString());
         if (user is null)
             throw new Exception("User cannot be null");
 
@@ -122,7 +123,7 @@ public class OfferService : IOfferService
     public async Task<IEnumerable<OfferResponseDTO>> GetAllByUserAsync(Guid userId)
     {
         // check if user exist
-        User? user = await _userRepository.GetByIdAsync(userId);
+        User? user = await _userManager.FindByIdAsync(userId.ToString());
         if (user is null)
             throw new Exception("User does not exist.");
 
