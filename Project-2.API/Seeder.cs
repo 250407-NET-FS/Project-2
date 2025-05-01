@@ -14,9 +14,20 @@ public static class Seeder
     public static async Task SeedAdmin(IServiceProvider serviceProvider)
     {
         var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+        var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
         const string email = "admin@admin.com";
         const string password = "Admin1234";
         const string fullName = "Admin";
+
+        if (!await roleManager.RoleExistsAsync("Admin"))
+        {
+            var roleResult = await roleManager.CreateAsync(new IdentityRole<Guid>("Admin"));
+            if (!roleResult.Succeeded)
+                throw new Exception($"Could not create Admin role: {string.Join("; ", roleResult.Errors.Select(e => e.Description))}");
+        }
+
+
+
         if (await userManager.FindByEmailAsync(email) is null)
         {
             var admin = new User
@@ -34,6 +45,8 @@ public static class Seeder
                 var errors = string.Join("; ", result.Errors.Select(e => e.Description));
                 throw new Exception($"Seeding admin user failed: {errors}");
             }
+
+
 
             if (!await userManager.IsInRoleAsync(admin, "Admin"))
             {
@@ -71,11 +84,11 @@ public static class Seeder
     public static async Task SeedProperty(IServiceProvider serviceProvider)
     {
 
-        
+
         var db = serviceProvider.GetRequiredService<JazaContext>();
         var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
 
-        
+
         const string userEmail = "user@user.com";
         var user = await userManager.FindByEmailAsync(userEmail);
         if (user is null)
