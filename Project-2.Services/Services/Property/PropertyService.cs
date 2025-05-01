@@ -1,5 +1,6 @@
 using Project_2.Data;
 using Project_2.Models;
+using Project_2.Models.DTOs;
 
 namespace Project_2.Services.Services;
 
@@ -12,80 +13,72 @@ public class PropertyService : IPropertyService
         _propertyRepository = propertyRepository;
     }
 
-    public async Task<IEnumerable<Property>> ShowAvailablePropertiesAsync(
+    public async Task<IEnumerable<Property>> GetPropertiesAsync(
         string country,
         string state,
+        string city,
         string zip,
         string address,
-        decimal minprice,
-        decimal maxprice,
+        decimal minPrice,
+        decimal maxPrice,
         int bedrooms,
-        decimal bathrooms
-    )
-    {
-        IEnumerable<Property> propertyList = await _propertyRepository.GetAllWithFilters(country, state, zip, address, minprice, maxprice, bedrooms, bathrooms);
-        return propertyList.Where(p => p.ForSale);
+        decimal bathrooms,
+        bool forSale,
+        Guid? OwnerId
+    ) {
+        IEnumerable<Property> propertyList = await _propertyRepository.GetAllWithFilters(country, state, city, zip, address,
+                                                    minPrice, maxPrice, bedrooms, bathrooms, forSale, OwnerId);
+        return propertyList;
     }
 
-    public async Task<Property?> GetByIdAsync(Guid guid)
+    public async Task<Property?> GetPropertyByIdAsync(Guid guid)
     {
         return await _propertyRepository.GetByIdAsync(guid);
     }
 
-    public async Task AddNewPropertyAsync(Property property)
+    public async Task<Guid> AddNewPropertyAsync(PropertyAddDTO propertyInfo)
     {
-        await _propertyRepository.AddAsync(property);
+        Property newProperty = new Property(propertyInfo.Country!, propertyInfo.State!,
+                                            propertyInfo.City!, propertyInfo.ZipCode!,
+                                            propertyInfo.StreetAddress!, propertyInfo.StartingPrice,
+                                            propertyInfo.Bedrooms, propertyInfo.Bathrooms, propertyInfo.OwnerID);
+
+        await _propertyRepository.AddAsync(newProperty);
+
         int result = await _propertyRepository.SaveChangesAsync();
         if (result < 1) {
             throw new Exception("Failed to insert property");
         }
+
+        return newProperty.PropertyID;
     }
 
-    // requires updating if repo update method  is changed to use a property DTO
-    // simply remove the get call and instead directly send the DTO
-    public async Task MarkForSaleAsync(Guid propertyId) {
-        Property? propertyToUpdate = await _propertyRepository.GetByIdAsync(propertyId);
+    public async Task UpdatePropertyAsync(PropertyUpdateDTO dto, Guid userId) {
+        Property? propertyToUpdate = await _propertyRepository.GetByIdAsync(dto.PropertyID);
         if (propertyToUpdate is null) {
             throw new Exception("Property not found");
         }
 
-        propertyToUpdate.ForSale = true;
-        propertyToUpdate.ListDate = DateTime.UtcNow;
-        _propertyRepository.Update(propertyToUpdate);
-
-        int result = await _propertyRepository.SaveChangesAsync();
-        if (result < 1) {
-            throw new Exception("Failed to update property");
-        }
-    }
-
-    // requires updating if repo update method  is changed to use a property DTO
-    // simply remove the get call and instead directly send the DTO
-    public async Task MarkSoldAsync(Guid propertyId, Guid newOwnerId)
-    {
-        Property? propertyToUpdate = await _propertyRepository.GetByIdAsync(propertyId);
-        if (propertyToUpdate is null) {
-            throw new Exception("Property not found");
+        if (propertyToUpdate.OwnerID != userId) {
+           throw new Exception("Unauthorized");
         }
 
-        propertyToUpdate.ForSale = false;
-        propertyToUpdate.OwnerID = newOwnerId;
-        _propertyRepository.Update(propertyToUpdate);
-
+        _propertyRepository.Update(dto);
+        
         int result = await _propertyRepository.SaveChangesAsync();
         if (result < 1) {
             throw new Exception("Failed to update property");
         }
     }
     
-    public async Task RemoveProperty(Guid propertyId, Guid userId)
+    public async Task RemovePropertyAsync(Guid propertyId, Guid? userId)
     {
         Property? propertyToRemove = await _propertyRepository.GetByIdAsync(propertyId);
         if (propertyToRemove is null) {
             throw new Exception("Property not found");
         }
 
-        if (propertyToRemove.OwnerID != userId) {
+        if (userId is not null && propertyToRemove.OwnerID != userId) {
            throw new Exception("Unauthorized");
         }
 
@@ -93,7 +86,7 @@ public class PropertyService : IPropertyService
 
         int result = await _propertyRepository.SaveChangesAsync();
         if (result < 1) {
-            throw new Exception("Failed to update property");
+            throw new Exception("Failed to delete property");
         }
     }
 }

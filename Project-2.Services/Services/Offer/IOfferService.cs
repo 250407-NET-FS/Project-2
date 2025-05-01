@@ -9,7 +9,7 @@ public interface IOfferService
     Task<OfferResponseDTO?> GetByIdAsync(Guid id);
     Task<OfferResponseDTO> AddAsync(OfferNewDTO dto);
     Task RemoveAsync(Guid offerId);
-    Task<IEnumerable<OfferResponseDTO>> GetAllForProperty(Guid propertyId);
-    Task<IEnumerable<OfferResponseDTO>> GetAllByUser(Guid userId);
+    Task<IEnumerable<OfferResponseDTO>> GetAllForPropertyAsync(Guid propertyId);
+    Task<IEnumerable<OfferResponseDTO>> GetAllByUserAsync(Guid userId);
     Task<IEnumerable<OfferResponseDTO>> SearchOffersAsync(OfferSearchDTO dto);
 }

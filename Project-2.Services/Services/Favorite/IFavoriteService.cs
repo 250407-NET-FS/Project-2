@@ -5,10 +5,9 @@ namespace Project_2.Services.Services;
 
 public interface IFavoriteService
 {
-    Task<IEnumerable<FavoriteResponseDTO>> GetAllAsync();
-    Task<FavoriteResponseDTO?> GetByIdAsync(Guid id);
-    Task<FavoriteResponseDTO> AddAsync(FavoritesAddDTO dto);
-    Task RemoveAsync(Guid favoriteId);
-    Task<IEnumerable<FavoriteResponseDTO>> GetAllForProperty(Guid propertyId);
-    Task<IEnumerable<FavoriteResponseDTO>> GetAllByUser(Guid userId);
+    Task<IEnumerable<Favorite>> GetAllFavoritesAsync();
+    Task MarkUnmarkFavoriteAsync(FavoritesDTO dto);
+    Task<bool> CheckFavoritedAsync(FavoritesGetDTO dto);
+    Task<IEnumerable<FavoritesDTO>> GetAllForPropertyAsync(Guid propertyId); // unused stretch goal 
+    Task<IEnumerable<FavoriteListForUserDTO>> GetAllByUserAsync(Guid userId);
 }

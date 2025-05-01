@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Project_2.API</RootNamespace>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,5 +23,6 @@
     <ProjectReference Include="../Project-2.Models/Project-2.Models.csproj" />
     <ProjectReference Include="../Project-2.Services/Project-2.Services.csproj" />
   </ItemGroup>
+  
 
 </Project>
