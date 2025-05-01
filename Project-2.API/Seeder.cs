@@ -86,15 +86,15 @@ public static class Seeder
         if (!db.Property.Any())
         {
             var property = new Property(
-                Country: "USA",
-                State: "Florida",
-                City: "Miami",
-                ZipCode: "33101",
-                StreetAddress: "321 Pine St",
-                StartingPrice: 1000_000m,
-                Bedrooms: 3,
-                Bathrooms: 2.5m,
-                OwnerID: user.Id
+                country: "USA",
+                state: "Florida",
+                city: "Miami",
+                zipCode: "33101",
+                streetAddress: "321 Pine St",
+                startingPrice: 1000_000m,
+                bedrooms: 3,
+                bathrooms: 2.5m,
+                ownerId: user.Id
             );
 
             db.Property.Add(property);
