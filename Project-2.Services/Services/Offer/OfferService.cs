@@ -49,12 +49,12 @@ public class OfferService : IOfferService
     public async Task<OfferResponseDTO> AddAsync(OfferNewDTO dto)
     {
         // check if property exists
-        Property property = await _propertyRepository.GetByIdAsync(dto.PropertyId);
+        Property? property = await _propertyRepository.GetByIdAsync(dto.PropertyId);
         if (property is null)
             throw new Exception("Property cannot be null");
 
         // check if user exists
-        User user = await _userRepository.GetByIdAsync(dto.UserId);
+        User? user = await _userRepository.GetByIdAsync(dto.UserId);
         if (user is null)
             throw new Exception("User cannot be null");
 
@@ -83,7 +83,7 @@ public class OfferService : IOfferService
     public async Task RemoveAsync(Guid offerId)
     {
         // Get offer to be removed
-        Offer offer = await _offerRepository.GetByIdAsync(offerId);
+        Offer? offer = await _offerRepository.GetByIdAsync(offerId);
 
         // if offer did not exist throw error
         if (offer is null)
@@ -96,10 +96,10 @@ public class OfferService : IOfferService
         await _offerRepository.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<OfferResponseDTO>> GetAllForProperty(Guid propertyId)
+    public async Task<IEnumerable<OfferResponseDTO>> GetAllForPropertyAsync(Guid propertyId)
     {
         // check if property exist
-        Property property = await _propertyRepository.GetByIdAsync(propertyId);
+        Property? property = await _propertyRepository.GetByIdAsync(propertyId);
         if (property is null)
             throw new Exception("Property does not exist");
 
@@ -119,10 +119,10 @@ public class OfferService : IOfferService
     }
 
 
-    public async Task<IEnumerable<OfferResponseDTO>> GetAllByUser(Guid userId)
+    public async Task<IEnumerable<OfferResponseDTO>> GetAllByUserAsync(Guid userId)
     {
         // check if user exist
-        User user = await _userRepository.GetByIdAsync(userId);
+        User? user = await _userRepository.GetByIdAsync(userId);
         if (user is null)
             throw new Exception("User does not exist.");
 
