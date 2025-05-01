@@ -34,8 +34,10 @@
                         {
                             <li class="nav-item">
                                 <span class="nav-link text-dark">
-                                    Hello, @User.Identity.Name!
-                                    Id: @User.FindFirstValue(ClaimTypes.NameIdentifier)
+                                    <p></p>Hello, @User.Identity.Name!<p>
+                                    <p>Id: @User.FindFirstValue(ClaimTypes.NameIdentifier)</p>
+                                    <li class="nav-item pull-right">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Owner/OwnerPropertyList">Check your properties</a>
                                 </span>
                             </li>
                             <form method="post">

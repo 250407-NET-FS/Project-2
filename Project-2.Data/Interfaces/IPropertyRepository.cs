@@ -14,7 +14,8 @@ public interface IPropertyRepository : IBaseRepository<Property> {
         decimal priceMin,
         int numBedroom,
         decimal numBathroom,
-        bool forSale);
+        bool forSale,
+        Guid? guid);
 
     public void Update(PropertyUpdateDTO propertyInfo);
 }

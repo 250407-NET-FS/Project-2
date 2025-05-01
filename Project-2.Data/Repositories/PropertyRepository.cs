@@ -24,7 +24,8 @@ public class PropertyRepository : BaseRepository<Property>, IPropertyRepository
         decimal priceMin,
         int numBedroom,
         decimal numBathroom,
-        bool forSale
+        bool forSale,
+        Guid? OwnerId
     )
     {
 
@@ -59,6 +60,10 @@ public class PropertyRepository : BaseRepository<Property>, IPropertyRepository
 
         if (forSale)
             query = query.Where(p => p.ForSale);
+        
+        if (OwnerId.HasValue){
+            query = query.Where(p => p.OwnerID == OwnerId.Value);
+        }
 
         return await query.ToListAsync();
     }

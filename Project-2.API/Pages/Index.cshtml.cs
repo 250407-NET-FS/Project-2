@@ -33,7 +33,7 @@ namespace Project_2.Pages
 
         public async Task OnGetAsync()
         {
-            var all = (await _propertyService.GetPropertiesAsync("", "", "", "", "", -1, -1, -1, -1, false))
+            var all = (await _propertyService.GetPropertiesAsync("", "", "", "", "", -1, -1, -1, -1, false, null))
                       .ToList();
 
             Properties = all;

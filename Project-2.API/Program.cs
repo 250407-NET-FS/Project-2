@@ -82,11 +82,18 @@ builder
 builder.Services.AddAuthorization();
 
 //Services
+
+builder.Services.AddScoped<Project_2.Services.Services.FavoriteService>();
 builder.Services.AddScoped<Project_2.Services.Services.PropertyService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
+builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+
 builder.Services.AddScoped<IPropertyService, PropertyService>();
+builder.Services.AddScoped<IFavoriteService, FavoriteService>();
 builder.Services.AddScoped<PropertyController>();
+
+builder.Services.AddScoped<UserController>();
 
 
 
