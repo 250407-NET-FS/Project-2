@@ -258,6 +258,12 @@ namespace Project_2.Tests
                 UserId = Guid.NewGuid()
             };
 
+            var getDto = new FavoritesGetDTO
+            {
+                PropertyId = dto.PropertyId,
+                UserId = dto.UserId
+            };
+
             var favorites = new List<Favorite>
             {
                 new(dto.PropertyId, dto.UserId)
@@ -267,7 +273,7 @@ namespace Project_2.Tests
                 .ReturnsAsync(favorites);
 
 
-            var result = await _favoriteService.CheckFavoritedAsync(dto);
+            var result = await _favoriteService.CheckFavoritedAsync(getDto);
 
             Assert.True(result);
         }
@@ -294,10 +300,10 @@ namespace Project_2.Tests
             _favoriteRepositoryMock.Setup(x => x.GetAllByUser(userId))
                 .ReturnsAsync(favorites);
 
-            // Act
+
             var result = await _favoriteService.GetAllByUserAsync(userId);
 
-            // Assert
+
             Assert.NotNull(result);
             Assert.Equal(favorites.Count, result.Count());
         }
@@ -378,7 +384,7 @@ namespace Project_2.Tests
 
             var exception = await Assert.ThrowsAsync<Exception>(
                 () => _favoriteService.MarkUnmarkFavoriteAsync(dto));
-            Assert.Equal("Property not found", exception.Message);
+            Assert.Equal("Property cannot be null", exception.Message);
         }
 
         [Fact]
@@ -400,7 +406,8 @@ namespace Project_2.Tests
                 .ReturnsAsync(favorites);
 
 
-            var result = await _favoriteService.CheckFavoritedAsync(dto);
+            var getDto = new FavoritesGetDTO { PropertyId = dto.PropertyId, UserId = dto.UserId };
+            var result = await _favoriteService.CheckFavoritedAsync(getDto);
 
 
             Assert.True(result);
@@ -415,10 +422,12 @@ namespace Project_2.Tests
                 UserId = Guid.NewGuid()
             };
 
+
             _favoriteRepositoryMock.Setup(x => x.GetAllByUser(dto.UserId))
                 .ReturnsAsync(new List<Favorite>());
 
-            var result = await _favoriteService.CheckFavoritedAsync(dto);
+            var getDto = new FavoritesGetDTO { PropertyId = dto.PropertyId, UserId = dto.UserId };
+            var result = await _favoriteService.CheckFavoritedAsync(getDto);
 
             Assert.False(result);
         }

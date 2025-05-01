@@ -1,6 +1,7 @@
 using Xunit;
 using Project_2.Models;
 using Project_2.Services.Services;
+using Project_2.Services;
 using Project_2.Data;
 using Project_2.Models.DTOs;
 using Moq;
@@ -27,8 +28,9 @@ public class TestPurchase
         _unitOfWorkMock.Setup(uow => uow.OfferRepo).Returns(new Mock<IOfferRepository>().Object);
 
         _purchaseService = new PurchaseService(
-            _purchaseRepositoryMock.Object,
-            _unitOfWorkMock.Object
+            _unitOfWorkMock.Object.OfferRepo,
+            _unitOfWorkMock.Object.PropertyRepo,
+            _purchaseRepositoryMock.Object
         );
     }
 
@@ -47,29 +49,54 @@ public class TestPurchase
             .ReturnsAsync(expectedPurchases);
 
 
-        var result = await _purchaseService.GetAllAsync();
+        var result = await _purchaseService.GetAllPurchasesAsync();
 
         Assert.NotNull(result); //not null
         Assert.Equal(expectedPurchases.Count, result.Count()); //correct count of purchases
         Assert.Equal(expectedPurchases, result); //correct purchases returned
     }
 
+    // [Fact] //test get purchase by id
+    // public async Task GetByIdAsync_ShouldReturnPurchaseById()
+    // {
+    //     var purchaseId = Guid.NewGuid();
+    //     var propertyId = Guid.NewGuid();
+    //     var expectedPurchase = new Purchase(purchaseId, propertyId, 100000);
+
+    //     _purchaseRepositoryMock
+    //         .Setup(repo => repo.GetByIdAsync(purchaseId))
+    //         .ReturnsAsync(expectedPurchase);
+
+    //     var result = await _purchaseService.GetByIdAsync(purchaseId);
+
+    //     Assert.NotNull(result); //not null
+    //     Assert.Equal(expectedPurchase.PurchaseID, result.PurchaseID); //correct purchase ID
+    //     _purchaseRepositoryMock.Verify(repo => repo.GetByIdAsync(purchaseId), Times.Once);
+    // }
+
     [Fact] //test get purchase by id
-    public async Task GetByIdAsync_ShouldReturnPurchaseById()
+    public async Task GetByIdAsync_ShouldReturnPurchasesByUserId()
     {
-        var purchaseId = Guid.NewGuid();
-        var propertyId = Guid.NewGuid();
-        var expectedPurchase = new Purchase(purchaseId, propertyId, 100000);
+        // Arrange
+        var userId = Guid.NewGuid();
+        var expectedPurchases = new List<Purchase>
+        {
+            new Purchase(userId, Guid.NewGuid(), 100000),
+            new Purchase(userId, Guid.NewGuid(), 200000)
+        };
 
         _purchaseRepositoryMock
-            .Setup(repo => repo.GetByIdAsync(purchaseId))
-            .ReturnsAsync(expectedPurchase);
+            .Setup(repo => repo.GetAllByUser(userId))
+            .ReturnsAsync(expectedPurchases);
 
-        var result = await _purchaseService.GetByIdAsync(purchaseId);
+        // Act
+        var result = await _purchaseService.GetAllPurchasesByUserAsync(userId);
 
-        Assert.NotNull(result); //not null
-        Assert.Equal(expectedPurchase.PurchaseID, result.PurchaseID); //correct purchase ID
-        _purchaseRepositoryMock.Verify(repo => repo.GetByIdAsync(purchaseId), Times.Once);
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(expectedPurchases.Count, result.Count());
+        Assert.Equal(expectedPurchases, result);
+        _purchaseRepositoryMock.Verify(repo => repo.GetAllByUser(userId), Times.Once);
     }
 
     [Fact] //test purchase creation valid
@@ -119,17 +146,26 @@ public class TestPurchase
         _unitOfWorkMock.Setup(uow => uow.PropertyRepo).Returns(propertyRepositoryMock.Object);
         propertyRepositoryMock.Setup(repo => repo.GetByIdAsync(propertyId)).ReturnsAsync(property);
 
+        // Add setup for property update and save changes
+        propertyRepositoryMock.Setup(repo => repo.Update(It.IsAny<PropertyUpdateDTO>()));
+        propertyRepositoryMock.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
+
         //set up offer moq
         var offerRepoMock = new Mock<IOfferRepository>();
         _unitOfWorkMock.Setup(uow => uow.OfferRepo).Returns(offerRepoMock.Object);
         offerRepoMock.Setup(repo => repo.GetByIdAsync(offerId)).ReturnsAsync(offer);
 
-        await _purchaseService.AcceptOffer(purchaseDTO);
+        var result = await _purchaseService.AcceptOfferAsync(purchaseDTO);
+
+        Assert.NotNull(result);
+        Assert.Equal(buyerId, result.OwnerID);
+        Assert.Equal(propertyId, result.PropertyID);
+        Assert.Equal(bidAmount, result.FinalPrice);
 
         // Verify that the purchase was created with the correct parameters
         _unitOfWorkMock.Verify(uow => uow.PurchaseRepo.AddAsync(
             It.Is<Purchase>(p =>
-            p.OwnerID == buyerId &&      //// Check that the OwnerID of the Purchase matches the buyerId.
+            p.OwnerID == buyerId &&
             p.PropertyID == propertyId &&
             p.FinalPrice == bidAmount))
             );
@@ -137,5 +173,11 @@ public class TestPurchase
         //check removeallforproperty runs
         offerRepoMock.Verify(repo => repo.RemoveAllForProperty(propertyId));
         _unitOfWorkMock.Verify(uow => uow.CommitAsync());
+
+        // Add verification for property update
+        propertyRepositoryMock.Verify(repo => repo.Update(It.Is<PropertyUpdateDTO>(p =>
+            p.OwnerID == buyerId &&
+            p.ForSale == false)), Times.Once);
+        propertyRepositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
     }
 }
