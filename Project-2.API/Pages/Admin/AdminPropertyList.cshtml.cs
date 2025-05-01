@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Project_2.API;
 using Project_2.Models;
-using Project_2.Services.Services;
+using Project_2.Services;
 
 namespace Project_2.Pages.Pages.Admin
 {

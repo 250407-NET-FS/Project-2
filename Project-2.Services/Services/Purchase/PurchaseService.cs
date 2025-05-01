@@ -2,7 +2,7 @@ using Project_2.Data;
 using Project_2.Models;
 using Project_2.Models.DTOs;
 
-namespace Project_2.Services.Services;
+namespace Project_2.Services;
 
 public class PurchaseService : IPurchaseService
 {

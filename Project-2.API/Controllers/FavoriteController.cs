@@ -1,5 +1,5 @@
 using Project_2.Models;
-using Project_2.Services.Services;
+using Project_2.Services;
 
 using Microsoft.AspNetCore.Mvc;
 using Project_2.Models.DTOs;
@@ -14,7 +14,8 @@ namespace Project_2.API;
 // parameterize the route name
 [ApiController]
 [Route("api/favorites")]
-public class FavoriteController : ControllerBase{
+public class FavoriteController : ControllerBase
+{
 
     private readonly UserManager<User> _userManager;
     private readonly IFavoriteService _favoriteService;
@@ -29,7 +30,8 @@ public class FavoriteController : ControllerBase{
     // Endpoint to retrieve all Favorites by the current user
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Favorite>>> GetAllFavorites(){
+    public async Task<ActionResult<IEnumerable<Favorite>>> GetAllFavorites()
+    {
         try
         {
             return Ok(await _favoriteService.GetAllByUserAsync(Guid.Parse(_userManager.GetUserId(this.User)!)));
@@ -42,7 +44,8 @@ public class FavoriteController : ControllerBase{
 
     // Get: api/favorites/{propertyId}
     [HttpGet("{propertyId}")]
-    public async Task<ActionResult<IEnumerable<Favorite>>> CheckIfFavorited(Guid propertyId){
+    public async Task<ActionResult<IEnumerable<Favorite>>> CheckIfFavorited(Guid propertyId)
+    {
         try
         {
             string? currentUserId = _userManager.GetUserId(this.User);
@@ -64,7 +67,8 @@ public class FavoriteController : ControllerBase{
         {
             //Explicitly checking the modelstate to make sure that out dto conforms
             //to whatever we need it to be
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
             }
 

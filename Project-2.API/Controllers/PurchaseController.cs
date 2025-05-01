@@ -1,5 +1,5 @@
 using Project_2.Models;
-using Project_2.Services.Services;
+using Project_2.Services;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +15,8 @@ namespace Project_2.API;
 [ApiController]
 [Authorize]
 [Route("api/purchase")]
-public class PurchaseController : ControllerBase{
+public class PurchaseController : ControllerBase
+{
 
     private readonly IPurchaseService _purchaseService;
     private readonly UserManager<User> _userManager;
@@ -30,7 +31,8 @@ public class PurchaseController : ControllerBase{
     // Endpoint to retrieve all Purchases
     [Authorize(Roles = "Admin")]
     [HttpGet("/api/admin/purhcase")]
-    public async Task<ActionResult<IEnumerable<Purchase>>> GetAllPurchases(){
+    public async Task<ActionResult<IEnumerable<Purchase>>> GetAllPurchases()
+    {
         try
         {
             return Ok(await _purchaseService.GetAllPurchasesAsync());
@@ -50,12 +52,13 @@ public class PurchaseController : ControllerBase{
         {
             //Explicitly checking the modelstate to make sure that out dto conforms
             //to whatever we need it to be
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
             }
 
             return Ok(await _purchaseService.AcceptOfferAsync(dto));
-            
+
         }
         catch (Exception e)
         {
@@ -66,11 +69,15 @@ public class PurchaseController : ControllerBase{
     // Get: api/purchase/user
     // Get all purchases by user
     [HttpGet("user")]
-    public async Task<ActionResult<Purchase>> GetAllPurchasesByUser(){
-        try{
+    public async Task<ActionResult<Purchase>> GetAllPurchasesByUser()
+    {
+        try
+        {
             User? user = await GetCurrentUserAsync();
             return Ok(await _purchaseService.GetAllPurchasesByUserAsync(user.Id));
-        } catch(Exception e){
+        }
+        catch (Exception e)
+        {
             return BadRequest(e.Message);
         }
     }

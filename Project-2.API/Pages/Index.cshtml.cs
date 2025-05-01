@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Project_2.Models;
 using Project_2.API;
 using Microsoft.AspNetCore.Identity;
-using Project_2.Services.Services;
+using Project_2.Services;
 
 namespace Project_2.Pages
 {
@@ -31,7 +31,8 @@ namespace Project_2.Pages
         public IEnumerable<Property> Paged { get; set; }
         public int TotalPages { get; set; }
 
-        public async Task<IActionResult> OnRetrieveAsync(Guid id) {
+        public async Task<IActionResult> OnRetrieveAsync(Guid id)
+        {
             return RedirectToPage($"./EstateProperties/Retrieve/{id}");
         }
 

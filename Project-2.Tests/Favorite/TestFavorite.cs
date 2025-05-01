@@ -7,7 +7,6 @@ using Project_2.Models;
 using Project_2.Services;
 using Project_2.Data;
 using Project_2.Models.DTOs;
-using Project_2.Services.Services;
 
 // test
 // get all favorites

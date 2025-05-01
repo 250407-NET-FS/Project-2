@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Identity;
 using Project_2.API;
 using Project_2.Models;
-using Project_2.Services.Services;
+using Project_2.Services;
 
 namespace Project_2.Pages.Pages.Owner
 {
@@ -18,12 +18,13 @@ namespace Project_2.Pages.Pages.Owner
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await _userManager.GetUserAsync(User);
-            if (user is null){
+            if (user is null)
+            {
                 return RedirectToPage("../Auth/Login");
             }
 
             PropertyList = (await _propertyService.GetPropertiesAsync("", "", "", "", "", -1, -1, -1, -1, false, user.Id)).ToList();
-            
+
             return Page();
         }
 
@@ -33,7 +34,8 @@ namespace Project_2.Pages.Pages.Owner
         public async Task<IActionResult> OnDeleteAsync(Guid id)
         {
             var user = await _userManager.GetUserAsync(User);
-            if (user is null){
+            if (user is null)
+            {
                 return RedirectToPage("../Auth/Login");
             }
             await _propertyService.RemovePropertyAsync(id, user.Id);
