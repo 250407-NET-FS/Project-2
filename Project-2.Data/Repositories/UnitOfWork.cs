@@ -9,7 +9,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly IPropertyRepository _propertyRepository;
     private readonly IPurchaseRepository _purchaseRepository;
 
-    private TransactionScope _transaction;
+    private TransactionScope? _transaction;
 
     public UnitOfWork(IFavoriteRepository favRepo, IOfferRepository offerRepo,
                       IPropertyRepository propRepo, IPurchaseRepository purRepo) {
@@ -24,8 +24,8 @@ public class UnitOfWork : IUnitOfWork
     public IOfferRepository OfferRepo => _offerRepository;
     public IPropertyRepository PropertyRepo => _propertyRepository;
     public IPurchaseRepository PurchaseRepo => _purchaseRepository;
-    
-     public async Task BeginTransaction()
+
+    public void BeginTransaction()
     {
         _transaction = new TransactionScope();
     }
@@ -37,7 +37,7 @@ public class UnitOfWork : IUnitOfWork
             // may appear to save favoritesRepository only but in the background 
             // it's calling dbContext.save and is saving changes to all repos
             await _favoriteRepository.SaveChangesAsync();
-            _transaction.Complete();
+            _transaction!.Complete();
         }
         catch
         {
