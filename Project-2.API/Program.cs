@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore;
 using System.Security.Claims;
+using Project_2.Services.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,8 +40,8 @@ builder
     })
     .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<JazaContext>()
-    .AddSignInManager();
-
+    .AddSignInManager()
+    .AddRoleManager<RoleManager<IdentityRole<Guid>>>();
 
 SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]));
 
@@ -81,7 +82,21 @@ builder
 builder.Services.AddAuthorization();
 
 //Services
+
+builder.Services.AddScoped<Project_2.Services.Services.FavoriteService>();
+builder.Services.AddScoped<Project_2.Services.Services.PropertyService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
+builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+
+builder.Services.AddScoped<IPropertyService, PropertyService>();
+builder.Services.AddScoped<IFavoriteService, FavoriteService>();
+builder.Services.AddScoped<PropertyController>();
+
+builder.Services.AddScoped<UserController>();
+
+
+
 
 
 //swagger
@@ -146,21 +161,23 @@ app.MapRazorPages()
 app.MapControllers();
 
 
-//For first timec
-// using (var scope = app.Services.CreateScope())
-// {
-//     var services = scope.ServiceProvider;
+// For first timec
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
 
-//     try
-//     {
-//         await RolesInitalizer.SeedRoles(services);
-//     }
-//     catch (Exception ex)
-//     {
-//         var logger = services.GetRequiredService<ILogger<Program>>();
-//         logger.LogError(ex, "Error seeding roles");
-//     }
-// }
+    try
+    {
+        await Seeder.SeedAdmin(services);
+        await Seeder.SeedUser(services);
+        await Seeder.SeedProperty(services);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Error seeding roles");
+    }
+}
 
 
 app.Run();

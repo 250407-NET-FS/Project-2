@@ -8,7 +8,7 @@ namespace Project_2.Models;
 [Table("Properties")]
 public class Property(string Country, string State, string City, string ZipCode,
 
- string StreetAddress, decimal StartingPrice, int Bedrooms, decimal Bathrooms)
+ string StreetAddress, decimal StartingPrice, int Bedrooms, decimal Bathrooms, Guid OwnerID)
 
 {
     [Key]
@@ -43,7 +43,7 @@ public class Property(string Country, string State, string City, string ZipCode,
     public DateTime ListDate { get; set; } = DateTime.Now;
 
     [ForeignKey("OwnerID")]
-    public Guid OwnerID { get; set; }
+    public Guid OwnerID { get; set; } = OwnerID;
 
     public bool ForSale { get; set; } = true;
 }
