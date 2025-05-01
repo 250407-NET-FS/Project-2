@@ -425,7 +425,7 @@ obj/
 .ionide
 
 ### EF Generated Migrations Files
-Migrations/*
+*/Migrations/*
 
 ### Web Root Files
 */wwwroot
