@@ -36,8 +36,11 @@ namespace Project_2.Pages.Pages.EstateProperties
             }
             PropertyInfo!.OwnerID = user.Id;
 
-            await _controller.CreateProperty(PropertyInfo);
-            return RedirectToPage("../Retrieve");
+            var actionResult = (await _controller.CreateProperty(PropertyInfo)).Result;
+            if (actionResult is OkObjectResult okResult) {
+                return RedirectToPage("./Retrieve", new { id = okResult.Value });
+            }
+            throw new Exception("Failed");
         }
     }
 }
