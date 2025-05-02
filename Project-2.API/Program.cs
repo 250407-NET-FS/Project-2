@@ -10,7 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore;
 using System.Security.Claims;
-using Project_2.Services.Services;
+using Project_2.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -84,19 +84,30 @@ builder.Services.AddAuthorization();
 
 //Services
 
-builder.Services.AddScoped<Project_2.Services.Services.FavoriteService>();
-builder.Services.AddScoped<Project_2.Services.Services.PropertyService>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<Project_2.Services.FavoriteService>();
+builder.Services.AddScoped<Project_2.Services.PropertyService>();
+builder.Services.AddScoped<Project_2.Services.OfferService>();
+builder.Services.AddScoped<Project_2.Services.PurchaseService>();
+builder.Services.AddScoped<Project_2.Services.UserService>();
+
 builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
 builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+builder.Services.AddScoped<IOfferRepository, OfferRepository>();
+builder.Services.AddScoped<IPurchaseRepository, PurchaseRepository>();
+
 
 builder.Services.AddScoped<IPropertyService, PropertyService>();
 builder.Services.AddScoped<IFavoriteService, FavoriteService>();
+builder.Services.AddScoped<IOfferService, OfferService>();
+builder.Services.AddScoped<IPurchaseService, PurchaseService>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<AuthUserController>();
+builder.Services.AddScoped<UserController>();
 builder.Services.AddScoped<PropertyController>();
 builder.Services.AddScoped<FavoriteController>();
-builder.Services.AddScoped<UserController>();
-
-
+builder.Services.AddScoped<OfferController>();
+builder.Services.AddScoped<PurchaseController>();
 
 
 
